@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# shellcheck disable=2034
+# shellcheck disable=2034 # These variables will remain unused in this file.
+# shellcheck disable=2154 # These variables will remain unused in this file.
 
 # A library of unicode box drawing characters.
 #
