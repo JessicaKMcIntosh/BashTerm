@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# shellcheck source=attr.sh
+# shellcheck source=color.sh
+# shellcheck source=cursor.sh
+# shellcheck source=boxes.sh
 
 # This is a functional interface to the variables.
 # If that is something you want... :shrug:
@@ -43,6 +47,7 @@ term::UNDERLINE()   { echo -n "${TERM_ATTR["rmul"]}" ; }
 term::bold()        { echo -n "${TERM_ATTR["bold"]}" ; }
 term::clear()       { echo -n "${TERM_ATTR["clear"]}" ; }
 term::dim()         { echo -n "${TERM_ATTR["dim"]}" ; }
+term::invis()       { echo -n "${TERM_ATTR["invis"]}" ; }
 term::italics()     { echo -n "${TERM_ATTR["italics"]}" ; }
 term::orig()        { echo -n "${TERM_ATTR["op"]}" ; }
 term::reset()       { echo -n "${TERM_ATTR["reset"]}" ; }

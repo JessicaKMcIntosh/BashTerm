@@ -43,5 +43,7 @@
     "markdown.extension.toc.slugifyMode": "github",
     "markdown.extension.toc.levels": "2..3",
     "markdown.extension.toc.orderedList": false,
-    "markdown.extension.toc.unorderedList.marker": "*"
+    "markdown.extension.toc.unorderedList.marker": "*",
+    "shellcheck.customArgs": ["-x"],
+
 }
