@@ -19,7 +19,10 @@ source "./attr.sh"
 source "./boxes.sh"
 source "./color.sh"
 source "./cursor.sh"
-source "./function.sh"
+
+echo "# Generated: $(date)"
+echo "# TERM=${TERM}"
+echo ""
 
 echo "# Stores terminal attribute escape sequences."
 declare -p "TERM_ATTR"
