@@ -22,21 +22,25 @@ fi
 declare -A TERM_BOX     # Stores unicode box drawing characters.
 
 # Variables meaning:
+#
+# This is what I came up with to make drawing boxes a little easier.
+# See the files `all_boxes.sh` and `alt_boxes.sh` for other options.
+#
 # The first character indicates the type.
 # L = Light       eg. │┐┘┌└
 # H = Heavy       eg. ┃┓┛┏┗
 # D = Double line eg. ║╗╝╔╚
 # R = Rounded     eg. │╮╯╭╰
-# Rounded are the same as Light, but the corners are rounded.
+# Rounded is the same as Light, but the corners are rounded.
 #
 # These are just lines in the given orientation.
-# L_LH = Light Line Horrizontal '│'
-# H_LV = Heavy Line Verticle '┃'
+# L_LH = Light Line Horizontal '─'
+# H_LV = Heavy Line Vertical   '┃'
 #
-# For the box parts the second two letters indicate the potision.
+# For the box parts the second two letters indicate the position.
 # First Letter:  Vertical Orientation   - T = Top,  M = Middle, B = Bottom
 # Second Letter: Horizontal Orientation - L = Left, C = Center, R = Right
-# 
+#
 # L_TL, L_TC, L_TR = Light:      Top Left '┌',    Top Center '┬',    Top Right '┐'
 # H_ML, H_MC, H_MR = Heavy:   Middle Left '┣', Middle Center '╋', Middle Right '┫'
 # D_BL, D_BC, D_BR = Double:  Bottom Left '╚', Bottom Center '╩', Bottom Right '╝'

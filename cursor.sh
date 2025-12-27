@@ -10,7 +10,7 @@
 # Provides a variable and functional interface to the terminal cursor capabilities.
 # For variables tput is called once per attribute to save the escape code.
 # This could add undesired delays to loading the script.
-# But it does have the advantabe of using variables and tput is only called once.
+# But it does have the advantage of using variables and tput is only called once.
 # Functions either print the variable or call tput.
 
 # Customization:
@@ -30,10 +30,12 @@ fi
 declare -A TERM_CURSOR  # Stores terminal cursor escape sequences.
 
 # Typical terminal cursor attributes.
-# Descriptions are from 'man 5 terminfo'.
+# Descriptions and names are from 'man 5 terminfo'.
 declare -A _TERM_CURSOR_ATTRIBUTES
 _TERM_CURSOR_ATTRIBUTES=(
+    [clr_bol]="el1"             # Clear to beginning of line
     [clr_eol]="el"              # clear to end of line
+    [clr_eos]="ed"              # clear to end of screen
     [delete_character]="dch1"   # delete character
     [delete_line]="dl1"         # delete line
     [down]="cud1"               # down one line
@@ -51,7 +53,6 @@ _TERM_CURSOR_ATTRIBUTES=(
     [to_ll]="ll"                # last line, first column (if no cup)
     [up]="cuu1"                 # up one line
     [visible]="cvvis"           # make cursor very visible
-    [clr_bol]="el1"             # Clear to beginning of line
 )
 for attr in "${!_TERM_CURSOR_ATTRIBUTES[@]}"; do
     TERM_CURSOR[$attr]="$(tput setaf "${_TERM_CURSOR_ATTRIBUTES[$attr]}")"
@@ -61,6 +62,7 @@ done
 # Some handy shortcuts for less typing.
 export TERM_CURSOR_CLR_BOL="${TERM_CURSOR[clr_bol]}"
 export TERM_CURSOR_CLR_EOL="${TERM_CURSOR[clr_eol]}"
+export TERM_CURSOR_CLR_EOS="${TERM_CURSOR[clr_eos]}"
 export TERM_CURSOR_DELETE_CHAR="${TERM_CURSOR[delete_character]}"
 export TERM_CURSOR_DELETE_LINE="${TERM_CURSOR[delete_line]}"
 export TERM_CURSOR_DOWN="${TERM_CURSOR[down]}"
@@ -91,6 +93,7 @@ term::move(){
 # Report the cursor position. row;col
 term::pos(){
     local position
+    # shellcheck disable=SC2162 # There are no backslashes to mangle.
     read -sdR -p "$(tput u7)" position
     position="${position#*[}" # Strip the escape.
     echo "${position}"
@@ -100,6 +103,7 @@ term::pos(){
 term::row(){
     local column
     local row
+    # shellcheck disable=SC2162 # There are no backslashes to mangle.
     IFS=';' read -sdR -p "$(tput u7)" row column
     row="${row#*[}" # Strip the escape.
     echo "${row}"
@@ -109,6 +113,7 @@ term::row(){
 term::col(){
     local column
     local row
+    # shellcheck disable=SC2162 # There are no backslashes to mangle.
     IFS=';' read -sdR -p "$(tput u7)" row column
     echo "${column}"
 }

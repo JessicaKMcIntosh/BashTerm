@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-# This generates sourceable code for all of the variables defined in the
+# BashTerm by Jessica K McIntosh is marked CC0 1.0.
+# To view a copy of this mark, visit:
+# https://creativecommons.org/publicdomain/zero/1.0/
+
+# This generates source-able code for all of the variables defined in the
 # library.
 
 # If you only want to generate the variables once, and for a specific terminal,

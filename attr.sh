@@ -5,21 +5,6 @@
 # https://creativecommons.org/publicdomain/zero/1.0/
 
 # A library of useful code for working with terminal attributes.
-#
-# Provides a variable interface to the terminal capabilities.
-# For every attribute tput is called to generate and save the escape codes
-# ahead of time.
-# This could add undesired delays to loading the script.
-# But it does have the advantabe of using variables
-# And tput is only called once per escape code.
-#
-# See the file 'colors.sh' for the same interface for terminal colors.
-
-# Customization:
-# Add or remove to these arrays to customize your setup.
-# For example remove attributes you don't need, or add your favorite.
-# _TERM_ATTRIBUTES - The attributes to fetch escape codes for.
-# _TERM_ATTRIBUTE_ALIASES - Aliasses to add to the TERM_ATTR array.
 
 # See 'man 5 terminfo' for more information.
 
@@ -34,23 +19,24 @@ fi
 declare -A TERM_ATTR    # Stores terminal attribute escape sequences.
 
 # Typical terminal attributes.
-declare -a _TERM_ATTRIBUTES
+declare -A _TERM_ATTRIBUTES
 _TERM_ATTRIBUTES=(
-    "bold"
-    "clear"
-    "dim"
-    "op"
-    "rev"
-    "ritm"
-    "rmso"
-    "rmul"
-    "sgr0"
-    "sitm"
-    "smso"
-    "smul"
+    [clear_screen]="clear"          # clear screen and home cursor
+    [enter_bold_mode]="bold"        # turn on bold (extra bright) mode
+    [enter_dim_mode]="dim"          # turn on half-bright mode
+    [enter_italics_mode]="sitm"     # Enter italic mode
+    [enter_reverse_mode]="rev"      # turn on reverse video mode
+    [enter_standout_mode]="smso"    # begin standout mode
+    [enter_underline_mode]="smul"   # begin underline mode
+    [exit_attribute_mode]="sgr0"    # turn off all attributes
+    [exit_italics_mode]="ritm"      # End italic mode
+    [exit_standout_mode]="rmso"     # exit standout mode
+    [exit_underline_mode]="rmul"    # exit underline mode
+    [orig_pair]="op"                # Set default pair to its original value
 )
-for attr in "${_TERM_ATTRIBUTES[@]}"; do
-    TERM_ATTR[$attr]="$(tput "${attr}")"
+for attr in "${!_TERM_ATTRIBUTES[@]}"; do
+    TERM_ATTR[$attr]="$(tput "${_TERM_ATTRIBUTES[$attr]}")"
+    TERM_ATTR[${_TERM_ATTRIBUTES[$attr]}]="${TERM_ATTR[$attr]}"
 done
 
 # Attribute aliases.
@@ -59,8 +45,7 @@ _TERM_ATTRIBUTE_ALIASES=(
     [ITALICS]="ritm"
     [STANDOUT]="rmso"
     [UNDERLINE]="rmul"
-    [default]="op"
-    [default_color]="op"
+    [orig]="op"
     [italics]="sitm"
     [reset]="sgr0"
     [reverse]="rev"
@@ -74,14 +59,14 @@ done
 # Some handy shortcuts for less typing.
 export TERM_ATTR_BOLD="${TERM_ATTR[bold]}"
 export TERM_ATTR_CLEAR="${TERM_ATTR[clear]}"
-export TERM_ATTR_DEFAULT="${TERM_ATTR[default_color]}"
 export TERM_ATTR_DIM="${TERM_ATTR[dim]}"
-export TERM_ATTR_EXIT_ITALICS="${TERM_ATTR[ITALICS]}"
-export TERM_ATTR_EXIT_STANDOUT="${TERM_ATTR[STANDOUT]}"
-export TERM_ATTR_EXIT_UNDERLINE="${TERM_ATTR[UNDERLINE]}"
-export TERM_ATTR_ITALICS="${TERM_ATTR[italics]}"
-export TERM_ATTR_RESET="${TERM_ATTR[reset]}"
-export TERM_ATTR_REVERSE="${TERM_ATTR[reverse]}"
-export TERM_ATTR_STANDOUT="${TERM_ATTR[standout]}"
-export TERM_ATTR_UNDERLINE="${TERM_ATTR[underline]}"
+export TERM_ATTR_EXIT_ITALICS="${TERM_ATTR[ritm]}"
+export TERM_ATTR_EXIT_STANDOUT="${TERM_ATTR[rmso]}"
+export TERM_ATTR_EXIT_UNDERLINE="${TERM_ATTR[rmul]}"
+export TERM_ATTR_ITALICS="${TERM_ATTR[sitm]}"
+export TERM_ATTR_ORIG="${TERM_ATTR[op]}"
+export TERM_ATTR_RESET="${TERM_ATTR[sgr0]}"
+export TERM_ATTR_REVERSE="${TERM_ATTR[rev]}"
+export TERM_ATTR_STANDOUT="${TERM_ATTR[smso]}"
+export TERM_ATTR_UNDERLINE="${TERM_ATTR[smul]}"
 

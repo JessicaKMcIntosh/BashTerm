@@ -1,0 +1,23 @@
+{
+    "cSpell.words": [
+        "civis",
+        "cnorm",
+        "cvvis",
+        "ritm",
+        "rmso",
+        "rmul",
+        "setab",
+        "setaf",
+        "sitm",
+        "smso",
+        "smul",
+        "terminfo",
+        "tput"
+    ],
+    "markdownlint.config": {
+        "no-duplicate-heading": {
+            "siblings_only": true
+        },
+        "MD013": false
+    }
+}

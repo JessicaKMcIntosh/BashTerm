@@ -37,14 +37,14 @@ term::cursor() {
 }
 
 # Attributes:
-term::ITALICS()     { echo -n "${TERM_ATTR["ITALICS"]}" ; }
-term::STANDOUT()    { echo -n "${TERM_ATTR["STANDOUT"]}" ; }
-term::UNDERLINE()   { echo -n "${TERM_ATTR["UNDERLINE"]}" ; }
+term::ITALICS()     { echo -n "${TERM_ATTR["ritm"]}" ; }
+term::STANDOUT()    { echo -n "${TERM_ATTR["rmso"]}" ; }
+term::UNDERLINE()   { echo -n "${TERM_ATTR["rmul"]}" ; }
 term::bold()        { echo -n "${TERM_ATTR["bold"]}" ; }
 term::clear()       { echo -n "${TERM_ATTR["clear"]}" ; }
-term::default()     { echo -n "${TERM_ATTR["default_color"]}" ; }
 term::dim()         { echo -n "${TERM_ATTR["dim"]}" ; }
 term::italics()     { echo -n "${TERM_ATTR["italics"]}" ; }
+term::orig()        { echo -n "${TERM_ATTR["op"]}" ; }
 term::reset()       { echo -n "${TERM_ATTR["reset"]}" ; }
 term::reverse()     { echo -n "${TERM_ATTR["reverse"]}" ; }
 term::standout()    { echo -n "${TERM_ATTR["standout"]}" ; }
@@ -70,6 +70,7 @@ term::YELLOW()      { echo -n "${TERM_BG["yellow"]}" ; }
 # Cursor:
 term::clr_bol()             { echo -n "${TERM_CURSOR["clr_bol"]}" ; }
 term::clr_eol()             { echo -n "${TERM_CURSOR["clr_eol"]}" ; }
+term::clr_eos()             { echo -n "${TERM_CURSOR["clr_eos"]}" ; }
 term::delete_character()    { echo -n "${TERM_CURSOR["delete_character"]}" ; }
 term::delete_line()         { echo -n "${TERM_CURSOR["delete_line"]}" ; }
 term::down()                { echo -n "${TERM_CURSOR["down"]}" ; }

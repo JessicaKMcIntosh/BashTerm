@@ -5,9 +5,6 @@
 # https://creativecommons.org/publicdomain/zero/1.0/
 
 # A library of useful code for working with terminal colors.
-#
-# See 'attr.sh' for more details.
-# This file is the same, but for color instead of attributes.
 
 # See 'man 5 terminfo' for more information.
 
@@ -23,7 +20,7 @@ declare -A TERM_FG      # Stores terminal foreground color escape sequences.
 declare -A TERM_BG      # Stores terminal background color escape sequences.
 
 # Terminal colors.
-declare -ag _TERM_COLORS
+declare -a _TERM_COLORS
 _TERM_COLORS=(
     "black"
     "red"

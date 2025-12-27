@@ -8,22 +8,20 @@ echo "Testing the functional interface from 'functions.sh'."
 echo ""
 
 echo "Testing attributes:"
-echo "Normal $(term::underline)Underline$(term::tput "rmul") not underlined"
+echo "Normal $(term::underline)Underline$(term::UNDERLINE) not underlined"
 echo "Normal $(term::bold)Bold$(term::reset) not bold"
 echo "Normal $(term::dim)Dim$(term::reset) not dim"
 echo ""
 
 echo "Testing colors:"
 for color in "${_TERM_COLORS[@]}"; do
-    if [[ "${color}" != "default" && "${color}" != "reset" ]] ; then
     echo -n "Color ${color} "
-    echo -n "$(term::fg "${color}")Foreground$(term::reset) "
+    echo -n "$(term::fg "${color}")Foreground$(term::orig) "
     echo -n "$(term::fg "${color}")$(term::dim)Dim$(term::reset) "
     echo -n "$(term::fg "${color}")$(term::bold)Bold$(term::reset) "
     echo -n "$(term::fg "${color}")$(term::underline)Underline$(term::reset) "
-    echo -n "$(term::bg "${color}")Background$(term::reset) "
+    echo -n "$(term::bg "${color}")Background$(term::orig) "
     echo    "Normal text"
-    fi
 done
 echo ""
 
