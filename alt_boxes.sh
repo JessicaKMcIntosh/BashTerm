@@ -7,7 +7,7 @@
 
 # Complete set of characters using the names from:
 # https://www.compart.com/en/unicode/block/U+2500
-# This file has the name abbeviated to just the first letter of the name.
+# This file has the name abbreviated to just the first letter of the name.
 
 # This requires bash version 4.
 if [[ "${BASH_VERSINFO[0]}" -lt "4" ]] ; then
