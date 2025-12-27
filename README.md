@@ -2,12 +2,47 @@
 
 A library to simplify working with the terminal in bash.
 
+* [DOC TODO](#doc-todo)
+* [Project TODO](#project-todo)
+* [Requirements](#requirements)
+* [Overview](#overview)
+* [Why?](#why)
+* [Terminal Attributes - `attr.sh`](#terminal-attributes---attrsh)
+  * [Primary interface](#primary-interface)
+  * [Shortcuts](#shortcuts)
+  * [Internal variables](#internal-variables)
+* [Terminal Colors - `color.sh`](#terminal-colors---colorsh)
+  * [Primary interface](#primary-interface-1)
+  * [Shortcuts](#shortcuts-1)
+  * [Colors](#colors)
+  * [Internal variables](#internal-variables-1)
+* [Terminal Cursor movement - `cursor.sh`](#terminal-cursor-movement---cursorsh)
+  * [Primary interface](#primary-interface-2)
+  * [Functions](#functions)
+  * [Shortcuts](#shortcuts-2)
+  * [Internal variables](#internal-variables-2)
+* [Box drawing unicode characters - `boxes.sh`](#box-drawing-unicode-characters---boxessh)
+  * [Primary interface](#primary-interface-3)
+  * [Variable meaning](#variable-meaning)
+* [Functional Interface - `functions.sh`](#functional-interface---functionssh)
+* [Export - `export.sh`](#export---exportsh)
+  * [Usage](#usage)
+* [Reference](#reference)
+* [Other Projects](#other-projects)
+* [LICENSE](#license)
+
 ## DOC TODO
 
 This to do for this doc:
 
 * Add examples. Use Putty and make note of my modified blue.
 * Document the test scripts.
+
+## Project TODO
+
+* Spinners.
+  * <https://stackoverflow.com/questions/2685435/cooler-ascii-spinners>
+  * <https://github.com/Silejonu/bash_loading_animations/blob/main/bash_loading_animations.sh>
 
 ## Requirements
 
@@ -174,7 +209,7 @@ Variables used to build the associative arrays.
 
 * `$_TERM_COLORS` -
   All available colors index by the color number.
-  When this array is processed both the color namd and color number are set in the arrays `$TERM_FG` and `$TERM_BG`.
+  When this array is processed both the color name and color number are set in the arrays `$TERM_FG` and `$TERM_BG`.
 
 ## Terminal Cursor movement - `cursor.sh`
 
@@ -186,7 +221,7 @@ The primary interface for the cursor library is the associative array `$TERM_CUR
 declare -A TERM_CURSOR  # Stores terminal cursor escape sequences.
 ```
 
-### Cursor Functions
+### Functions
 
 The following are functions because they call tput dynamically or return values.
 
@@ -251,11 +286,63 @@ Change these to customize the escape codes retrieved using `tput`.
 
 ## Box drawing unicode characters - `boxes.sh`
 
+Unicode box drawing characters.
+
+I created a custom naming scheme to make drawing boxes a little easier.
+This is a bit odd, but it kinda makes sense if you squint.
+
+There are two additional files:
+
+* `all_boxes.sh` - All Unicode box drawing characters with long names from the Unicode standard.
+* `alt_boxes.sh` - The same thing, but shorter names.
+
 ### Primary interface
 
-### Shortcuts
+The primary interface for the boxes library is the associative array `$TERM_BOX`.
+There are no shortcuts for this library.
 
-### Internal variables
+```shell
+declare -A TERM_BOX     # Stores unicode box drawing characters.
+```
+
+### Variable meaning
+
+Each of the box characters has a name that indicates the type of line then the position in the box.
+
+For example the name `L_MC` means Light line, Middle and Center position, `┼`.
+
+This is what I came up with to make drawing boxes a little easier.
+
+The first character indicates the type.
+Rounded is the same as Light, but the corners are rounded.
+
+| Character | Line type   | Examples |
+| --------- | ----------- | -------- |
+| L         | Light       | `│┐┘┌└`  |
+| H         | Heavy       | `┃┓┛┏┗`  |
+| D         | Double line | `║╗╝╔╚`  |
+| R         | Rounded     | `│╮╯╭╰`  |
+
+These two are just lines in the given orientation.
+
+* `L_LH` - Light Line Horizontal `─`
+* `H_LV` - Heavy Line Vertical   `┃`
+
+For the box parts the second two characters indicate the position.
+
+* The first characters is th vertical orientation. \
+  T = Top,  M = Middle, B = Bottom
+* The second character is the horizontal orientation. \
+  L = Left, C = Center, R = Right
+
+Examples of box parts.
+
+| Line Type  | VAR  | Meaning         | Var  | Meaning           | Var  | Meaning          |
+| ---------- | ---- | --------------- | ---- | ----------------- | ---- | ---------------- |
+| Light      | L_TL |    Top Left `┌` | L_TC |    Top Center `┬` | L_TR |    Top Right `┐` |
+| Heavy      | H_ML | Middle Left `┣` | H_MC | Middle Center `╋` | H_MR | Middle Right `┫` |
+| Double     | D_BL | Bottom Left `╚` | D_BC | Bottom Center `╩` | D_BR | Bottom Right `╝` |
+| Rounded    | R_BL | Bottom Left `╰` | R_BC | Bottom Center `┴` | R_BR | Bottom Right `╯` |
 
 ## Functional Interface - `functions.sh`
 
@@ -263,20 +350,41 @@ Think of this as a little bonus.
 It is just functions to print the various escape codes.
 This is more a suggestion instead of something to use directly.
 
+## Export - `export.sh`
+
+This script will print variable declarations that Bash can read back.
+All of the environment variables for the above libraries are output.
+**Note: functions are not included!*
+
+This is really only useful for adding the escape codes for a specific terminal directly to your script.
+
+### Usage
+
+Run the script and redirect the output.
+Optionally set the environment variable `$TERM`.
+
+```shell
+TERM=xterm ./export.sh > env_xterm.sh
+```
+
 ## Reference
 
 Most of the details in these files have come from Google searches and the `terminfo` manpage.
 
-Terminfo man page:
+`terminfo` man page:
 
 * `man 5 terminfo`
 * <https://man7.org/linux/man-pages/man5/terminfo.5.html>
+
+`tput` man page:
+
+* `man 5 tput`
+* <https://man7.org/linux/man-pages/man1/tput.1.html>
 
 Unicode Box drawing characters:
 
 * <https://www.compart.com/en/unicode/block/U+2500>
 * <https://en.wikipedia.org/wiki/Box-drawing_characters>
-
 
 ## Other Projects
 
