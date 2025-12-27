@@ -8,18 +8,11 @@
         "brightred",
         "brightwhite",
         "brightyellow",
-        "brightblack",
-        "brightblue",
-        "brightcyan",
-        "brightgreen",
-        "brightmagenta",
-        "brightred",
-        "brightwhite",
-        "brightyellow",
         "civis",
         "cnorm",
         "Consolas",
         "cvvis",
+        "invis",
         "ritm",
         "rmso",
         "rmul",
@@ -29,7 +22,8 @@
         "smso",
         "smul",
         "terminfo",
-        "tput"
+        "tput",
+        "shellcheck"
     ],
     "cSpell.ignorePaths": [
         "alt_boxes.sh"

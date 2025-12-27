@@ -113,6 +113,7 @@ Shortcut variables to make code a bit more friendly.
 | TERM_ATTR_BOLD | bold | enter_bold_mode | turn on bold (extra bright) mode |
 | TERM_ATTR_CLEAR | clear | clear_screen | clear screen and home cursor |
 | TERM_ATTR_DIM | dim | enter_dim_mode | turn on half-bright mode |
+| TERM_ATTR_INVISIBLE | invis | enter_secure_mode | turn on blank mode (characters invisible) |
 | TERM_ATTR_EXIT_ITALICS | ritm | exit_italics_mode | End italic mode |
 | TERM_ATTR_EXIT_STANDOUT | rmso | exit_standout_mode | exit standout mode |
 | TERM_ATTR_EXIT_UNDERLINE | rmul | exit_underline_mode | exit underline mode |
