@@ -2,7 +2,6 @@
 
 A library to simplify working with the terminal in bash.
 
-* [DOC TODO](#doc-todo)
 * [Project TODO](#project-todo)
 * [Requirements](#requirements)
 * [Overview](#overview)
@@ -27,16 +26,13 @@ A library to simplify working with the terminal in bash.
 * [Functional Interface - `functions.sh`](#functional-interface---functionssh)
 * [Export - `export.sh`](#export---exportsh)
   * [Usage](#usage)
+* [Examples](#examples)
+  * [Attributes - `test_attr.sh`](#attributes---test_attrsh)
+  * [Colors - `test_color.sh`](#colors---test_colorsh)
+  * [Boxes - `test_boxes.sh`](#boxes---test_boxessh)
 * [Reference](#reference)
 * [Other Projects](#other-projects)
 * [LICENSE](#license)
-
-## DOC TODO
-
-This to do for this doc:
-
-* Add examples. Use Putty and make note of my modified blue.
-* Document the test scripts.
 
 ## Project TODO
 
@@ -366,6 +362,30 @@ Optionally set the environment variable `$TERM`.
 ```shell
 TERM=xterm ./export.sh > env_xterm.sh
 ```
+
+## Examples
+
+Here is some example output of the various test scripts.
+These were captured using Putty on Windows using the [Consolas font](https://en.wikipedia.org/wiki/Consolas).
+The only change in Putty was to make Blue readable.
+
+### Attributes - `test_attr.sh`
+
+Exercises te attributes for Underline, Dim and Bold.
+
+![Attribute Test](images/attributes.png)
+
+### Colors - `test_color.sh`
+
+Demonstrates the colors, including with the attributes Dim, Bold and Underline.
+
+![Color Test](images/colors.png)
+
+### Boxes - `test_boxes.sh`
+
+Draws a few boxes.
+
+![Boxes Test](images/boxes.png)
 
 ## Reference
 
