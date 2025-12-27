@@ -144,7 +144,9 @@ Change these to customize the escape codes retrieved using `tput`.
 
 Escape codes for setting foreground and background.
 
-This only uses the old 8 color interface.
+This only uses the old 16 color interface.
+
+Note: The bright foreground colors are usually the same as the foreground color and the bold attribute.
 
 **IMPORTANT:**
 The default foreground and background colors are **NOT** always the same as `white` and `black`.
@@ -165,22 +167,38 @@ Shortcut variables to make code a bit more friendly.
 
 | Variable | Color |
 | --- | --- |
-| TERM_FG_BLACK | black  foreground |
-| TERM_FG_RED | red  foreground |
-| TERM_FG_GREEN | green  foreground |
-| TERM_FG_YELLOW | yellow  foreground |
-| TERM_FG_BLUE | blue  foreground |
-| TERM_FG_MAGENTA | magenta  foreground |
-| TERM_FG_CYAN | cyan  foreground |
-| TERM_FG_WHITE | white background |
 | TERM_BG_BLACK | black background |
-| TERM_BG_RED | red background |
-| TERM_BG_GREEN | green background |
-| TERM_BG_YELLOW | yellow background |
 | TERM_BG_BLUE | blue background |
-| TERM_BG_MAGENTA | magenta background |
+| TERM_BG_BRIGHT_BLACK | brightblack |
+| TERM_BG_BRIGHT_BLUE | brightblue |
+| TERM_BG_BRIGHT_CYAN | brightcyan |
+| TERM_BG_BRIGHT_GREEN | brightgreen |
+| TERM_BG_BRIGHT_MAGENTA | brightmagenta |
+| TERM_BG_BRIGHT_RED | brightred |
+| TERM_BG_BRIGHT_WHITE | brightwhite |
+| TERM_BG_BRIGHT_YELLOW | brightyellow |
 | TERM_BG_CYAN | cyan background |
+| TERM_BG_GREEN | green background |
+| TERM_BG_MAGENTA | magenta background |
+| TERM_BG_RED | red background |
 | TERM_BG_WHITE | white background |
+| TERM_BG_YELLOW | yellow background |
+| TERM_FG_BLACK | black  foreground |
+| TERM_FG_BLUE | blue  foreground |
+| TERM_FG_BRIGHT_BLACK | brightblack |
+| TERM_FG_BRIGHT_BLUE | brightblue |
+| TERM_FG_BRIGHT_CYAN | brightcyan |
+| TERM_FG_BRIGHT_GREEN | brightgreen |
+| TERM_FG_BRIGHT_MAGENTA | brightmagenta |
+| TERM_FG_BRIGHT_RED | brightred |
+| TERM_FG_BRIGHT_WHITE | brightwhite |
+| TERM_FG_BRIGHT_YELLOW | brightyellow |
+| TERM_FG_CYAN | cyan  foreground |
+| TERM_FG_GREEN | green  foreground |
+| TERM_FG_MAGENTA | magenta  foreground |
+| TERM_FG_RED | red  foreground |
+| TERM_FG_WHITE | white background |
+| TERM_FG_YELLOW | yellow  foreground |
 
 ### Colors
 
@@ -196,6 +214,14 @@ Supported colors.
 | magenta | 5 |
 | cyan | 6 |
 | white | 7 |
+| brightblack/grey | 8 |
+| brightred | 9 |
+| brightgreen | 10 |
+| brightyellow | 11 |
+| brightblue | 12 |
+| brightmagenta | 13 |
+| brightcyan | 14 |
+| brightwhite | 15 |
 
 Note that on some terminals red and blue may be swapped.
 
@@ -206,6 +232,9 @@ Variables used to build the associative arrays.
 * `$_TERM_COLORS` -
   All available colors index by the color number.
   When this array is processed both the color name and color number are set in the arrays `$TERM_FG` and `$TERM_BG`.
+
+* `$_TERM_COLOR_ALIASES` -
+  Color aliases. Currently only mapping `grey` and `gray` to `brightblack`.
 
 ## Terminal Cursor movement - `cursor.sh`
 
