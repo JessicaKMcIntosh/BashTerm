@@ -43,11 +43,11 @@ _TERM_COLORS=(
 # Set the color codes in the variables.
 for color in "${!_TERM_COLORS[@]}"; do
     TERM_FG[${_TERM_COLORS[$color]}]="$(tput setaf "${color}")"
-    TERM_FG[${color}]=TERM_FG[${_TERM_COLORS[$color]}]
+    TERM_FG[${color}]="${TERM_FG[${_TERM_COLORS[$color]}]}"
 done
 for color in "${!_TERM_COLORS[@]}"; do
     TERM_BG[${_TERM_COLORS[$color]}]="$(tput setab "${color}")"
-    TERM_BG[${color}]=TERM_BG[${_TERM_COLORS[$color]}]
+    TERM_BG[${color}]="${TERM_BG[${_TERM_COLORS[$color]}]}"
 done
 
 # Color aliases.

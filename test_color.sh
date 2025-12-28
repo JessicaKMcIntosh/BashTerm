@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Test the attribute library.
+# Test the color library.
 
 source "./attr.sh"
 source "./color.sh"
@@ -15,4 +15,3 @@ for color in "${_TERM_COLORS[@]}"; do
     echo -n "${TERM_BG[$color]}Background${TERM_ATTR_ORIG} "
     echo    "Normal text"
 done
-
