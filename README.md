@@ -324,12 +324,9 @@ There are two additional files:
 
 ### Primary interface
 
-The primary interface for the boxes library is the associative array `$TERM_BOX`.
-There are no shortcuts for this library.
-
-```shell
-declare -A TERM_BOX     # Stores unicode box drawing characters.
-```
+The primary interface for the boxes library are the variables starting with `$TERM_BOX_`.
+See the file `boxes.sh` for the variables.
+There are too many to fit here.
 
 ### Variable meaning
 
