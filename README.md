@@ -2,7 +2,7 @@
 
 A library to simplify working with the terminal in bash.
 
-* [Project TODO](#project-todo)
+* [TODO](#todo)
 * [Requirements](#requirements)
 * [Overview](#overview)
 * [Why?](#why)
@@ -23,6 +23,7 @@ A library to simplify working with the terminal in bash.
 * [Box drawing unicode characters - `boxes.sh`](#box-drawing-unicode-characters---boxessh)
   * [Primary interface](#primary-interface-3)
   * [Variable meaning](#variable-meaning)
+* [Attribute and color table - `table.sh`](#attribute-and-color-table---tablesh)
 * [Functional Interface - `functions.sh`](#functional-interface---functionssh)
 * [Export - `export.sh`](#export---exportsh)
   * [Usage](#usage)
@@ -34,11 +35,14 @@ A library to simplify working with the terminal in bash.
 * [Other Projects](#other-projects)
 * [LICENSE](#license)
 
-## Project TODO
+## TODO
 
+* Draw boxes. Could do this with AWK.
+* Unit tests.
 * Spinners.
   * <https://stackoverflow.com/questions/2685435/cooler-ascii-spinners>
   * <https://github.com/Silejonu/bash_loading_animations/blob/main/bash_loading_animations.sh>
+  * <https://www.compart.com/en/unicode/block/U+2800>
 
 ## Requirements
 
@@ -366,6 +370,10 @@ Examples of box parts.
 | Heavy      | H_ML | Middle Left `┣` | H_MC | Middle Center `╋` | H_MR | Middle Right `┫` |
 | Double     | D_BL | Bottom Left `╚` | D_BC | Bottom Center `╩` | D_BR | Bottom Right `╝` |
 | Rounded    | R_BL | Bottom Left `╰` | R_BC | Bottom Center `┴` | R_BR | Bottom Right `╯` |
+
+## Attribute and color table - `table.sh`
+
+This script prints a table of foreground and background colors, showing attributes in the cells.
 
 ## Functional Interface - `functions.sh`
 

@@ -28,7 +28,7 @@ color_table(){
     )
 
     # Header for the table.
-    echo -en "BG\u2193 /FG\u2192  "
+    echo -en "BG\u2193 / FG\u2192 "
     printf "%-10s" "DEFAULT"
     for color in "${TEST_COLORS[@]}"; do
         printf "%-9s" "${color}"
@@ -42,7 +42,7 @@ color_table(){
         color_name="${TEST_COLORS["${line_color}"]}"
         color_table_line "${color_name}" "${TERM_BG[${line_color}]}"
         # Bright background color.
-        bright_color=$((line_color + 8))
+        bright_color="$((line_color + 8))"
         color_table_line "${color_name^^}" "${TERM_BG[${bright_color}]}"
     done
     echo ""
@@ -71,7 +71,7 @@ color_table_line(){
     color_table_attribute "${bg_color}" "" "NOT_PRESENT" " "
     color_table_cell "${bg_color}" "" ""
     for color in "${!TEST_COLORS[@]}"; do
-    bright_color=$((color + 8))
+    bright_color="$((color + 8))"
         color_table_cell "${bg_color}" "${TERM_FG[${color}]}" "${TERM_FG[${bright_color}]}"
     done
     echo ""
