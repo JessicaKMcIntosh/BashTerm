@@ -20,7 +20,7 @@ A library to simplify working with the terminal in bash.
   * [Functions](#functions)
   * [Shortcuts](#shortcuts-2)
   * [Internal variables](#internal-variables-2)
-* [Box drawing unicode characters - `boxes.sh`](#box-drawing-unicode-characters---boxessh)
+* [Box drawing Unicode characters - `boxes.sh`](#box-drawing-unicode-characters---boxessh)
   * [Primary interface](#primary-interface-3)
   * [Variable meaning](#variable-meaning)
 * [Attribute and color table - `table.sh`](#attribute-and-color-table---tablesh)
@@ -38,7 +38,9 @@ A library to simplify working with the terminal in bash.
 ## TODO
 
 * Draw boxes. Could do this with AWK.
+* Something like `printf` to make setting attributes and colors easier.
 * Unit tests.
+* Write an actual test for the cursor library.
 * Spinners.
   * <https://stackoverflow.com/questions/2685435/cooler-ascii-spinners>
   * <https://github.com/Silejonu/bash_loading_animations/blob/main/bash_loading_animations.sh>
@@ -51,11 +53,11 @@ There are some features that only work with 4.
 For example Unicode characters `$'\u2500'` and associative arrays.
 
 MacOS still ships with Bash 3.
-For MacOS check out [Homebrew](https://brew.sh/)
+For MacOS check out [Homebrew](https://brew.sh/) for a modern version of bash.
 
 ## Overview
 
-This library provides a variable interface.
+This library provides a variable interface with a few functions.
 When the library loads it calls `tput` to get the escape codes for terminal functionality.
 
 The primary interface is using associative arrays.
@@ -144,6 +146,10 @@ Change these to customize the escape codes retrieved using `tput`.
   Aliases to add to the TERM_ATTR array.
   These are more friendly names for the various capabilities.
   For example use `UNDERLINE` to exit underline mode instead of the more cryptic `rmul`.
+
+* `$_TERM_ATTRIBUTE_SHORTCUTS` -
+  Shortcut variables to create.
+  Creating environment variables this way makes it easier for you to customize.
 
 ## Terminal Colors - `color.sh`
 
@@ -253,7 +259,7 @@ declare -A TERM_CURSOR  # Stores terminal cursor escape sequences.
 
 ### Functions
 
-The following are functions because they call tput dynamically or return values.
+The following are functions because they call `tput` dynamically or return values.
 
 Fetching the cursor position is a bit of a hack.
 This is a known issue with multiple solutions.
@@ -314,7 +320,7 @@ Change these to customize the escape codes retrieved using `tput`.
   These are taken directly from the `terminfo` man page.
   When this array is processed both the capability name and attribute are set in `$TERM_CURSOR`.
 
-## Box drawing unicode characters - `boxes.sh`
+## Box drawing Unicode characters - `boxes.sh`
 
 Unicode box drawing characters.
 
@@ -357,7 +363,7 @@ These two are just lines in the given orientation.
 
 For the box parts the second two characters indicate the position.
 
-* The first characters is th vertical orientation. \
+* The first characters is the vertical orientation. \
   T = Top,  M = Middle, B = Bottom
 * The second character is the horizontal orientation. \
   L = Left, C = Center, R = Right
@@ -406,7 +412,7 @@ The only change in Putty was to make Blue readable.
 
 ### Attributes - `test_attr.sh`
 
-Exercises te attributes for Underline, Dim and Bold.
+Exercises the attributes for Bold, Dim, Invisible, Italics (probably will not work), Reversed, Standout, and Underline .
 
 ![Attribute Test](images/attributes.png)
 
