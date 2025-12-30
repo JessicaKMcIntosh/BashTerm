@@ -28,10 +28,6 @@ echo "# Stores terminal attribute escape sequences."
 declare -p "TERM_ATTR"
 echo ""
 
-echo "# Stores unicode box drawing characters."
-declare -p "TERM_BOX"
-echo ""
-
 echo "# Stores terminal foreground color escape sequences."
 declare -p "TERM_FG"
 echo ""
@@ -45,6 +41,15 @@ declare -p "TERM_CURSOR"
 echo ""
 
 echo "# Shortcut variables."
-for name in $(compgen -e | grep '^TERM_'); do
+for name in $(compgen -e TERM_ATTR); do
+    declare -p "${name}"
+done
+for name in $(compgen -e TERM_BG); do
+    declare -p "${name}"
+done
+for name in $(compgen -e TERM_FG); do
+    declare -p "${name}"
+done
+for name in $(compgen -e TERM_CURSOR); do
     declare -p "${name}"
 done
