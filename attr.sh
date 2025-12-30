@@ -58,17 +58,23 @@ for attr in "${!_TERM_ATTRIBUTE_ALIASES[@]}"; do
     TERM_ATTR["${attr}"]="${TERM_ATTR[${_TERM_ATTRIBUTE_ALIASES[$attr]}]}"
 done
 
-# Some handy shortcuts for less typing.
-export TERM_ATTR_BOLD="${TERM_ATTR[bold]}"
-export TERM_ATTR_CLEAR="${TERM_ATTR[clear]}"
-export TERM_ATTR_DIM="${TERM_ATTR[dim]}"
-export TERM_ATTR_INVISIBLE="${TERM_ATTR[invis]}"
-export TERM_ATTR_EXIT_ITALICS="${TERM_ATTR[ritm]}"
-export TERM_ATTR_EXIT_STANDOUT="${TERM_ATTR[rmso]}"
-export TERM_ATTR_EXIT_UNDERLINE="${TERM_ATTR[rmul]}"
-export TERM_ATTR_ITALICS="${TERM_ATTR[sitm]}"
-export TERM_ATTR_ORIG="${TERM_ATTR[op]}"
-export TERM_ATTR_RESET="${TERM_ATTR[sgr0]}"
-export TERM_ATTR_REVERSE="${TERM_ATTR[rev]}"
-export TERM_ATTR_STANDOUT="${TERM_ATTR[smso]}"
-export TERM_ATTR_UNDERLINE="${TERM_ATTR[smul]}"
+# Create the shortcut variables.
+declare -A _TERM_ATTRIBUTE_SHORTCUTS
+_TERM_ATTRIBUTE_SHORTCUTS=(
+    [EXIT_ITALICS]="ritm"
+    [EXIT_STANDOUT]="rmso"
+    [EXIT_UNDERLINE]="rmul"
+    [BOLD]="bold"
+    [CLEAR]="clear"
+    [DIM]="dim"
+    [ORIG]="op"
+    [INVISIBLE]="invis"
+    [ITALICS]="sitm"
+    [RESET]="sgr0"
+    [REVERSE]="rev"
+    [STANDOUT]="smso"
+    [UNDERLINE]="smul"
+)
+for attr in "${!_TERM_ATTRIBUTE_SHORTCUTS[@]}"; do
+    declare -x "TERM_ATTR_${attr}=${TERM_ATTR[${_TERM_ATTRIBUTE_SHORTCUTS[$attr]}]}"
+done
