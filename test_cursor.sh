@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-# Test the cusror library.
+# Test the cursor library.
 
 source "./cursor.sh"
-
 source "./attr.sh"
 
 echo -n "${TERM_ATTR_CLEAR}"
