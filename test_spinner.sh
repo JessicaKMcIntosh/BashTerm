@@ -3,14 +3,15 @@
 
 # Test the spinner library.
 
+# Load libraries.
 source "./spinner.sh"
 source "./function.sh"
 
 echo "Spinner demo!"
 
-declare -a SPINNER_FRAMES
-declare -a SPINNER_OPTIONS
-SPINNER_OPTIONS=(
+declare -a SPINNER_FRAMES   # Frame set to use.
+declare -a SPINNER_MENU     # User menu.
+SPINNER_MENU=(
     "Six dots (${_TERM_SPIN_FRAMES_SIX[*]})"
     "Six dots in and out (${_TERM_SPIN_FRAMES_SIX_IN_OUT[*]})"
     "Eight dots (${_TERM_SPIN__TERM_SPIN_FRAMES_EIGHT[*]})"
@@ -21,6 +22,8 @@ SPINNER_OPTIONS=(
 )
 
 # Make sure the cursor returns.
+# Otherwise if Ctrl-C is pressed while spinning
+# the cursor would stay hidden.
 trap_exit(){
     echo ""
     term::show
@@ -28,15 +31,21 @@ trap_exit(){
 }
 trap trap_exit SIGINT
 
+# Simple floating point math.
+float_math(){
+    echo "${@}" | awk '$1=="+" {print $2 + $3;} $1=="-" {print $2 - $3;}'
+}
+
 # Run the demo.
 while true; do
     # What frame type do they want to demo?
     term::clear
     echo "Available frame types:"
-    for option in "${!SPINNER_OPTIONS[@]}"; do
-        echo "$((option + 1)): ${SPINNER_OPTIONS[$option]}"
+    for option in "${!SPINNER_MENU[@]}"; do
+        echo "$((option + 1)): ${SPINNER_MENU[$option]}"
     done
     echo "0: Exit"
+    echo "+ / -: Faster / Slower frame rate (0.1s). Currently: ${TERM_SPIN_SLEEP}s"
     read -n 1 -p "Select the frame set to demo: "
     echo ""
     case "${REPLY}" in
@@ -48,6 +57,8 @@ while true; do
         6) SPINNER_FRAMES=("${_TERM_SPIN_FRAMES_LINES[@]}");;
         7) SPINNER_FRAMES=("${_TERM_SPIN_FRAMES_ASCII[@]}");;
         0|""|" ") exit;;
+        +) TERM_SPIN_SLEEP="$(float_math "+" "${TERM_SPIN_SLEEP}" "0.1")"; continue;;
+        -) TERM_SPIN_SLEEP="$(float_math "-" "${TERM_SPIN_SLEEP}" "0.1")"; continue;;
         *) echo "Invalid option: '${REPLY}'"; exit;;
     esac
     echo ""

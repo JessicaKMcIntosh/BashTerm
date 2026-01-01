@@ -20,6 +20,11 @@ A library to simplify working with the terminal in bash.
   * [Functions](#functions)
   * [Shortcuts](#shortcuts-2)
   * [Internal variables](#internal-variables-2)
+* [Spinner - `spinner.sh`](#spinner---spinnersh)
+  * [Available Frames](#available-frames)
+  * [Configuration](#configuration)
+  * [Internal variables](#internal-variables-3)
+* [Functions](#functions-1)
 * [Box drawing Unicode characters - `boxes.sh`](#box-drawing-unicode-characters---boxessh)
   * [Primary interface](#primary-interface-3)
   * [Variable meaning](#variable-meaning)
@@ -41,10 +46,6 @@ A library to simplify working with the terminal in bash.
 * Something like `printf` to make setting attributes and colors easier.
 * Unit tests.
 * Write an actual test for the cursor library.
-* Spinners.
-  * <https://stackoverflow.com/questions/2685435/cooler-ascii-spinners>
-  * <https://github.com/Silejonu/bash_loading_animations/blob/main/bash_loading_animations.sh>
-  * <https://www.compart.com/en/unicode/block/U+2800>
 
 ## Requirements
 
@@ -321,6 +322,77 @@ Change these to customize the escape codes retrieved using `tput`.
   The attributes to fetch escape codes for.
   These are taken directly from the `terminfo` man page.
   When this array is processed both the capability name and attribute are set in `$TERM_CURSOR`.
+
+* `$_TERM_CURSOR_SHORTCUTS` -
+  Shortcut variables to create.
+  Creating environment variables this way makes it easier for you to customize.s
+
+## Spinner - `spinner.sh`
+
+A simple spinner to tell the user something is going on.
+This is more of an example than a complete solution.
+
+### Available Frames
+
+These are the defined frames.
+They are just arrays, so adding your own is easy.
+Note: The code assumes the characters are single width.
+
+| Variable | Description | Characters |
+| --- | --- | --- |
+| _TERM_SPIN_FRAMES_SIX | Six brail dots. Blank dot chasing counter clockwise. | `⠷⠯⠟⠻⠽⠾` |
+| _TERM_SPIN_FRAMES_SIX_IN_OUT | Six brail dots. Disappearing then appearing. | `⠿⠷⠧⠇⠃⠁⠀⠈⠘⠸⠼⠾` |
+| _TERM_SPIN_FRAMES_EIGHT | Eight brail dots. Blank dot chasing counter clockwise. | `⣷⣯⣟⡿⢿⣻⣽⣾` |
+| _TERM_SPIN_FRAMES_EIGHT_IN_OUT | Eight brail dots. Disappearing then appearing. | `⣿⣷⣧⣇⡇⠇⠃⠁⠀⠈⠘⠸⢸⣸⣼⣾` |
+| _TERM_SPIN_FRAMES_ARROWS | An arrow spinning clockwise. | `↑↗→↘↓↙←↖` |
+| _TERM_SPIN_FRAMES_LINES | A silly example. | `╵└├┼╀╄╊╋╈╅┽┼┬┐╴` |
+| _TERM_SPIN_FRAMES_ASCII | Simple ASCII characters. | `\|/-\` |
+
+### Configuration
+
+The variable `$TERM_SPIN_SLEEP` sets the sleep time between frames.
+The default is `0.1`.
+The value is passed to the Bash `read` command using the option `-t`.
+
+Full command:
+
+```shell
+read -n 1 -s -t "${TERM_SPIN_SLEEP}"
+```
+
+### Internal variables
+
+These are used to track the state of the spinner.
+
+* `$_TERM_SPIN_FRAMES` -
+  Keeps track of the current frames.
+
+* `$_TERM_SPIN_STATE` -
+  Keeps track of the next frame number to print.
+
+* `$_TERM_SPIN_MAX` -
+
+## Functions
+
+Again, this is just an example.
+Adapt this code to your needs.
+
+* `term::spin_start()` -
+  Starts the spinner.
+  Pass in the frame array.
+  Sets the internal variables then prints the first frame.
+
+  Example: `term::spin_start "${_TERM_SPIN_FRAMES_SIX[@]}"`
+
+* `term::spin_step()` -
+  Prints the next frame.
+
+* `term::spin_spin` -
+  Runs the spinner until a key is pressed.
+  Calls `term::spin_start()` then loops forever calling `term::spin_step()`.
+  Pass in the frame array.
+
+  Example: `term::spin_spin "${_TERM_SPIN_FRAMES_SIX[@]}"`
 
 ## Box drawing Unicode characters - `boxes.sh`
 

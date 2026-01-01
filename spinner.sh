@@ -16,6 +16,7 @@ if [[ "${BASH_VERSINFO[0]}" -lt "4" ]] ; then
 fi
 
 # These are the main variables for the Library.
+declare -g TERM_SPIN_SLEEP="0.1"
 declare -a _TERM_SPIN_FRAMES_SIX
 declare -a _TERM_SPIN_FRAMES_SIX_IN_OUT
 declare -a _TERM_SPIN_FRAMES_EIGHT
@@ -134,15 +135,14 @@ term::spin_start(){
     fi
     _TERM_SPIN_STATE=0
     _TERM_SPIN_MAX="${#_TERM_SPIN_FRAMES[@]}"
-    echo -n "${_TERM_SPIN_FRAMES[${_TERM_SPIN_STATE}]}"
 }
 
 # Print the next spinner character.
 # Erases the previous character.
 # You would call this for each step to make the spinner advance.
 term::spin_step(){
-    tput cub1
     echo -n "${_TERM_SPIN_FRAMES[${_TERM_SPIN_STATE}]}"
+    tput cub1
     # Doing the math this way eliminates pauses in the spinner.
     # Make sure the exact same work is done for each loop.
     _TERM_SPIN_STATE=$(((_TERM_SPIN_STATE + 1) % _TERM_SPIN_MAX))
@@ -156,7 +156,7 @@ term::spin_spin(){
     term::spin_start "${SPINNER_FRAMES[@]}"
     while true; do
         term::spin_step
-        if read -n 1 -s -t 0.1 ; then
+        if read -n 1 -s -t "${TERM_SPIN_SLEEP}" ; then
             break
         fi
     done
