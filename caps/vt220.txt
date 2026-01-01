@@ -1,18 +1,31 @@
 #	Reconstructed via infocmp from file: /lib/terminfo/v/vt220
-vt220|vt200|DEC VT220:\
-	:am:bs:mi:ms:xn:xo:\
-	:co#80:it#8:li#24:vt#3:\
-	:AL=\E[%dL:DC=\E[%dP:DL=\E[%dM:DO=\E[%dB:IC=\E[%d@:\
-	:LE=\E[%dD:RI=\E[%dC:UP=\E[%dA:ae=4\E(B:al=\E[L:as=2\E(0:\
-	:bl=^G:cd=\E[J:ce=\E[K:cl=\E[H\E[J:cm=\E[%i%d;%dH:cr=\r:\
-	:cs=\E[%i%d;%dr:ct=\E[3g:dc=\E[P:dl=\E[M:do=\n:ec=\E[%dX:\
-	:ei=\E[4l:ho=\E[H:if=/usr/share/tabset/vt100:im=\E[4h:\
-	:is=\E[?7h\E[>\E[?1l\E F\E[?4l:k1=\EOP:k2=\EOQ:k3=\EOR:\
-	:k4=\EOS:k6=\E[17~:k7=\E[18~:k8=\E[19~:k9=\E[20~:kD=\E[3~:\
-	:kI=\E[2~:kN=\E[6~:kP=\E[5~:kb=^H:kd=\E[B:kl=\E[D:kr=\E[C:\
-	:ku=\E[A:le=^H:mb=\E[5m:md=\E[1m:me=2\E[0m:mr=\E[7m:\
-	:nd=\E[C:nw=\EE:rc=\E8:\
-	:..sa=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;$<2>:\
-	:sc=\E7:se=\E[27m:sf=\ED:so=\E[7m:sr=\EM:st=\EH:ta=^I:\
-	:ue=\E[24m:up=\E[A:us=\E[4m:vb=\E[?5h\E[?5l:ve=\E[?25h:\
-	:vi=\E[?25l:
+vt220|vt200|DEC VT220,
+	am, OTbs, xenl, mir, msgr, mc5i, xon,
+	cols#80, it#8, lines#24, vt#3,
+	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
+	bel=^G, cr=\r, csr=\E[%i%p1%d;%p2%dr, tbc=\E[3g,
+	clear=\E[H\E[J, el1=\E[1K, el=\E[K, ed=\E[J,
+	cup=\E[%i%p1%d;%p2%dH, cud1=\n, home=\E[H, civis=\E[?25l,
+	cub1=^H, cnorm=\E[?25h, cuf1=\E[C, cuu1=\E[A, dch1=\E[P,
+	dl1=\E[M, enacs=\E)0, smacs=\E(0$<2>, smam=\E[?7h,
+	blink=\E[5m, bold=\E[1m, smir=\E[4h, rev=\E[7m, smso=\E[7m,
+	smul=\E[4m, ech=\E[%p1%dX, rmacs=\E(B$<4>, rmam=\E[?7l,
+	sgr0=\E[m\E(B, rmir=\E[4l, rmso=\E[27m, rmul=\E[24m,
+	flash=\E[?5h$<200/>\E[?5l,
+	is2=\E[?7h\E[>\E[?1l\E F\E[?4l,
+	if=/usr/share/tabset/vt100, il1=\E[L, kbs=^H,
+	kdch1=\E[3~, kcud1=\E[B, kf1=\EOP, kf10=\E[21~,
+	kf11=\E[23~, kf12=\E[24~, kf13=\E[25~, kf14=\E[26~,
+	kf17=\E[31~, kf18=\E[32~, kf19=\E[33~, kf2=\EOQ,
+	kf20=\E[34~, kf3=\EOR, kf4=\EOS, kf6=\E[17~, kf7=\E[18~,
+	kf8=\E[19~, kf9=\E[20~, kfnd=\E[1~, khlp=\E[28~,
+	kich1=\E[2~, kcub1=\E[D, knp=\E[6~, kpp=\E[5~, krdo=\E[29~,
+	kcuf1=\E[C, kslt=\E[4~, kcuu1=\E[A, lf1=pf1, lf2=pf2,
+	lf3=pf3, lf4=pf4, nel=\EE, dch=\E[%p1%dP, dl=\E[%p1%dM,
+	cud=\E[%p1%dB, ich=\E[%p1%d@, il=\E[%p1%dL,
+	cub=\E[%p1%dD, cuf=\E[%p1%dC, cuu=\E[%p1%dA, mc0=\E[i,
+	mc4=\E[4i, mc5=\E[5i, rs1=\E[?3l, rc=\E8, sc=\E7, ind=\ED,
+	ri=\EM,
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;$<2>,
+	hts=\EH, ht=^I, u6=\E[%i%d;%dR, u7=\E[6n,
+	u8=\E[?%[;0123456789]c, u9=\E[c,

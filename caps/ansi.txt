@@ -1,16 +1,24 @@
 #	Reconstructed via infocmp from file: /lib/terminfo/a/ansi
-# (rmacs/smacs removed for consistency)
-ansi|ansi/pc-term compatible with color:\
-	:am:bs:mi:ms:\
-	:co#80:it#8:li#24:\
-	:AL=\E[%dL:DC=\E[%dP:DL=\E[%dM:DO=\E[%dB:IC=\E[%d@:\
-	:LE=\E[%dD:RI=\E[%dC:SF=\E[%dS:SR=\E[%dT:UP=\E[%dA:\
-	:al=\E[L:bl=^G:bt=\E[Z:cd=\E[J:ce=\E[K:cl=\E[H\E[J:\
-	:cm=\E[%i%d;%dH:cr=\r:ct=\E[3g:dc=\E[P:dl=\E[M:do=\E[B:\
-	:ec=\E[%dX:ei=:ho=\E[H:im=:kI=\E[L:kb=^H:kd=\E[B:kh=\E[H:\
-	:kl=\E[D:kr=\E[C:ku=\E[A:le=\E[D:mb=\E[5m:md=\E[1m:\
-	:me=\E[0m:mr=\E[7m:nd=\E[C:nw=\r\E[S:\
-	:..rp=%p1%c\E[%p2%{1}%-%db:\
-	:..sa=\E[0;10%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;%?%p7%t;8%;%?%p9%t;11%;m:\
-	:se=\E[m:sf=\n:so=\E[7m:st=\EH:ta=\E[I:ue=\E[m:up=\E[A:\
-	:us=\E[4m:
+ansi|ansi/pc-term compatible with color,
+	am, OTbs, mir, msgr, mc5i,
+	cols#80, it#8, lines#24, colors#8, pairs#64, ncv#3,
+	acsc=+\020\,\021-\030.^Y0\333`\004a\261f\370g\361h\260j\331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u\264v\301w\302x\263y\363z\362{\343|\330}\234~\376,
+	cbt=\E[Z, bel=^G, cr=\r, tbc=\E[3g, clear=\E[H\E[J,
+	el1=\E[1K, el=\E[K, ed=\E[J, hpa=\E[%i%p1%dG,
+	cup=\E[%i%p1%d;%p2%dH, cud1=\E[B, home=\E[H, cub1=\E[D,
+	cuf1=\E[C, cuu1=\E[A, dch1=\E[P, dl1=\E[M, smacs=\E[11m,
+	blink=\E[5m, bold=\E[1m, smpch=\E[11m, rev=\E[7m,
+	invis=\E[8m, smso=\E[7m, smul=\E[4m, ech=\E[%p1%dX,
+	rmacs=\E[10m, sgr0=\E[0;10m, rmpch=\E[10m, rmso=\E[m,
+	rmul=\E[m, il1=\E[L, kbs=^H, kcbt=\E[Z, kcud1=\E[B,
+	khome=\E[H, kich1=\E[L, kcub1=\E[D, kcuf1=\E[C, kcuu1=\E[A,
+	nel=\r\E[S, op=\E[39;49m, dch=\E[%p1%dP, dl=\E[%p1%dM,
+	cud=\E[%p1%dB, ich=\E[%p1%d@, indn=\E[%p1%dS,
+	il=\E[%p1%dL, cub=\E[%p1%dD, cuf=\E[%p1%dC,
+	rin=\E[%p1%dT, cuu=\E[%p1%dA, mc4=\E[4i, mc5=\E[5i,
+	rep=%p1%c\E[%p2%{1}%-%db, vpa=\E[%i%p1%dd, ind=\n,
+	s0ds=\E(B, s1ds=\E)B, s2ds=\E*B, s3ds=\E+B,
+	setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
+	sgr=\E[0;10%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;%?%p7%t;8%;%?%p9%t;11%;m,
+	hts=\EH, ht=\E[I, u6=\E[%i%d;%dR, u7=\E[6n,
+	u8=\E[?%[;0123456789]c, u9=\E[c,
