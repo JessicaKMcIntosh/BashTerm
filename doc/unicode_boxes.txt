@@ -1,3 +1,4 @@
+Taken from: https://www.compart.com/en/unicode/block/U+2500
 Character List
 Unicode	Char   	Name
 U+2500	─	Box Drawings Light Horizontal

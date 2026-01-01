@@ -21,4 +21,10 @@ term::lines
 
 term::move "2" "2"
 echo "$TERM_CURSOR_CLR_BOL"
+
+term::move "3" "0"
+echo -n "#"
+tput smir
+echo -n "%"
+
 term::move "10" "0"
