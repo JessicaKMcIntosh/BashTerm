@@ -18,12 +18,13 @@
         "rmul",
         "setab",
         "setaf",
+        "shellcheck",
         "sitm",
+        "smir",
         "smso",
         "smul",
         "terminfo",
-        "tput",
-        "shellcheck"
+        "tput"
     ],
     "cSpell.ignorePaths": [
         "alt_boxes.sh"
