@@ -18,6 +18,10 @@ fi
 # These are the main variables for the Library.
 declare -A TERM_ATTR    # Stores terminal attribute escape sequences.
 
+# Temporary variables that are unset at the end of the script.
+declare _TERM_TEMP_ATTR
+declare _TERM_TEMP_CODE
+
 # Typical terminal attributes.
 declare -A _TERM_ATTRIBUTES
 _TERM_ATTRIBUTES=(
@@ -35,9 +39,14 @@ _TERM_ATTRIBUTES=(
     [exit_underline_mode]="rmul"    # exit underline mode
     [orig_pair]="op"                # Set default pair to its original value
 )
-for attr in "${!_TERM_ATTRIBUTES[@]}"; do
-    TERM_ATTR[$attr]="$(tput "${_TERM_ATTRIBUTES[$attr]}")"
-    TERM_ATTR[${_TERM_ATTRIBUTES[$attr]}]="${TERM_ATTR[$attr]}"
+for _TERM_TEMP_ATTR in "${!_TERM_ATTRIBUTES[@]}"; do
+    if _TERM_TEMP_CODE="$(tput "${_TERM_ATTRIBUTES[$_TERM_TEMP_ATTR]}")" ; then
+        TERM_ATTR[$_TERM_TEMP_ATTR]="${_TERM_TEMP_CODE}"
+        TERM_ATTR[${_TERM_ATTRIBUTES[$_TERM_TEMP_ATTR]}]="${_TERM_TEMP_CODE}"
+    else
+        echo "WARNING: This terminal does not support the capability: ${_TERM_ATTRIBUTES[$_TERM_TEMP_ATTR]}"
+        unset "TERM_ATTR[$_TERM_TEMP_ATTR]"
+    fi
 done
 
 # Attribute aliases.
@@ -54,8 +63,8 @@ _TERM_ATTRIBUTE_ALIASES=(
     [standout]="smso"
     [underline]="smul"
 )
-for attr in "${!_TERM_ATTRIBUTE_ALIASES[@]}"; do
-    TERM_ATTR["${attr}"]="${TERM_ATTR[${_TERM_ATTRIBUTE_ALIASES[$attr]}]}"
+for _TERM_TEMP_ATTR in "${!_TERM_ATTRIBUTE_ALIASES[@]}"; do
+    TERM_ATTR["${_TERM_TEMP_ATTR}"]="${TERM_ATTR[${_TERM_ATTRIBUTE_ALIASES[$_TERM_TEMP_ATTR]}]}"
 done
 
 # Create the shortcut variables.
@@ -75,6 +84,10 @@ _TERM_ATTRIBUTE_SHORTCUTS=(
     [STANDOUT]="smso"
     [UNDERLINE]="smul"
 )
-for attr in "${!_TERM_ATTRIBUTE_SHORTCUTS[@]}"; do
-    declare -x "TERM_ATTR_${attr}=${TERM_ATTR[${_TERM_ATTRIBUTE_SHORTCUTS[$attr]}]}"
+for _TERM_TEMP_ATTR in "${!_TERM_ATTRIBUTE_SHORTCUTS[@]}"; do
+    declare -x "TERM_ATTR_${_TERM_TEMP_ATTR}=${TERM_ATTR[${_TERM_ATTRIBUTE_SHORTCUTS[$_TERM_TEMP_ATTR]}]}"
 done
+
+# Remove the temporary variables.
+unset _TERM_TEMP_ATTR
+unset _TERM_TEMP_CODE

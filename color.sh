@@ -19,6 +19,9 @@ fi
 declare -A TERM_FG      # Stores terminal foreground color escape sequences.
 declare -A TERM_BG      # Stores terminal background color escape sequences.
 
+# Temporary variables that are unset at the end of the script.
+declare _TERM_TEMP_COLOR
+
 # Terminal colors.
 declare -a _TERM_COLORS
 _TERM_COLORS=(
@@ -41,13 +44,13 @@ _TERM_COLORS=(
 )
 
 # Set the color codes in the variables.
-for color in "${!_TERM_COLORS[@]}"; do
-    TERM_FG[${_TERM_COLORS[$color]}]="$(tput setaf "${color}")"
-    TERM_FG[${color}]="${TERM_FG[${_TERM_COLORS[$color]}]}"
+for _TERM_TEMP_COLOR in "${!_TERM_COLORS[@]}"; do
+    TERM_FG[${_TERM_COLORS[$_TERM_TEMP_COLOR]}]="$(tput setaf "${_TERM_TEMP_COLOR}")"
+    TERM_FG[${_TERM_TEMP_COLOR}]="${TERM_FG[${_TERM_COLORS[$_TERM_TEMP_COLOR]}]}"
 done
-for color in "${!_TERM_COLORS[@]}"; do
-    TERM_BG[${_TERM_COLORS[$color]}]="$(tput setab "${color}")"
-    TERM_BG[${color}]="${TERM_BG[${_TERM_COLORS[$color]}]}"
+for _TERM_TEMP_COLOR in "${!_TERM_COLORS[@]}"; do
+    TERM_BG[${_TERM_COLORS[$_TERM_TEMP_COLOR]}]="$(tput setab "${_TERM_TEMP_COLOR}")"
+    TERM_BG[${_TERM_TEMP_COLOR}]="${TERM_BG[${_TERM_COLORS[$_TERM_TEMP_COLOR]}]}"
 done
 
 # Color aliases.
@@ -56,13 +59,15 @@ _TERM_COLOR_ALIASES=(
     [gray]="brightblack"
     [grey]="brightblack"
 )
-for color in "${!_TERM_COLOR_ALIASES[@]}"; do
-    _TERM_COLORS["${color}"]="${_TERM_COLORS[${_TERM_COLOR_ALIASES[$color]}]}"
+for _TERM_TEMP_COLOR in "${!_TERM_COLOR_ALIASES[@]}"; do
+    _TERM_COLORS["${_TERM_TEMP_COLOR}"]="${_TERM_COLORS[${_TERM_COLOR_ALIASES[$_TERM_TEMP_COLOR]}]}"
 done
 
 # Some handy shortcuts for less typing.
-for color in "${_TERM_COLORS[@]}"; do
-    declare -x "TERM_FG_${color^^}=${TERM_FG[$color]}"
-    declare -x "TERM_BG_${color^^}=${TERM_BG[$color]}"
+for _TERM_TEMP_COLOR in "${_TERM_COLORS[@]}"; do
+    declare -x "TERM_FG_${_TERM_TEMP_COLOR^^}=${TERM_FG[$_TERM_TEMP_COLOR]}"
+    declare -x "TERM_BG_${_TERM_TEMP_COLOR^^}=${TERM_BG[$_TERM_TEMP_COLOR]}"
 done
 
+# Remove the temporary variables.
+unset _TERM_TEMP_COLOR

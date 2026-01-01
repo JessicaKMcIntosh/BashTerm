@@ -46,13 +46,13 @@ _TERM_SPIN_SIX_IN_OUT=(
 )
 
 _TERM_SPIN_EIGHT=(
-$'\u28FF' # ⣿ Braille Pattern Dots-12345678
-$'\u28F7' # ⣷ Braille Pattern Dots-1235678
-$'\u28EF' # ⣯ Braille Pattern Dots-1234678
-$'\u28DF' # ⣟ Braille Pattern Dots-1234578
-$'\u287F' # ⡿ Braille Pattern Dots-1234567
-$'\u28BF' # ⢿ Braille Pattern Dots-1234568
-$'\u28FB' # ⣻ Braille Pattern Dots-1245678
-$'\u28FD' # ⣽ Braille Pattern Dots-1345678
-$'\u28FE' # ⣾ Braille Pattern Dots-2345678
+    $'\u28FF' # ⣿ Braille Pattern Dots-12345678
+    $'\u28F7' # ⣷ Braille Pattern Dots-1235678
+    $'\u28EF' # ⣯ Braille Pattern Dots-1234678
+    $'\u28DF' # ⣟ Braille Pattern Dots-1234578
+    $'\u287F' # ⡿ Braille Pattern Dots-1234567
+    $'\u28BF' # ⢿ Braille Pattern Dots-1234568
+    $'\u28FB' # ⣻ Braille Pattern Dots-1245678
+    $'\u28FD' # ⣽ Braille Pattern Dots-1345678
+    $'\u28FE' # ⣾ Braille Pattern Dots-2345678
 )

@@ -20,5 +20,5 @@ echo -n "Terminal lines: "
 term::lines
 
 term::move "2" "2"
-tput el1
+echo "$TERM_CURSOR_CLR_BOL"
 term::move "10" "0"

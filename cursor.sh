@@ -29,6 +29,10 @@ fi
 # These are the main variables for the Library.
 declare -A TERM_CURSOR  # Stores terminal cursor escape sequences.
 
+# Temporary variables that are unset at the end of the script.
+declare _TERM_TEMP_ATTR
+declare _TERM_TEMP_CODE
+
 # Typical terminal cursor attributes.
 # Descriptions and names are from 'man 5 terminfo'.
 declare -A _TERM_CURSOR_ATTRIBUTES
@@ -54,32 +58,47 @@ _TERM_CURSOR_ATTRIBUTES=(
     [up]="cuu1"                 # up one line
     [visible]="cvvis"           # make cursor very visible
 )
-for attr in "${!_TERM_CURSOR_ATTRIBUTES[@]}"; do
-    TERM_CURSOR[$attr]="$(tput setaf "${_TERM_CURSOR_ATTRIBUTES[$attr]}")"
-    TERM_CURSOR[${_TERM_CURSOR_ATTRIBUTES[$attr]}]="${TERM_CURSOR[$attr]}"
+for _TERM_TEMP_ATTR in "${!_TERM_CURSOR_ATTRIBUTES[@]}"; do
+    if _TERM_TEMP_CODE="$(tput "${_TERM_CURSOR_ATTRIBUTES[$_TERM_TEMP_ATTR]}")" ; then
+        TERM_CURSOR[$_TERM_TEMP_ATTR]="${_TERM_TEMP_CODE}"
+        TERM_CURSOR[${_TERM_CURSOR_ATTRIBUTES[$_TERM_TEMP_ATTR]}]="${_TERM_TEMP_CODE}"
+    else
+        echo "WARNING: This terminal does not support the capability: ${_TERM_CURSOR_ATTRIBUTES[$_TERM_TEMP_ATTR]}"
+        unset "TERM_ATTR[$_TERM_TEMP_ATTR]"
+    fi
 done
 
 # Some handy shortcuts for less typing.
-export TERM_CURSOR_CLR_BOL="${TERM_CURSOR[clr_bol]}"
-export TERM_CURSOR_CLR_EOL="${TERM_CURSOR[clr_eol]}"
-export TERM_CURSOR_CLR_EOS="${TERM_CURSOR[clr_eos]}"
-export TERM_CURSOR_DELETE_CHAR="${TERM_CURSOR[delete_character]}"
-export TERM_CURSOR_DELETE_LINE="${TERM_CURSOR[delete_line]}"
-export TERM_CURSOR_DOWN="${TERM_CURSOR[down]}"
-export TERM_CURSOR_HIDE="${TERM_CURSOR[hide]}"
-export TERM_CURSOR_HOME="${TERM_CURSOR[home]}"
-export TERM_CURSOR_INSERT_CHAR="${TERM_CURSOR[insert_character]}"
-export TERM_CURSOR_INSERT_LINE="${TERM_CURSOR[insert_line]}"
-export TERM_CURSOR_INVISIBLE="${TERM_CURSOR[invisible]}"
-export TERM_CURSOR_LEFT="${TERM_CURSOR[left]}"
-export TERM_CURSOR_NORMAL="${TERM_CURSOR[normal]}"
-export TERM_CURSOR_RESTORE="${TERM_CURSOR[restore]}"
-export TERM_CURSOR_RIGHT="${TERM_CURSOR[right]}"
-export TERM_CURSOR_SAVE="${TERM_CURSOR[save]}"
-export TERM_CURSOR_SHOW="${TERM_CURSOR[show]}"
-export TERM_CURSOR_TO_LL="${TERM_CURSOR[to_ll]}"
-export TERM_CURSOR_UP="${TERM_CURSOR[up]}"
-export TERM_CURSOR_VISIBLE="${TERM_CURSOR[visible]}"
+declare -A _TERM_CURSOR_SHORTCUTS
+_TERM_CURSOR_SHORTCUTS=(
+    [CLR_BOL]="el1"
+    [CLR_EOL]="el"
+    [CLR_EOS]="ed"
+    [DELETE_CHAR]="dch1"
+    [DELETE_LINE]="dl1"
+    [DOWN]="cud1"
+    [HIDE]="civis"
+    [HOME]="home"
+    [INSERT_CHAR]="ich1"
+    [INSERT_LINE]="il1"
+    [INVISIBLE]="civis"
+    [LEFT]="cub1"
+    [NORMAL]="cnorm"
+    [RESTORE]="rc"
+    [RIGHT]="cuf1"
+    [SAVE]="sc"
+    [SHOW]="cvvis"
+    [TO_LL]="ll"
+    [UP]="cuu1"
+    [VISIBLE]="cvvis"
+)
+for _TERM_TEMP_ATTR in "${!_TERM_CURSOR_SHORTCUTS[@]}"; do
+    declare -x "TERM_CURSOR_${_TERM_TEMP_ATTR}=${TERM_CURSOR[${_TERM_CURSOR_SHORTCUTS[$_TERM_TEMP_ATTR]}]}"
+done
+
+# Remove the temporary variables.
+unset _TERM_TEMP_ATTR
+unset _TERM_TEMP_CODE
 
 # Functions for cursor positions.
 
