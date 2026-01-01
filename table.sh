@@ -67,12 +67,13 @@ color_table(){
 color_table_line(){
     local color_name="${1}" # The name of the color.
     local bg_color="${2}"   # The background color escape code.
+    local color             # Iterator.
     local bright_color      # Bright version of the color.
     printf "%-9s"  "${color_name}"
     color_table_attribute "${bg_color}" "" "NOT_PRESENT" " "
     color_table_cell "${bg_color}" "" ""
     for color in "${!TEST_COLORS[@]}"; do
-        bright_color="$((color + 8))"
+        bright_color=$((color + 8))
         color_table_cell "${bg_color}" "${TERM_FG[${color}]}" "${TERM_FG[${bright_color}]}"
     done
     echo ""
