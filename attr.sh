@@ -28,12 +28,14 @@ _TERM_ATTRIBUTES=(
     [clear_screen]="clear"          # clear screen and home cursor
     [enter_bold_mode]="bold"        # turn on bold (extra bright) mode
     [enter_dim_mode]="dim"          # turn on half-bright mode
+    [enter_insert_mode]="smir"      # enter insert mode
     [enter_italics_mode]="sitm"     # Enter italic mode
     [enter_reverse_mode]="rev"      # turn on reverse video mode
     [enter_secure_mode]="invis"     # turn on blank mode (characters invisible)
     [enter_standout_mode]="smso"    # begin standout mode
     [enter_underline_mode]="smul"   # begin underline mode
     [exit_attribute_mode]="sgr0"    # turn off all attributes
+    [exit_insert_mode]="rmir"       # exit insert mode
     [exit_italics_mode]="ritm"      # End italic mode
     [exit_standout_mode]="rmso"     # exit standout mode
     [exit_underline_mode]="rmul"    # exit underline mode
@@ -52,10 +54,12 @@ done
 # Attribute aliases.
 declare -A _TERM_ATTRIBUTE_ALIASES
 _TERM_ATTRIBUTE_ALIASES=(
+    [INSERT]="rmir"
     [ITALICS]="ritm"
     [STANDOUT]="rmso"
     [UNDERLINE]="rmul"
     [orig]="op"
+    [insert]="smir"
     [invisible]="invis"
     [italics]="sitm"
     [reset]="sgr0"
@@ -70,6 +74,7 @@ done
 # Create the shortcut variables.
 declare -A _TERM_ATTRIBUTE_SHORTCUTS
 _TERM_ATTRIBUTE_SHORTCUTS=(
+    [EXIT_INSERT]="rmir"
     [EXIT_ITALICS]="ritm"
     [EXIT_STANDOUT]="rmso"
     [EXIT_UNDERLINE]="rmul"
@@ -77,6 +82,7 @@ _TERM_ATTRIBUTE_SHORTCUTS=(
     [CLEAR]="clear"
     [DIM]="dim"
     [ORIG]="op"
+    [INSERT]="smir"
     [INVISIBLE]="invis"
     [ITALICS]="sitm"
     [RESET]="sgr0"
