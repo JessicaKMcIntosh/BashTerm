@@ -299,7 +299,7 @@ Shortcut variables to make code a bit more friendly.
 | TERM_CURSOR_DOWN | cud1 | down | down one line |
 | TERM_CURSOR_HIDE | civis | hide | make cursor invisible |
 | TERM_CURSOR_HOME | home | home | home cursor (if no cup) |
-| TERM_CURSOR_INSERT_CHAR | ich1 | insert_character | insert character |
+| TERM_CURSOR_INSERT_CHAR | ich1 | insert_character | insert character (DISABLED, rarely present) |
 | TERM_CURSOR_INSERT_LINE | il1 | insert_line | insert line |
 | TERM_CURSOR_INVISIBLE | civis | invisible | make cursor invisible |
 | TERM_CURSOR_LEFT | cub1 | left | move left one space |
@@ -308,7 +308,7 @@ Shortcut variables to make code a bit more friendly.
 | TERM_CURSOR_RIGHT | cuf1 | right | non-destructive space (move right one space) |
 | TERM_CURSOR_SAVE | sc | save | save current cursor |
 | TERM_CURSOR_SHOW | cvvis | show | make cursor very visible |
-| TERM_CURSOR_TO_LL | ll | to_ll | last line, first column (if no cup) |
+| TERM_CURSOR_TO_LL | ll | to_ll | last line, first column (if no cup) (DISABLED, rarely present) |
 | TERM_CURSOR_UP | cuu1 | up | up one line |
 | TERM_CURSOR_VISIBLE | cvvis | visible | make cursor very visible |
 

@@ -81,7 +81,7 @@ term::delete_line()         { echo -n "${TERM_CURSOR["delete_line"]}" ; }
 term::down()                { echo -n "${TERM_CURSOR["down"]}" ; }
 term::hide()                { echo -n "${TERM_CURSOR["hide"]}" ; }
 term::home()                { echo -n "${TERM_CURSOR["home"]}" ; }
-term::insert_character()    { echo -n "${TERM_CURSOR["insert_character"]}" ; }
+# term::insert_character()    { echo -n "${TERM_CURSOR["insert_character"]}" ; }
 term::insert_line()         { echo -n "${TERM_CURSOR["insert_line"]}" ; }
 term::invisible()           { echo -n "${TERM_CURSOR["invisible"]}" ; }
 term::left()                { echo -n "${TERM_CURSOR["left"]}" ; }
@@ -90,7 +90,7 @@ term::restore()             { echo -n "${TERM_CURSOR["restore"]}" ; }
 term::right()               { echo -n "${TERM_CURSOR["right"]}" ; }
 term::save()                { echo -n "${TERM_CURSOR["save"]}" ; }
 term::show()                { echo -n "${TERM_CURSOR["show"]}" ; }
-term::to_ll()               { echo -n "${TERM_CURSOR["to_ll"]}" ; }
+# term::to_ll()               { echo -n "${TERM_CURSOR["to_ll"]}" ; }
 term::up()                  { echo -n "${TERM_CURSOR["up"]}" ; }
 term::visible()             { echo -n "${TERM_CURSOR["visible"]}" ; }
 
