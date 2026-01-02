@@ -26,7 +26,7 @@ SPINNER_MENU=(
 # the cursor would stay hidden.
 trap_exit(){
     echo ""
-    term::show
+    term::normal
     exit
 }
 trap trap_exit SIGINT

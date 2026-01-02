@@ -160,5 +160,5 @@ term::spin_spin(){
             break
         fi
     done
-    tput cvvis
+    tput cnorm
 }
