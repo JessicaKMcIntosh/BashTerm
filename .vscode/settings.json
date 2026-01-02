@@ -14,6 +14,7 @@
         "cvvis",
         "invis",
         "ritm",
+        "rmir",
         "rmso",
         "rmul",
         "setab",
@@ -23,6 +24,8 @@
         "smir",
         "smso",
         "smul",
+        "sprintf",
+        "strtonum",
         "terminfo",
         "tput"
     ],
