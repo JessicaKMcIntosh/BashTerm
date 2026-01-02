@@ -12,6 +12,7 @@
         "cnorm",
         "Consolas",
         "cvvis",
+        "getline",
         "invis",
         "ritm",
         "rmir",
@@ -32,6 +33,7 @@
     "cSpell.ignorePaths": [
         "alt_boxes.sh"
     ],
+    "files.eol": "\n",
     "markdownlint.config": {
         "no-duplicate-heading": {
             "siblings_only": true
