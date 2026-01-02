@@ -50,9 +50,10 @@ term::printf(){
         echo "${1}"
         shift
     done | awk -f printf.awk
+    # done | gawk --lint -f printf.awk # For development.
 }
 
-term::printf "This%{rev}is%{sgr0} a %%%(underline)format%(UNDERLINE) %s%(reset).\n" "test" # | hexdump -C
+term::printf "This%{rev}is%{sgr0} a %%%(underline)format%(UNDERLINE) %s.%(reset)\n" "test" # | hexdump -C
 term::printf "Color %(green)Green%(reset) Normal %(CYAN)More%(reset)\n"
 term::printf "Short %[m]color%[r] codes%[o] and %[byB]Attributes%[-]\n"
 # Be careful with backslashes in double quotes.
