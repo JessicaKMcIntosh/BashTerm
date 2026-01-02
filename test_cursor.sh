@@ -19,7 +19,7 @@ echo -n "Terminal lines: "
 term::lines
 
 term::move "2" "2"
-echo "$TERM_CURSOR_CLR_BOL"
+echo "$TERM_ATTR_CLR_BOL"
 
 term::move "3" "0"
 echo -n "#"
