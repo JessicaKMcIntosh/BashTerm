@@ -120,8 +120,8 @@ _TERM_SPIN_FRAMES_ASCII=(
 
 # State variables.
 declare -a _TERM_SPIN_FRAMES
-declare -g _TERM_SPIN_STATE
-declare -g _TERM_SPIN_MAX
+declare -g _TERM_SPIN_NEXT_FRAME
+declare -g _TERM_SPIN_TOTAL_FRAMES
 
 # This is just an example of how to use these.
 
@@ -133,19 +133,19 @@ term::spin_start(){
     if [[ "${#_TERM_SPIN_FRAMES[@]}" -eq 0 ]] ; then
         _TERM_SPIN_FRAMES=("${_TERM_SPIN_SIX[@]}")
     fi
-    _TERM_SPIN_STATE=0
-    _TERM_SPIN_MAX="${#_TERM_SPIN_FRAMES[@]}"
+    _TERM_SPIN_NEXT_FRAME=0
+    _TERM_SPIN_TOTAL_FRAMES="${#_TERM_SPIN_FRAMES[@]}"
 }
 
 # Print the next spinner character.
 # Erases the previous character.
 # You would call this for each step to make the spinner advance.
 term::spin_step(){
-    echo -n "${_TERM_SPIN_FRAMES[${_TERM_SPIN_STATE}]}"
+    echo -n "${_TERM_SPIN_FRAMES[${_TERM_SPIN_NEXT_FRAME}]}"
     tput cub1
     # Doing the math this way eliminates pauses in the spinner.
-    # Make sure the exact same work is done for each loop.
-    _TERM_SPIN_STATE=$(((_TERM_SPIN_STATE + 1) % _TERM_SPIN_MAX))
+    # Make sure the exact same work is done for each loop for consistent timing.
+    _TERM_SPIN_NEXT_FRAME=$(((_TERM_SPIN_NEXT_FRAME + 1) % _TERM_SPIN_TOTAL_FRAMES))
 }
 
 # Spin until a key is pressed.
