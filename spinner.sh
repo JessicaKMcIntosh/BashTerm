@@ -152,7 +152,7 @@ term::spin_step(){
 # Modify this to suit your needs.
 term::spin_spin(){
     _TERM_SPIN_FRAMES=("${@}")
-    term::hide
+    tput civis
     term::spin_start "${SPINNER_FRAMES[@]}"
     while true; do
         term::spin_step
@@ -160,5 +160,5 @@ term::spin_spin(){
             break
         fi
     done
-    term::show
+    tput cvvis
 }
