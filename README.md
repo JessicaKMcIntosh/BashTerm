@@ -292,26 +292,26 @@ Shortcut variables to make code a bit more friendly.
 
 | Variable | Attribute | Name | Meaning |
 | --- | --- | --- | --- |
-| TERM_CURSOR_CLR_BOL | el1 | clr_bol | Clear to beginning of line |
-| TERM_CURSOR_CLR_EOL | el | clr_eol | clear to end of line |
-| TERM_CURSOR_CLR_EOS | ed | clr_eos | clear to end of screen |
-| TERM_CURSOR_DELETE_CHAR | dch1 | delete_character | delete character |
-| TERM_CURSOR_DELETE_LINE | dl1 | delete_line | delete line |
-| TERM_CURSOR_DOWN | cud1 | down | down one line |
-| TERM_CURSOR_HIDE | civis | hide | make cursor invisible |
-| TERM_CURSOR_HOME | home | home | home cursor (if no cup) |
-| TERM_CURSOR_INSERT_CHAR | ich1 | insert_character | insert character (DISABLED, rarely present) |
-| TERM_CURSOR_INSERT_LINE | il1 | insert_line | insert line |
-| TERM_CURSOR_INVISIBLE | civis | invisible | make cursor invisible |
-| TERM_CURSOR_LEFT | cub1 | left | move left one space |
-| TERM_CURSOR_NORMAL | cnorm | normal | make cursor appear normal (undo civis/cvvis) |
-| TERM_CURSOR_RESTORE | rc | restore | restore cursor to position of last |
-| TERM_CURSOR_RIGHT | cuf1 | right | non-destructive space (move right one space) |
-| TERM_CURSOR_SAVE | sc | save | save current cursor |
-| TERM_CURSOR_SHOW | cvvis | show | make cursor very visible |
-| TERM_CURSOR_TO_LL | ll | to_ll | last line, first column (if no cup) (DISABLED, rarely present) |
-| TERM_CURSOR_UP | cuu1 | up | up one line |
-| TERM_CURSOR_VISIBLE | cvvis | visible | make cursor very visible |
+| TERM_ATTR_CLR_BOL | el1 | clr_bol | Clear to beginning of line |
+| TERM_ATTR_CLR_EOL | el | clr_eol | clear to end of line |
+| TERM_ATTR_CLR_EOS | ed | clr_eos | clear to end of screen |
+| TERM_ATTR_DELETE_CHAR | dch1 | delete_character | delete character |
+| TERM_ATTR_DELETE_LINE | dl1 | delete_line | delete line |
+| TERM_ATTR_DOWN | cud1 | down | down one line |
+| TERM_ATTR_HIDE | civis | hide | make cursor invisible |
+| TERM_ATTR_HOME | home | home | home cursor (if no cup) |
+| TERM_ATTR_INSERT_CHAR | ich1 | insert_character | insert character (DISABLED, rarely present) |
+| TERM_ATTR_INSERT_LINE | il1 | insert_line | insert line |
+| TERM_ATTR_INVISIBLE | civis | invisible | make cursor invisible |
+| TERM_ATTR_LEFT | cub1 | left | move left one space |
+| TERM_ATTR_NORMAL | cnorm | normal | make cursor appear normal (undo civis/cvvis) |
+| TERM_ATTR_RESTORE | rc | restore | restore cursor to position of last |
+| TERM_ATTR_RIGHT | cuf1 | right | non-destructive space (move right one space) |
+| TERM_ATTR_SAVE | sc | save | save current cursor |
+| TERM_ATTR_SHOW | cvvis | show | make cursor very visible |
+| TERM_ATTR_TO_LL | ll | to_ll | last line, first column (if no cup) (DISABLED, rarely present) |
+| TERM_ATTR_UP | cuu1 | up | up one line |
+| TERM_ATTR_VISIBLE | cvvis | visible | make cursor very visible |
 
 ### Internal variables
 
