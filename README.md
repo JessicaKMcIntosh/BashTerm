@@ -36,6 +36,7 @@ A library to simplify working with the terminal in bash.
   * [Attributes - `test_attr.sh`](#attributes---test_attrsh)
   * [Colors - `test_color.sh`](#colors---test_colorsh)
   * [Boxes - `test_boxes.sh`](#boxes---test_boxessh)
+  * [Color and Attribute Table - `table.sh*`](#color-and-attribute-table---tablesh)
 * [Reference](#reference)
 * [Other Projects](#other-projects)
 * [LICENSE](#license)
@@ -367,10 +368,11 @@ These are used to track the state of the spinner.
 * `$_TERM_SPIN_FRAMES` -
   Keeps track of the current frames.
 
-* `$_TERM_SPIN_STATE` -
+* `$_TERM_SPIN_NEXT_FRAME` -
   Keeps track of the next frame number to print.
 
-* `$_TERM_SPIN_MAX` -
+* `$_TERM_SPIN_TOTAL_FRAMES` -
+  The total number of frames in `$_TERM_SPIN_FRAMES`.
 
 ## Functions
 
@@ -380,12 +382,12 @@ Adapt this code to your needs.
 * `term::spin_start()` -
   Starts the spinner.
   Pass in the frame array.
-  Sets the internal variables then prints the first frame.
+  Sets the internal variables.
 
   Example: `term::spin_start "${_TERM_SPIN_FRAMES_SIX[@]}"`
 
 * `term::spin_step()` -
-  Prints the next frame.
+  Prints the next frame.w
 
 * `term::spin_spin` -
   Runs the spinner until a key is pressed.
@@ -502,6 +504,12 @@ Draws a few boxes.
 
 ![Boxes Test](images/boxes.png)
 
+### Color and Attribute Table - `table.sh*`
+
+Draws a table showing off colors and attributes.
+
+![Color and Attribute Table](images/table.png)
+
 ## Reference
 
 Most of the details in these files have come from Google searches and the `terminfo` manpage.
@@ -520,6 +528,13 @@ Unicode Box drawing characters:
 
 * <https://www.compart.com/en/unicode/block/U+2500>
 * <https://en.wikipedia.org/wiki/Box-drawing_characters>
+
+The following subdirectories:
+
+* `doc/` - Contains lists of Brail and Box Drawing Unicode characters.
+* `caps/` - Terminal capabilities with terminfo names from the command:
+  `infocmp -I TERMINAL > TERMINAL.txt`
+  These are useful for looking up capabilities or finding what an escape code is for.
 
 ## Other Projects
 
