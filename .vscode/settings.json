@@ -28,6 +28,7 @@
         "sprintf",
         "strtonum",
         "terminfo",
+        "toupper",
         "tput"
     ],
     "cSpell.ignorePaths": [
