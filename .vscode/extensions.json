@@ -1,5 +1,6 @@
 {
     "recommendations": [
+        "beaglefoot.awk-ide-vscode",
         "timonwong.shellcheck"
     ]
 }
