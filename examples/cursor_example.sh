@@ -30,11 +30,14 @@ echo -n "Terminal lines: "
 term::lines
 
 term::move "2" "2"
-echo "$TERM_ATTR_CLR_BOL"
+echo "${TERM_ATTR_CLR_BOL}"
 
 term::move "3" "0"
 echo -n "#"
-tput smir
+echo -n "${TERM_ATTR_INSERT}"
 echo -n "%"
+echo -n "${TERM_ATTR_EXIT_INSERT}"
 
 term::move "10" "0"
+
+echo -n "${TERM_ATTR_RESET}"
