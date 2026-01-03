@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck source=../printf.sh
 
-# Test the printf library.
+# Example of using the printf library.
 
 # Load the library.
 find_library(){

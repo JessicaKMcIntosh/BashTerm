@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck source=../attr.sh
 
-# Test the attribute library.
+# Example of using the attribute library.
 
 # Load the library.
 find_library(){

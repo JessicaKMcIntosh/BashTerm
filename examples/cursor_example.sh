@@ -2,7 +2,7 @@
 # shellcheck source=../attr.sh
 # shellcheck source=../cursor.sh
 
-# Test the cursor library.
+# Example of using the cursor library.
 
 # Load the libraries.
 find_library(){

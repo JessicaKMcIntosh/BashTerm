@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck source=../boxes.sh
 
-# Test the boxes library.
+# Example of using the boxes library.
 
 # Load the library
 find_library(){

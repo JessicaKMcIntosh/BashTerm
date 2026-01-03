@@ -3,7 +3,7 @@
 # shellcheck source=../spinner.sh
 # shellcheck disable=SC2162 # Backspaces will not be read.
 
-# Test the spinner library.
+# Example of using the spinner library.
 
 # Load libraries.
 # Load the libraries.

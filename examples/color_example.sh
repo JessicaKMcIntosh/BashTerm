@@ -2,7 +2,7 @@
 # shellcheck source=../attr.sh
 # shellcheck source=../color.sh
 
-# Test the color library.
+# Example of using the color library.
 
 # Load the libraries.
 find_library(){

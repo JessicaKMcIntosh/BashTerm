@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck source=../function.sh
 
-# Test the attribute library.
+# Example of using the function library.
 
 # Load the library.
 find_library(){
