@@ -1,8 +1,18 @@
 #!/usr/bin/env bash
+# shellcheck source=../boxes.sh
 
 # Test the boxes library.
 
-source "./boxes.sh"
+# Load the library
+find_library(){
+    local library="${1}"
+    for file_name in {./,../}${library} ; do
+        if [[ -f  "${file_name}" ]] ; then
+            echo "${file_name}"
+        fi
+done
+}
+source "$(find_library "boxes.sh")"
 
 #┌┬─┐
 #├┼─┤

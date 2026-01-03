@@ -1,9 +1,20 @@
 #!/usr/bin/env bash
+# shellcheck source=../attr.sh
+# shellcheck source=../color.sh
 
 # Print a nice color and attribute table.
 
-source "./attr.sh"
-source "./color.sh"
+# Load the libraries.
+find_library(){
+    local library="${1}"
+    for file_name in {./,../}${library} ; do
+        if [[ -f  "${file_name}" ]] ; then
+            echo "${file_name}"
+        fi
+done
+}
+source "$(find_library "attr.sh")"
+source "$(find_library "color.sh")"
 
 # I got the idea from the project 'ansi'.
 # https://github.com/fidian/ansi

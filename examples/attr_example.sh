@@ -1,8 +1,18 @@
 #!/usr/bin/env bash
+# shellcheck source=../attr.sh
 
 # Test the attribute library.
 
-source "./attr.sh"
+# Load the library.
+find_library(){
+    local library="${1}"
+    for file_name in {./,../}${library} ; do
+        if [[ -f  "${file_name}" ]] ; then
+            echo "${file_name}"
+        fi
+done
+}
+source "$(find_library "attr.sh")"
 
 echo "Testing attributes:"
 echo "Normal text ${TERM_ATTR_BOLD}Bold text${TERM_ATTR[sgr0]} not bold"

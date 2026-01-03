@@ -1,11 +1,22 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2162
+# shellcheck source=../function.sh
+# shellcheck source=../spinner.sh
+# shellcheck disable=SC2162 # Backspaces will not be read.
 
 # Test the spinner library.
 
 # Load libraries.
-source "./spinner.sh"
-source "./function.sh"
+# Load the libraries.
+find_library(){
+    local library="${1}"
+    for file_name in {./,../}${library} ; do
+        if [[ -f  "${file_name}" ]] ; then
+            echo "${file_name}"
+        fi
+done
+}
+source "$(find_library "function.sh")"
+source "$(find_library "spinner.sh")"
 
 echo "Spinner demo!"
 

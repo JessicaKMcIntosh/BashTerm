@@ -1,9 +1,20 @@
 #!/usr/bin/env bash
+# shellcheck source=../attr.sh
+# shellcheck source=../cursor.sh
 
 # Test the cursor library.
 
-source "./cursor.sh"
-source "./attr.sh"
+# Load the libraries.
+find_library(){
+    local library="${1}"
+    for file_name in {./,../}${library} ; do
+        if [[ -f  "${file_name}" ]] ; then
+            echo "${file_name}"
+        fi
+done
+}
+source "$(find_library "attr.sh")"
+source "$(find_library "cursor.sh")"
 
 echo -n "${TERM_ATTR_CLEAR}"
 

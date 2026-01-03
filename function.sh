@@ -1,18 +1,27 @@
 #!/usr/bin/env bash
 # shellcheck source=attr.sh
+# shellcheck source=boxes.sh
 # shellcheck source=color.sh
 # shellcheck source=cursor.sh
-# shellcheck source=boxes.sh
 
 # This is a functional interface to the variables.
 # If that is something you want... :shrug:
 
 # I recommend picking and choosing what you want.
 
-source "./attr.sh"
-source "./color.sh"
-source "./cursor.sh"
-source "./boxes.sh"
+# Load the libraries.
+find_library(){
+    local library="${1}"
+    for file_name in {./,../}${library} ; do
+        if [[ -f  "${file_name}" ]] ; then
+            echo "${file_name}"
+        fi
+done
+}
+source "$(find_library "attr.sh")"
+source "$(find_library "boxes.sh")"
+source "$(find_library "color.sh")"
+source "$(find_library "cursor.sh")"
 
 # Directly call 'tput'
 term::tput() {

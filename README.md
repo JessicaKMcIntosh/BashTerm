@@ -28,15 +28,17 @@ A library to simplify working with the terminal in bash.
 * [Box drawing Unicode characters - `boxes.sh`](#box-drawing-unicode-characters---boxessh)
   * [Primary interface](#primary-interface-3)
   * [Variable meaning](#variable-meaning)
-* [Attribute and color table - `table.sh`](#attribute-and-color-table---tablesh)
-* [Functional Interface - `functions.sh`](#functional-interface---functionssh)
+* [Functional Interface - `function.sh`](#functional-interface---functionsh)
 * [Export - `export.sh`](#export---exportsh)
   * [Usage](#usage)
 * [Examples](#examples)
-  * [Attributes - `test_attr.sh`](#attributes---test_attrsh)
-  * [Colors - `test_color.sh`](#colors---test_colorsh)
-  * [Boxes - `test_boxes.sh`](#boxes---test_boxessh)
-  * [Color and Attribute Table - `table.sh*`](#color-and-attribute-table---tablesh)
+  * [Attributes - `examples/attr_example.sh`](#attributes---examplesattr_examplesh)
+  * [Colors - `examples/color_example.sh`](#colors---examplescolor_examplesh)
+  * [Color and Attribute Table - `examples/table.sh`](#color-and-attribute-table---examplestablesh)
+  * [Boxes - `examples/boxes_example.sh`](#boxes---examplesboxes_examplesh)
+  * [Cursor - `examples/cursor_example.sh`](#cursor---examplescursor_examplesh)
+  * [Function - `examples/function_example.sh`](#function---examplesfunction_examplesh)
+  * [Spinner - `examples/spinner_example.sh`](#spinner---examplesspinner_examplesh)
 * [Reference](#reference)
 * [Other Projects](#other-projects)
 * [LICENSE](#license)
@@ -44,7 +46,6 @@ A library to simplify working with the terminal in bash.
 ## TODO
 
 * Draw boxes. Could do this with AWK.
-* Something like `printf` to make setting attributes and colors easier.
 * Unit tests.
 * Write an actual test for the cursor library.
 
@@ -136,6 +137,10 @@ Shortcut variables to make code a bit more friendly.
 
 The `Variable` column is the variable name from the terminfo manpage.
 
+**NOTE:**
+The attribute `invis` doesn't always work.
+For example, it is not working on my Putty install.
+
 ### Internal variables
 
 Variables used to build the associative array.
@@ -161,7 +166,8 @@ Escape codes for setting foreground and background.
 
 This only uses the old 16 color interface.
 
-Note: The bright foreground colors are usually the same as the foreground color and the bold attribute.
+**NOTE:**
+The bright foreground colors are usually the same as the foreground color and the bold attribute.
 
 **IMPORTANT:**
 The default foreground and background colors are **NOT** always the same as `white` and `black`.
@@ -238,7 +244,8 @@ Supported colors.
 | brightcyan | 14 |
 | brightwhite | 15 |
 
-Note that on some terminals red and blue may be swapped.
+**NOTE:**
+On some terminals red and blue may be swapped.
 
 ### Internal variables
 
@@ -337,7 +344,9 @@ This is more of an example than a complete solution.
 
 These are the defined frames.
 They are just arrays, so adding your own is easy.
-Note: The code assumes the characters are single width.
+
+**NOTE:**
+The code assumes the characters are single width.
 
 | Variable | Description | Characters |
 | --- | --- | --- |
@@ -453,11 +462,7 @@ Examples of box parts.
 | Double     | D_BL | Bottom Left `╚` | D_BC | Bottom Center `╩` | D_BR | Bottom Right `╝` |
 | Rounded    | R_BL | Bottom Left `╰` | R_BC | Bottom Center `┴` | R_BR | Bottom Right `╯` |
 
-## Attribute and color table - `table.sh`
-
-This script prints a table of foreground and background colors, showing attributes in the cells.
-
-## Functional Interface - `functions.sh`
+## Functional Interface - `function.sh`
 
 Think of this as a little bonus.
 It is just functions to print the various escape codes.
@@ -467,7 +472,9 @@ This is more a suggestion instead of something to use directly.
 
 This script will print variable declarations that Bash can read back.
 All of the environment variables for the above libraries are output.
-**Note: functions are not included!*
+
+**NOTE:**
+Functions are not included in the export!
 
 This is really only useful for adding the escape codes for a specific terminal directly to your script.
 
@@ -486,29 +493,45 @@ Here is some example output of the various test scripts.
 These were captured using Putty on Windows using the [Consolas font](https://en.wikipedia.org/wiki/Consolas).
 The only change in Putty was to make Blue readable.
 
-### Attributes - `test_attr.sh`
+### Attributes - `examples/attr_example.sh`
 
 Exercises the attributes for Bold, Dim, Invisible, Italics (probably will not work), Reversed, Standout, and Underline .
 
 ![Attribute Test](images/attributes.png)
 
-### Colors - `test_color.sh`
+### Colors - `examples/color_example.sh`
 
 Demonstrates the colors, including with the attributes Dim, Bold and Underline.
 
 ![Color Test](images/colors.png)
 
-### Boxes - `test_boxes.sh`
+### Color and Attribute Table - `examples/table.sh`
+
+Draws a table showing off colors and attributes.
+
+![Color and Attribute Table](images/table.png)
+
+### Boxes - `examples/boxes_example.sh`
 
 Draws a few boxes.
 
 ![Boxes Test](images/boxes.png)
 
-### Color and Attribute Table - `table.sh*`
+### Cursor - `examples/cursor_example.sh`
 
-Draws a table showing off colors and attributes.
+**TODO!**
+A bad demo of cursor functionality.
+This needs to be fixed.
 
-![Color and Attribute Table](images/table.png)
+### Function - `examples/function_example.sh`
+
+Demonstrates the function interface by duplicating `examples/attr_example.sh`, `examples/boxes_example.sh`, and `examples/color_example.sh`.
+
+### Spinner - `examples/spinner_example.sh`
+
+A simple demo of the spinner.
+Presents a menu to pick from the available animations.
+This is meant as an example, not a complete solution.
 
 ## Reference
 
@@ -526,13 +549,16 @@ Most of the details in these files have come from Google searches and the `termi
 
 Unicode Box drawing characters:
 
-* <https://www.compart.com/en/unicode/block/U+2500>
-* <https://en.wikipedia.org/wiki/Box-drawing_characters>
+* [Box Drawing Characters](https://www.compart.com/en/unicode/block/U+2500)
+* [Brail Chatacters](https://www.compart.com/en/unicode/block/U+2800)
+* [Wikipedia article on Box Drawing Characters](https://en.wikipedia.org/wiki/Box-drawing_characters)
 
 The following subdirectories:
 
-* `doc/unicode/` - Contains lists of Brail and Box Drawing Unicode characters.
-* `doc/capability/` - Terminal capabilities with terminfo names from the command:
+* `doc/unicode/` -
+  Contains lists of Brail and Box Drawing Unicode characters.
+* `doc/capability/` -
+  Terminal capabilities with terminfo names from the command:
   `infocmp -I TERMINAL > TERMINAL.txt`
   These are useful for looking up capabilities for a specific terminal or finding what an escape code is for.
 
@@ -581,12 +607,12 @@ I browsed through them to get some ideas.
 
 See the file `LICENSE` for details.
 
-BashTerm - Bash Terminal Library
-Written in 2025 by Jessica K McIntosh AT gmail
+BashTerm - Bash Terminal Library \
+Written in 2025 by Jessica K McIntosh AT gmail \
 To the extent possible under law, the author(s) have dedicated all copyright
 and related and neighboring rights to this software to the public domain
 worldwide. This software is distributed without any warranty.
 
 You should have received a copy of the CC0 Public Domain Dedication along
-with this software.
+with this software in the file `LICENSE`. \
 If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.

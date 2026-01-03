@@ -1,8 +1,18 @@
 #!/usr/bin/env bash
+# shellcheck source=../function.sh
 
 # Test the attribute library.
 
-source "./function.sh"
+# Load the library.
+find_library(){
+    local library="${1}"
+    for file_name in {./,../}${library} ; do
+        if [[ -f  "${file_name}" ]] ; then
+            echo "${file_name}"
+        fi
+done
+}
+source "$(find_library "function.sh")"
 
 echo "Testing the functional interface from 'functions.sh'."
 echo ""
