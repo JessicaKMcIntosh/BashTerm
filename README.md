@@ -119,21 +119,21 @@ Shortcut variables to make code a bit more friendly.
 
 | Variable | Attribute | Name | Meaning |
 | --- | --- | --- | --- |
-| TERM_ATTR_BOLD | bold | enter_bold_mode | turn on bold (extra bright) mode |
-| TERM_ATTR_CLEAR | clear | clear_screen | clear screen and home cursor |
-| TERM_ATTR_DIM | dim | enter_dim_mode | turn on half-bright mode |
-| TERM_ATTR_INSERT | smir | enter_insert_mode | enter insert mode |
-| TERM_ATTR_INVISIBLE | invis | enter_secure_mode | turn on blank mode (characters invisible) |
-| TERM_ATTR_EXIT_INSERT | rmir | exit_insert_mode | exit insert mode |
-| TERM_ATTR_EXIT_ITALICS | ritm | exit_italics_mode | End italic mode |
-| TERM_ATTR_EXIT_STANDOUT | rmso | exit_standout_mode | exit standout mode |
-| TERM_ATTR_EXIT_UNDERLINE | rmul | exit_underline_mode | exit underline mode |
-| TERM_ATTR_ITALICS | sitm | enter_italics_mode | Enter italic mode |
-| TERM_ATTR_ORIG | op | orig_pair | Set default pair to its original value |
-| TERM_ATTR_RESET | sgr0 | exit_attribute_mode | turn off all attributes |
-| TERM_ATTR_REVERSE | rev | enter_reverse_mode | turn on reverse video mode |
-| TERM_ATTR_STANDOUT | smso | enter_standout_mode | begin standout mode |
-| TERM_ATTR_UNDERLINE | smul | enter_underline_mode | begin underline mode |
+| $TERM_ATTR_BOLD | bold | enter_bold_mode | turn on bold (extra bright) mode |
+| $TERM_ATTR_CLEAR | clear | clear_screen | clear screen and home cursor |
+| $TERM_ATTR_DIM | dim | enter_dim_mode | turn on half-bright mode |
+| $TERM_ATTR_INSERT | smir | enter_insert_mode | enter insert mode |
+| $TERM_ATTR_INVISIBLE | invis | enter_secure_mode | turn on blank mode (characters invisible) |
+| $TERM_ATTR_EXIT_INSERT | rmir | exit_insert_mode | exit insert mode |
+| $TERM_ATTR_EXIT_ITALICS | ritm | exit_italics_mode | End italic mode |
+| $TERM_ATTR_EXIT_STANDOUT | rmso | exit_standout_mode | exit standout mode |
+| $TERM_ATTR_EXIT_UNDERLINE | rmul | exit_underline_mode | exit underline mode |
+| $TERM_ATTR_ITALICS | sitm | enter_italics_mode | Enter italic mode |
+| $TERM_ATTR_ORIG | op | orig_pair | Set default pair to its original value |
+| $TERM_ATTR_RESET | sgr0 | exit_attribute_mode | turn off all attributes |
+| $TERM_ATTR_REVERSE | rev | enter_reverse_mode | turn on reverse video mode |
+| $TERM_ATTR_STANDOUT | smso | enter_standout_mode | begin standout mode |
+| $TERM_ATTR_UNDERLINE | smul | enter_underline_mode | begin underline mode |
 
 The `Variable` column is the variable name from the terminfo manpage.
 
@@ -171,7 +171,7 @@ The bright foreground colors are usually the same as the foreground color and th
 
 **IMPORTANT:**
 The default foreground and background colors are **NOT** always the same as `white` and `black`.
-To get the default foreground and background colors use `$TERM_ATTR_ORIG` from `attr.sh`.
+To get the default foreground and background colors use `$TERM_ATTR_ORIG` from `attr.sh` or `tput op`.
 
 ### Primary interface
 
@@ -188,38 +188,38 @@ Shortcut variables to make code a bit more friendly.
 
 | Variable | Color |
 | --- | --- |
-| TERM_BG_BLACK | black background |
-| TERM_BG_BLUE | blue background |
-| TERM_BG_BRIGHT_BLACK | brightblack |
-| TERM_BG_BRIGHT_BLUE | brightblue |
-| TERM_BG_BRIGHT_CYAN | brightcyan |
-| TERM_BG_BRIGHT_GREEN | brightgreen |
-| TERM_BG_BRIGHT_MAGENTA | brightmagenta |
-| TERM_BG_BRIGHT_RED | brightred |
-| TERM_BG_BRIGHT_WHITE | brightwhite |
-| TERM_BG_BRIGHT_YELLOW | brightyellow |
-| TERM_BG_CYAN | cyan background |
-| TERM_BG_GREEN | green background |
-| TERM_BG_MAGENTA | magenta background |
-| TERM_BG_RED | red background |
-| TERM_BG_WHITE | white background |
-| TERM_BG_YELLOW | yellow background |
-| TERM_FG_BLACK | black  foreground |
-| TERM_FG_BLUE | blue  foreground |
-| TERM_FG_BRIGHT_BLACK | brightblack |
-| TERM_FG_BRIGHT_BLUE | brightblue |
-| TERM_FG_BRIGHT_CYAN | brightcyan |
-| TERM_FG_BRIGHT_GREEN | brightgreen |
-| TERM_FG_BRIGHT_MAGENTA | brightmagenta |
-| TERM_FG_BRIGHT_RED | brightred |
-| TERM_FG_BRIGHT_WHITE | brightwhite |
-| TERM_FG_BRIGHT_YELLOW | brightyellow |
-| TERM_FG_CYAN | cyan  foreground |
-| TERM_FG_GREEN | green  foreground |
-| TERM_FG_MAGENTA | magenta  foreground |
-| TERM_FG_RED | red  foreground |
-| TERM_FG_WHITE | white background |
-| TERM_FG_YELLOW | yellow  foreground |
+| $TERM_BG_BLACK | black background |
+| $TERM_BG_BLUE | blue background |
+| $TERM_BG_BRIGHT_BLACK | brightblack |
+| $TERM_BG_BRIGHT_BLUE | brightblue |
+| $TERM_BG_BRIGHT_CYAN | brightcyan |
+| $TERM_BG_BRIGHT_GREEN | brightgreen |
+| $TERM_BG_BRIGHT_MAGENTA | brightmagenta |
+| $TERM_BG_BRIGHT_RED | brightred |
+| $TERM_BG_BRIGHT_WHITE | brightwhite |
+| $TERM_BG_BRIGHT_YELLOW | brightyellow |
+| $TERM_BG_CYAN | cyan background |
+| $TERM_BG_GREEN | green background |
+| $TERM_BG_MAGENTA | magenta background |
+| $TERM_BG_RED | red background |
+| $TERM_BG_WHITE | white background |
+| $TERM_BG_YELLOW | yellow background |
+| $TERM_FG_BLACK | black  foreground |
+| $TERM_FG_BLUE | blue  foreground |
+| $TERM_FG_BRIGHT_BLACK | brightblack |
+| $TERM_FG_BRIGHT_BLUE | brightblue |
+| $TERM_FG_BRIGHT_CYAN | brightcyan |
+| $TERM_FG_BRIGHT_GREEN | brightgreen |
+| $TERM_FG_BRIGHT_MAGENTA | brightmagenta |
+| $TERM_FG_BRIGHT_RED | brightred |
+| $TERM_FG_BRIGHT_WHITE | brightwhite |
+| $TERM_FG_BRIGHT_YELLOW | brightyellow |
+| $TERM_FG_CYAN | cyan  foreground |
+| $TERM_FG_GREEN | green  foreground |
+| $TERM_FG_MAGENTA | magenta  foreground |
+| $TERM_FG_RED | red  foreground |
+| $TERM_FG_WHITE | white background |
+| $TERM_FG_YELLOW | yellow  foreground |
 
 ### Colors
 
@@ -256,7 +256,8 @@ Variables used to build the associative arrays.
   When this array is processed both the color name and color number are set in the arrays `$TERM_FG` and `$TERM_BG`.
 
 * `$_TERM_COLOR_ALIASES` -
-  Color aliases. Currently only mapping `grey` and `gray` to `brightblack`.
+  Color aliases.
+  Currently only mapping `grey` and `gray` to `brightblack`.
 
 ## Terminal Cursor movement - `cursor.sh`
 
@@ -300,26 +301,26 @@ Shortcut variables to make code a bit more friendly.
 
 | Variable | Attribute | Name | Meaning |
 | --- | --- | --- | --- |
-| TERM_ATTR_CLR_BOL | el1 | clr_bol | Clear to beginning of line |
-| TERM_ATTR_CLR_EOL | el | clr_eol | clear to end of line |
-| TERM_ATTR_CLR_EOS | ed | clr_eos | clear to end of screen |
-| TERM_ATTR_DELETE_CHAR | dch1 | delete_character | delete character |
-| TERM_ATTR_DELETE_LINE | dl1 | delete_line | delete line |
-| TERM_ATTR_DOWN | cud1 | down | down one line |
-| TERM_ATTR_HIDE | civis | hide | make cursor invisible |
-| TERM_ATTR_HOME | home | home | home cursor (if no cup) |
-| TERM_ATTR_INSERT_CHAR | ich1 | insert_character | insert character (DISABLED, rarely present) |
-| TERM_ATTR_INSERT_LINE | il1 | insert_line | insert line |
-| TERM_ATTR_INVISIBLE | civis | invisible | make cursor invisible |
-| TERM_ATTR_LEFT | cub1 | left | move left one space |
-| TERM_ATTR_NORMAL | cnorm | normal | make cursor appear normal (undo civis/cvvis) |
-| TERM_ATTR_RESTORE | rc | restore | restore cursor to position of last |
-| TERM_ATTR_RIGHT | cuf1 | right | non-destructive space (move right one space) |
-| TERM_ATTR_SAVE | sc | save | save current cursor |
-| TERM_ATTR_SHOW | cvvis | show | make cursor very visible |
-| TERM_ATTR_TO_LL | ll | to_ll | last line, first column (if no cup) (DISABLED, rarely present) |
-| TERM_ATTR_UP | cuu1 | up | up one line |
-| TERM_ATTR_VISIBLE | cvvis | visible | make cursor very visible |
+| $TERM_ATTR_CLR_BOL | el1 | clr_bol | Clear to beginning of line |
+| $TERM_ATTR_CLR_EOL | el | clr_eol | clear to end of line |
+| $TERM_ATTR_CLR_EOS | ed | clr_eos | clear to end of screen |
+| $TERM_ATTR_DELETE_CHAR | dch1 | delete_character | delete character |
+| $TERM_ATTR_DELETE_LINE | dl1 | delete_line | delete line |
+| $TERM_ATTR_DOWN | cud1 | down | down one line |
+| $TERM_ATTR_HIDE | civis | hide | make cursor invisible |
+| $TERM_ATTR_HOME | home | home | home cursor (if no cup) |
+| $TERM_ATTR_INSERT_CHAR | ich1 | insert_character | insert character (DISABLED, rarely present) |
+| $TERM_ATTR_INSERT_LINE | il1 | insert_line | insert line |
+| $TERM_ATTR_INVISIBLE | civis | invisible | make cursor invisible |
+| $TERM_ATTR_LEFT | cub1 | left | move left one space |
+| $TERM_ATTR_NORMAL | cnorm | normal | make cursor appear normal (undo civis/cvvis) |
+| $TERM_ATTR_RESTORE | rc | restore | restore cursor to position of last |
+| $TERM_ATTR_RIGHT | cuf1 | right | non-destructive space (move right one space) |
+| $TERM_ATTR_SAVE | sc | save | save current cursor |
+| $TERM_ATTR_SHOW | cvvis | show | make cursor very visible |
+| $TERM_ATTR_TO_LL | ll | to_ll | last line, first column (if no cup) (DISABLED, rarely present) |
+| $TERM_ATTR_UP | cuu1 | up | up one line |
+| $TERM_ATTR_VISIBLE | cvvis | visible | make cursor very visible |
 
 ### Internal variables
 
@@ -350,13 +351,13 @@ The code assumes the characters are single width.
 
 | Variable | Description | Characters |
 | --- | --- | --- |
-| _TERM_SPIN_FRAMES_SIX | Six brail dots. Blank dot chasing counter clockwise. | `⠷⠯⠟⠻⠽⠾` |
-| _TERM_SPIN_FRAMES_SIX_IN_OUT | Six brail dots. Disappearing then appearing. | `⠿⠷⠧⠇⠃⠁⠀⠈⠘⠸⠼⠾` |
-| _TERM_SPIN_FRAMES_EIGHT | Eight brail dots. Blank dot chasing counter clockwise. | `⣷⣯⣟⡿⢿⣻⣽⣾` |
-| _TERM_SPIN_FRAMES_EIGHT_IN_OUT | Eight brail dots. Disappearing then appearing. | `⣿⣷⣧⣇⡇⠇⠃⠁⠀⠈⠘⠸⢸⣸⣼⣾` |
-| _TERM_SPIN_FRAMES_ARROWS | An arrow spinning clockwise. | `↑↗→↘↓↙←↖` |
-| _TERM_SPIN_FRAMES_LINES | A silly example. | `╵└├┼╀╄╊╋╈╅┽┼┬┐╴` |
-| _TERM_SPIN_FRAMES_ASCII | Simple ASCII characters. | `\|/-\` |
+| $_TERM_SPIN_FRAMES_SIX | Six brail dots. Blank dot chasing counter clockwise. | `⠷⠯⠟⠻⠽⠾` |
+| $_TERM_SPIN_FRAMES_SIX_IN_OUT | Six brail dots. Disappearing then appearing. | `⠿⠷⠧⠇⠃⠁⠀⠈⠘⠸⠼⠾` |
+| $_TERM_SPIN_FRAMES_EIGHT | Eight brail dots. Blank dot chasing counter clockwise. | `⣷⣯⣟⡿⢿⣻⣽⣾` |
+| $_TERM_SPIN_FRAMES_EIGHT_IN_OUT | Eight brail dots. Disappearing then appearing. | `⣿⣷⣧⣇⡇⠇⠃⠁⠀⠈⠘⠸⢸⣸⣼⣾` |
+| $_TERM_SPIN_FRAMES_ARROWS | An arrow spinning clockwise. | `↑↗→↘↓↙←↖` |
+| $_TERM_SPIN_FRAMES_LINES | A silly example. | `╵└├┼╀╄╊╋╈╅┽┼┬┐╴` |
+| $_TERM_SPIN_FRAMES_ASCII | Simple ASCII characters. | `\|/-\` |
 
 ### Configuration
 
@@ -495,7 +496,7 @@ The only change in Putty was to make Blue readable.
 
 ### Attributes - `examples/attr_example.sh`
 
-Exercises the attributes for Bold, Dim, Invisible, Italics (probably will not work), Reversed, Standout, and Underline .
+Exercises the attributes for Bold, Dim, Invisible (doesn't work in putty), Italics (probably will not work), Reversed, Standout, and Underline .
 
 ![Attribute Test](images/attributes.png)
 
@@ -550,7 +551,7 @@ Most of the details in these files have come from Google searches and the `termi
 Unicode Box drawing characters:
 
 * [Box Drawing Characters](https://www.compart.com/en/unicode/block/U+2500)
-* [Brail Chatacters](https://www.compart.com/en/unicode/block/U+2800)
+* [Brail Characters](https://www.compart.com/en/unicode/block/U+2800)
 * [Wikipedia article on Box Drawing Characters](https://en.wikipedia.org/wiki/Box-drawing_characters)
 
 The following subdirectories:
