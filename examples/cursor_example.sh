@@ -16,7 +16,7 @@ done
 source "$(find_library "attr.sh")"
 source "$(find_library "cursor.sh")"
 
-echo -n "${TERM_ATTR_CLEAR}"
+echo -n "${TERM_CLEAR}"
 
 echo -n "Cursor position: "
 term::pos
@@ -30,14 +30,14 @@ echo -n "Terminal lines: "
 term::lines
 
 term::move "2" "2"
-echo "${TERM_ATTR_CLR_BOL}"
+echo "${TERM_CLR_BOL}"
 
 term::move "3" "0"
 echo -n "#"
-echo -n "${TERM_ATTR_INSERT}"
+echo -n "${TERM_INSERT}"
 echo -n "%"
-echo -n "${TERM_ATTR_EXIT_INSERT}"
+echo -n "${TERM_EXIT_INSERT}"
 
 term::move "10" "0"
 
-echo -n "${TERM_ATTR_RESET}"
+echo -n "${TERM_RESET}"

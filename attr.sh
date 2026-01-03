@@ -91,7 +91,7 @@ _TERM_ATTRIBUTE_SHORTCUTS=(
     [UNDERLINE]="smul"
 )
 for _TERM_TEMP_ATTR in "${!_TERM_ATTRIBUTE_SHORTCUTS[@]}"; do
-    declare -x "TERM_ATTR_${_TERM_TEMP_ATTR}=${TERM_ATTR[${_TERM_ATTRIBUTE_SHORTCUTS[$_TERM_TEMP_ATTR]}]}"
+    declare -x "TERM_${_TERM_TEMP_ATTR}=${TERM_ATTR[${_TERM_ATTRIBUTE_SHORTCUTS[$_TERM_TEMP_ATTR]}]}"
 done
 
 # Remove the temporary variables.

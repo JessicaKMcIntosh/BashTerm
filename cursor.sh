@@ -91,7 +91,7 @@ _TERM_CURSOR_SHORTCUTS=(
     [VISIBLE]="cvvis"
 )
 for _TERM_TEMP_ATTR in "${!_TERM_CURSOR_SHORTCUTS[@]}"; do
-    declare -x "TERM_ATTR_${_TERM_TEMP_ATTR}=${TERM_CURSOR[${_TERM_CURSOR_SHORTCUTS[$_TERM_TEMP_ATTR]}]}"
+    declare -x "TERM_${_TERM_TEMP_ATTR}=${TERM_CURSOR[${_TERM_CURSOR_SHORTCUTS[$_TERM_TEMP_ATTR]}]}"
 done
 
 # Remove the temporary variables.

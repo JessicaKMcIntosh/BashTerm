@@ -82,7 +82,7 @@ Instead of using the associative array this uses variables just for those attrib
 
 ```shell
 source "./attr.sh"
-echo "Normal ${TERM_ATTR_BOLD}Bold${TERM_ATTR_RESET} not bold"
+echo "Normal ${TERM_BOLD}Bold${TERM_RESET} not bold"
 ```
 
 This us done by using the command `tput` to generate the escape codes.
@@ -123,21 +123,21 @@ Shortcut variables to make code a bit more friendly.
 
 | Variable | Attribute | Name | Meaning |
 | --- | --- | --- | --- |
-| $TERM_ATTR_BOLD | bold | enter_bold_mode | turn on bold (extra bright) mode |
-| $TERM_ATTR_CLEAR | clear | clear_screen | clear screen and home cursor |
-| $TERM_ATTR_DIM | dim | enter_dim_mode | turn on half-bright mode |
-| $TERM_ATTR_INSERT | smir | enter_insert_mode | enter insert mode |
-| $TERM_ATTR_INVISIBLE | invis | enter_secure_mode | turn on blank mode (characters invisible) |
-| $TERM_ATTR_EXIT_INSERT | rmir | exit_insert_mode | exit insert mode |
-| $TERM_ATTR_EXIT_ITALICS | ritm | exit_italics_mode | End italic mode |
-| $TERM_ATTR_EXIT_STANDOUT | rmso | exit_standout_mode | exit standout mode |
-| $TERM_ATTR_EXIT_UNDERLINE | rmul | exit_underline_mode | exit underline mode |
-| $TERM_ATTR_ITALICS | sitm | enter_italics_mode | Enter italic mode |
-| $TERM_ATTR_ORIG | op | orig_pair | Set default pair to its original value |
-| $TERM_ATTR_RESET | sgr0 | exit_attribute_mode | turn off all attributes |
-| $TERM_ATTR_REVERSE | rev | enter_reverse_mode | turn on reverse video mode |
-| $TERM_ATTR_STANDOUT | smso | enter_standout_mode | begin standout mode |
-| $TERM_ATTR_UNDERLINE | smul | enter_underline_mode | begin underline mode |
+| $TERM_BOLD | bold | enter_bold_mode | turn on bold (extra bright) mode |
+| $TERM_CLEAR | clear | clear_screen | clear screen and home cursor |
+| $TERM_DIM | dim | enter_dim_mode | turn on half-bright mode |
+| $TERM_INSERT | smir | enter_insert_mode | enter insert mode |
+| $TERM_INVISIBLE | invis | enter_secure_mode | turn on blank mode (characters invisible) |
+| $TERM_EXIT_INSERT | rmir | exit_insert_mode | exit insert mode |
+| $TERM_EXIT_ITALICS | ritm | exit_italics_mode | End italic mode |
+| $TERM_EXIT_STANDOUT | rmso | exit_standout_mode | exit standout mode |
+| $TERM_EXIT_UNDERLINE | rmul | exit_underline_mode | exit underline mode |
+| $TERM_ITALICS | sitm | enter_italics_mode | Enter italic mode |
+| $TERM_ORIG | op | orig_pair | Set default pair to its original value |
+| $TERM_RESET | sgr0 | exit_attribute_mode | turn off all attributes |
+| $TERM_REVERSE | rev | enter_reverse_mode | turn on reverse video mode |
+| $TERM_STANDOUT | smso | enter_standout_mode | begin standout mode |
+| $TERM_UNDERLINE | smul | enter_underline_mode | begin underline mode |
 
 The `Variable` column is the variable name from the terminfo manpage.
 
@@ -175,7 +175,7 @@ The bright foreground colors are usually the same as the foreground color and th
 
 **IMPORTANT:**
 The default foreground and background colors are **NOT** always the same as `white` and `black`.
-To get the default foreground and background colors use `$TERM_ATTR_ORIG` from `attr.sh` or `tput op`.
+To get the default foreground and background colors use `$TERM_ORIG` from `attr.sh` or `tput op`.
 
 ### Primary interface
 
@@ -305,25 +305,25 @@ Shortcut variables to make code a bit more friendly.
 
 | Variable | Attribute | Name | Meaning |
 | --- | --- | --- | --- |
-| $TERM_ATTR_CLR_BOL | el1 | clr_bol | Clear to beginning of line |
-| $TERM_ATTR_CLR_EOL | el | clr_eol | clear to end of line |
-| $TERM_ATTR_CLR_EOS | ed | clr_eos | clear to end of screen |
-| $TERM_ATTR_DELETE_CHAR | dch1 | delete_character | delete character |
-| $TERM_ATTR_DELETE_LINE | dl1 | delete_line | delete line |
-| $TERM_ATTR_DOWN | cud1 | down | down one line |
-| $TERM_ATTR_HIDE | civis | hide | make cursor invisible |
-| $TERM_ATTR_HOME | home | home | home cursor (if no cup) |
-| $TERM_ATTR_INSERT_CHAR | ich1 | insert_character | insert character (DISABLED, rarely present) |
-| $TERM_ATTR_INSERT_LINE | il1 | insert_line | insert line |
-| $TERM_ATTR_LEFT | cub1 | left | move left one space |
-| $TERM_ATTR_NORMAL | cnorm | normal | make cursor appear normal (undo civis/cvvis) |
-| $TERM_ATTR_RESTORE | rc | restore | restore cursor to position of last |
-| $TERM_ATTR_RIGHT | cuf1 | right | non-destructive space (move right one space) |
-| $TERM_ATTR_SAVE | sc | save | save current cursor |
-| $TERM_ATTR_SHOW | cvvis | show | make cursor very visible |
-| $TERM_ATTR_TO_LL | ll | to_ll | last line, first column (if no cup) (DISABLED, rarely present) |
-| $TERM_ATTR_UP | cuu1 | up | up one line |
-| $TERM_ATTR_VISIBLE | cvvis | visible | make cursor very visible |
+| $TERM_CLR_BOL | el1 | clr_bol | Clear to beginning of line |
+| $TERM_CLR_EOL | el | clr_eol | clear to end of line |
+| $TERM_CLR_EOS | ed | clr_eos | clear to end of screen |
+| $TERM_DELETE_CHAR | dch1 | delete_character | delete character |
+| $TERM_DELETE_LINE | dl1 | delete_line | delete line |
+| $TERM_DOWN | cud1 | down | down one line |
+| $TERM_HIDE | civis | hide | make cursor invisible |
+| $TERM_HOME | home | home | home cursor (if no cup) |
+| $TERM_INSERT_CHAR | ich1 | insert_character | insert character (DISABLED, rarely present) |
+| $TERM_INSERT_LINE | il1 | insert_line | insert line |
+| $TERM_LEFT | cub1 | left | move left one space |
+| $TERM_NORMAL | cnorm | normal | make cursor appear normal (undo civis/cvvis) |
+| $TERM_RESTORE | rc | restore | restore cursor to position of last |
+| $TERM_RIGHT | cuf1 | right | non-destructive space (move right one space) |
+| $TERM_SAVE | sc | save | save current cursor |
+| $TERM_SHOW | cvvis | show | make cursor very visible |
+| $TERM_TO_LL | ll | to_ll | last line, first column (if no cup) (DISABLED, rarely present) |
+| $TERM_UP | cuu1 | up | up one line |
+| $TERM_VISIBLE | cvvis | visible | make cursor very visible |
 
 ### Internal variables
 
@@ -497,7 +497,7 @@ Printf has five features:
   The string can contain multiple attributes separated by a comma. \
   For example: `"%{sgr0,clear, setaf 3}"` will reset all attributes then clear the screen using tput.
 * Lookup the environment variable for an attribute.
-  Using `%(STRING)` will attempt to fetch the attribute from the `$TERM_ATTR_` shortcut environment variables.
+  Using `%(STRING)` will attempt to fetch the attribute from the `$TERM_` shortcut environment variables.
   Some special allowances are made:
 
   * If the attribute is a color name such as `red` or `BRIGHTBLUE` they will be translated to the correct color variable.
