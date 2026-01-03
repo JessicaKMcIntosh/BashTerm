@@ -51,7 +51,7 @@ declare -p "TERM_CURSOR"
 echo ""
 
 echo "# Shortcut variables."
-for name in $(compgen -e TERM_ATTR); do
+for name in $(compgen -e TERM_); do
     declare -p "${name}"
 done
 for name in $(compgen -e TERM_BG); do
