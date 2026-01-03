@@ -531,10 +531,10 @@ Unicode Box drawing characters:
 
 The following subdirectories:
 
-* `doc/` - Contains lists of Brail and Box Drawing Unicode characters.
-* `caps/` - Terminal capabilities with terminfo names from the command:
+* `doc/unicode/` - Contains lists of Brail and Box Drawing Unicode characters.
+* `doc/capability/` - Terminal capabilities with terminfo names from the command:
   `infocmp -I TERMINAL > TERMINAL.txt`
-  These are useful for looking up capabilities or finding what an escape code is for.
+  These are useful for looking up capabilities for a specific terminal or finding what an escape code is for.
 
 ## Other Projects
 
