@@ -31,67 +31,66 @@ fi
 # Rounded is the same as Light, but the corners are rounded.
 #
 # These are just lines in the given orientation.
-# L_LH = Light Line Horizontal '─'
-# H_LV = Heavy Line Vertical   '┃'
+# LLH = Light Line Horizontal '─'
+# HLV = Heavy Line Vertical   '┃'
 #
 # For the box parts the second two letters indicate the position.
 # First Letter:  Vertical Orientation   - T = Top,  M = Middle, B = Bottom
 # Second Letter: Horizontal Orientation - L = Left, C = Center, R = Right
 #
-# L_TL, L_TC, L_TR = Light:      Top Left '┌',    Top Center '┬',    Top Right '┐'
-# H_ML, H_MC, H_MR = Heavy:   Middle Left '┣', Middle Center '╋', Middle Right '┫'
-# D_BL, D_BC, D_BR = Double:  Bottom Left '╚', Bottom Center '╩', Bottom Right '╝'
-# R_BL, R_BC, R_BR = Rounded: Bottom Left '╰', Bottom Center '┴', Bottom Right '╯'
+# LTL, LTC, LTR = Light:      Top Left '┌',    Top Center '┬',    Top Right '┐'
+# HML, HMC, HMR = Heavy:   Middle Left '┣', Middle Center '╋', Middle Right '┫'
+# DBL, DBC, DBR = Double:  Bottom Left '╚', Bottom Center '╩', Bottom Right '╝'
+# RBL, RBC, RBR = Rounded: Bottom Left '╰', Bottom Center '┴', Bottom Right '╯'
 
 # Light boxes.
-export TERM_BOX_L_LH=$'\u2500'  # ─ Box Drawings Light Horizontal
-export TERM_BOX_L_LV=$'\u2502'  # │ Box Drawings Light Vertical
-export TERM_BOX_L_TC=$'\u252C'  # ┬ Box Drawings Light Down and Horizontal
-export TERM_BOX_L_TL=$'\u250C'  # ┌ Box Drawings Light Down and Right
-export TERM_BOX_L_TR=$'\u2510'  # ┐ Box Drawings Light Down and Left
-export TERM_BOX_L_ML=$'\u251C'  # ├ Box Drawings Light Vertical and Right
-export TERM_BOX_L_MC=$'\u253C'  # ┼ Box Drawings Light Vertical and Horizontal
-export TERM_BOX_L_MR=$'\u2524'  # ┤ Box Drawings Light Vertical and Left
-export TERM_BOX_L_BC=$'\u2534'  # ┴ Box Drawings Light Up and Horizontal
-export TERM_BOX_L_BL=$'\u2514'  # └ Box Drawings Light Up and Right
-export TERM_BOX_L_BR=$'\u2518'  # ┘ Box Drawings Light Up and Left
+export TERM_BOX_LLH=$'\u2500'  # ─ Box Drawings Light Horizontal
+export TERM_BOX_LLV=$'\u2502'  # │ Box Drawings Light Vertical
+export TERM_BOX_LTC=$'\u252C'  # ┬ Box Drawings Light Down and Horizontal
+export TERM_BOX_LTL=$'\u250C'  # ┌ Box Drawings Light Down and Right
+export TERM_BOX_LTR=$'\u2510'  # ┐ Box Drawings Light Down and Left
+export TERM_BOX_LML=$'\u251C'  # ├ Box Drawings Light Vertical and Right
+export TERM_BOX_LMC=$'\u253C'  # ┼ Box Drawings Light Vertical and Horizontal
+export TERM_BOX_LMR=$'\u2524'  # ┤ Box Drawings Light Vertical and Left
+export TERM_BOX_LBC=$'\u2534'  # ┴ Box Drawings Light Up and Horizontal
+export TERM_BOX_LBL=$'\u2514'  # └ Box Drawings Light Up and Right
+export TERM_BOX_LBR=$'\u2518'  # ┘ Box Drawings Light Up and Left
 
 # Heavy boxes.
-export TERM_BOX_H_LH=$'\u2501'  # ━ Box Drawings Heavy Horizontal
-export TERM_BOX_H_LV=$'\u2503'  # ┃ Box Drawings Heavy Vertical
-export TERM_BOX_H_TC=$'\u2533'  # ┳ Box Drawings Heavy Down and Horizontal
-export TERM_BOX_H_TL=$'\u250F'  # ┏ Box Drawings Heavy Down and Right
-export TERM_BOX_H_TR=$'\u2513'  # ┓ Box Drawings Heavy Down and Left
-export TERM_BOX_H_ML=$'\u2523'  # ┣ Box Drawings Heavy Vertical and Right
-export TERM_BOX_H_MC=$'\u254B'  # ╋ Box Drawings Heavy Vertical and Horizontal
-export TERM_BOX_H_MR=$'\u252B'  # ┫ Box Drawings Heavy Vertical and Left
-export TERM_BOX_H_BC=$'\u253B'  # ┻ Box Drawings Heavy Up and Horizontal
-export TERM_BOX_H_BL=$'\u2517'  # ┗ Box Drawings Heavy Up and Right
-export TERM_BOX_H_BR=$'\u251B'  # ┛ Box Drawings Heavy Up and Left
+export TERM_BOX_HLH=$'\u2501'  # ━ Box Drawings Heavy Horizontal
+export TERM_BOX_HLV=$'\u2503'  # ┃ Box Drawings Heavy Vertical
+export TERM_BOX_HTC=$'\u2533'  # ┳ Box Drawings Heavy Down and Horizontal
+export TERM_BOX_HTL=$'\u250F'  # ┏ Box Drawings Heavy Down and Right
+export TERM_BOX_HTR=$'\u2513'  # ┓ Box Drawings Heavy Down and Left
+export TERM_BOX_HML=$'\u2523'  # ┣ Box Drawings Heavy Vertical and Right
+export TERM_BOX_HMC=$'\u254B'  # ╋ Box Drawings Heavy Vertical and Horizontal
+export TERM_BOX_HMR=$'\u252B'  # ┫ Box Drawings Heavy Vertical and Left
+export TERM_BOX_HBC=$'\u253B'  # ┻ Box Drawings Heavy Up and Horizontal
+export TERM_BOX_HBL=$'\u2517'  # ┗ Box Drawings Heavy Up and Right
+export TERM_BOX_HBR=$'\u251B'  # ┛ Box Drawings Heavy Up and Left
 
 # Double boxes.
-export TERM_BOX_D_LH=$'\u2550'  # ═ Box Drawings Double Horizontal
-export TERM_BOX_D_LV=$'\u2551'  # ║ Box Drawings Double Vertical
-export TERM_BOX_D_TC=$'\u2566'  # ╦ Box Drawings Double Down and Horizontal
-export TERM_BOX_D_TL=$'\u2554'  # ╔ Box Drawings Double Down and Right
-export TERM_BOX_D_TR=$'\u2557'  # ╗ Box Drawings Double Down and Left
-export TERM_BOX_D_ML=$'\u2560'  # ╠ Box Drawings Double Vertical and Right
-export TERM_BOX_D_MC=$'\u256C'  # ╬ Box Drawings Double Vertical and Horizontal
-export TERM_BOX_D_MR=$'\u2563'  # ╣ Box Drawings Double Vertical and Left
-export TERM_BOX_D_BC=$'\u2569'  # ╩ Box Drawings Double Up and Horizontal
-export TERM_BOX_D_BL=$'\u255A'  # ╚ Box Drawings Double Up and Right
-export TERM_BOX_D_BR=$'\u255D'  # ╝ Box Drawings Double Up and Left
+export TERM_BOX_DLH=$'\u2550'  # ═ Box Drawings Double Horizontal
+export TERM_BOX_DLV=$'\u2551'  # ║ Box Drawings Double Vertical
+export TERM_BOX_DTC=$'\u2566'  # ╦ Box Drawings Double Down and Horizontal
+export TERM_BOX_DTL=$'\u2554'  # ╔ Box Drawings Double Down and Right
+export TERM_BOX_DTR=$'\u2557'  # ╗ Box Drawings Double Down and Left
+export TERM_BOX_DML=$'\u2560'  # ╠ Box Drawings Double Vertical and Right
+export TERM_BOX_DMC=$'\u256C'  # ╬ Box Drawings Double Vertical and Horizontal
+export TERM_BOX_DMR=$'\u2563'  # ╣ Box Drawings Double Vertical and Left
+export TERM_BOX_DBC=$'\u2569'  # ╩ Box Drawings Double Up and Horizontal
+export TERM_BOX_DBL=$'\u255A'  # ╚ Box Drawings Double Up and Right
+export TERM_BOX_DBR=$'\u255D'  # ╝ Box Drawings Double Up and Left
 
 # Rounded light boxes.
-export TERM_BOX_R_LH=$'\u2500'  # ─ Box Drawings Light Horizontal
-export TERM_BOX_R_LV=$'\u2502'  # │ Box Drawings Light Vertical
-export TERM_BOX_R_TC=$'\u252C'  # ┬ Box Drawings Light Down and Horizontal
-export TERM_BOX_R_TL=$'\u256D'  # ╭ Box Drawings Light Arc Down and Right
-export TERM_BOX_R_TR=$'\u256E'  # ╮ Box Drawings Light Arc Down and Left
-export TERM_BOX_R_ML=$'\u251C'  # ├ Box Drawings Light Vertical and Right
-export TERM_BOX_R_MC=$'\u253C'  # ┼ Box Drawings Light Vertical and Horizontal
-export TERM_BOX_R_MR=$'\u2524'  # ┤ Box Drawings Light Vertical and Left
-export TERM_BOX_R_BC=$'\u2534'  # ┴ Box Drawings Light Up and Horizontal
-export TERM_BOX_R_BL=$'\u2570'  # ╰ Box Drawings Light Arc Up and Right
-export TERM_BOX_R_BR=$'\u256F'  # ╯ Box Drawings Light Arc Up and Left
-
+export TERM_BOX_RLH=$'\u2500'  # ─ Box Drawings Light Horizontal
+export TERM_BOX_RLV=$'\u2502'  # │ Box Drawings Light Vertical
+export TERM_BOX_RTC=$'\u252C'  # ┬ Box Drawings Light Down and Horizontal
+export TERM_BOX_RTL=$'\u256D'  # ╭ Box Drawings Light Arc Down and Right
+export TERM_BOX_RTR=$'\u256E'  # ╮ Box Drawings Light Arc Down and Left
+export TERM_BOX_RML=$'\u251C'  # ├ Box Drawings Light Vertical and Right
+export TERM_BOX_RMC=$'\u253C'  # ┼ Box Drawings Light Vertical and Horizontal
+export TERM_BOX_RMR=$'\u2524'  # ┤ Box Drawings Light Vertical and Left
+export TERM_BOX_RBC=$'\u2534'  # ┴ Box Drawings Light Up and Horizontal
+export TERM_BOX_RBL=$'\u2570'  # ╰ Box Drawings Light Arc Up and Right
+export TERM_BOX_RBR=$'\u256F'  # ╯ Box Drawings Light Arc Up and Left

@@ -432,7 +432,7 @@ There are too many to fit here.
 
 Each of the box characters has a name that indicates the type of line then the position in the box.
 
-For example the name `L_MC` means Light line, Middle and Center position, `┼`.
+For example the name `LMC` means Light line, Middle and Center position, `┼`.
 
 This is what I came up with to make drawing boxes a little easier.
 
@@ -448,8 +448,8 @@ Rounded is the same as Light, but the corners are rounded.
 
 These two are just lines in the given orientation.
 
-* `L_LH` - Light Line Horizontal `─`
-* `H_LV` - Heavy Line Vertical   `┃`
+* `LLH` - Light Line Horizontal `─`
+* `HLV` - Heavy Line Vertical   `┃`
 
 For the box parts the second two characters indicate the position.
 
@@ -460,12 +460,12 @@ For the box parts the second two characters indicate the position.
 
 Examples of box parts.
 
-| Line Type  | VAR  | Meaning         | Var  | Meaning           | Var  | Meaning          |
-| ---------- | ---- | --------------- | ---- | ----------------- | ---- | ---------------- |
-| Light      | L_TL |    Top Left `┌` | L_TC |    Top Center `┬` | L_TR |    Top Right `┐` |
-| Heavy      | H_ML | Middle Left `┣` | H_MC | Middle Center `╋` | H_MR | Middle Right `┫` |
-| Double     | D_BL | Bottom Left `╚` | D_BC | Bottom Center `╩` | D_BR | Bottom Right `╝` |
-| Rounded    | R_BL | Bottom Left `╰` | R_BC | Bottom Center `┴` | R_BR | Bottom Right `╯` |
+| Line Type  | VAR | Meaning         | Var | Meaning           | Var | Meaning          |
+| ---------- | --- | --------------- | --- | ----------------- | --- | ---------------- |
+| Light      | LTL |    Top Left `┌` | LTC |    Top Center `┬` | LTR |    Top Right `┐` |
+| Heavy      | HML | Middle Left `┣` | HMC | Middle Center `╋` | HMR | Middle Right `┫` |
+| Double     | DBL | Bottom Left `╚` | DBC | Bottom Center `╩` | DBR | Bottom Right `╝` |
+| Rounded    | RBL | Bottom Left `╰` | RBC | Bottom Center `┴` | RBR | Bottom Right `╯` |
 
 ## Printf - `printf.sh` and `printf.awk`
 
@@ -522,14 +522,14 @@ Printf has six features:
 
   For example the string `"Short %[m]color %[r]codes%[o]"` renders `colors` in magenta and `codes` in red.
 
-* Draw with the Unicode box drawing chatacters from `boxes.sh`.
+* Draw with the Unicode box drawing characters from `boxes.sh`.
   Using `%<STRING>` will attempt to fetch the attribute from the `$TERM_BOX_` shortcut environment variables.
   The string can contain multiple attributes separated by a comma.
   Use the part of the box variable name after `$TERM_BOX_`.
   For example `%<D_BC>` will draw the character `╩`.
   Use underscore, `_`, for a single space.
 
-  For example the string `"%<L_ML,L_LH,L_MC,L_LH,L_MR,_,_,L_LV>"` translates into `├─┼─┤  │`.
+  For example the string `"%<LML,LLH,LMC,LLH,LMR,_,_,LLV>"` translates into `├─┼─┤  │`.
 
 ### Primary interface
 

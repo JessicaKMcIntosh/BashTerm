@@ -34,13 +34,13 @@ term::printf 'Backslash escapes: \x7e \x22\\\x3d\x22 => \042\075\042 \176\012'
 echo "Box drawing characters:"
 
 # Each box character in a separate "%<>".
-term::printf "%<L_TL>%<L_LH>%<L_TC>%<L_TR>\n"
-term::printf "%<L_ML>%<L_LH>%<L_MC>%<L_MR>\n"
-term::printf "%<L_BL>%<L_LH>%<L_BC>%<L_BR>\n"
+term::printf "%<LTL>%<LLH>%<LTC>%<LTR>\n"
+term::printf "%<LML>%<LLH>%<LMC>%<LMR>\n"
+term::printf "%<LBL>%<LLH>%<LBC>%<LBR>\n"
 
 # Multiple box chatacters separated by a comma.
 # Use "_" to print a space.
-term::printf "%<L_TL,L_LH,L_TC,L_LH,L_TC,L_LH,L_LH,L_TR>\n"
-term::printf "%<L_ML,L_LH,L_MC,L_LH,L_MR,_,_,L_LV>\n"
-term::printf "%<L_LV,_,L_ML,L_LH,L_MR,_,_,L_LV>\n"
-term::printf "%<L_BL,L_LH,L_BC,L_LH,L_BC,L_LH,L_LH,L_BR>\n"
+term::printf "%<LTL,LLH,LTC,LLH,LTC,LLH,LLH,LTR>\n"
+term::printf "%<LML,LLH,LMC,LLH,LMR,_  ,_  ,LLV>\n"
+term::printf "%<LLV,_  ,LML,LLH,LMR,_  ,_  ,LLV>\n"
+term::printf "%<LBL,LLH,LBC,LLH,LBC,LLH,LLH,LBR>\n"
