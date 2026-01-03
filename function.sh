@@ -56,7 +56,7 @@ term::UNDERLINE()   { echo -n "${TERM_ATTR["rmul"]}" ; }
 term::bold()        { echo -n "${TERM_ATTR["bold"]}" ; }
 term::clear()       { echo -n "${TERM_ATTR["clear"]}" ; }
 term::dim()         { echo -n "${TERM_ATTR["dim"]}" ; }
-term::invis()       { echo -n "${TERM_ATTR["invis"]}" ; }
+term::invisibl()    { echo -n "${TERM_ATTR["invis"]}" ; }
 term::italics()     { echo -n "${TERM_ATTR["italics"]}" ; }
 term::orig()        { echo -n "${TERM_ATTR["op"]}" ; }
 term::reset()       { echo -n "${TERM_ATTR["reset"]}" ; }
@@ -82,26 +82,25 @@ term::RED()         { echo -n "${TERM_BG["red"]}" ; }
 term::YELLOW()      { echo -n "${TERM_BG["yellow"]}" ; }
 
 # Cursor:
-term::clr_bol()             { echo -n "${TERM_CURSOR["clr_bol"]}" ; }
-term::clr_eol()             { echo -n "${TERM_CURSOR["clr_eol"]}" ; }
-term::clr_eos()             { echo -n "${TERM_CURSOR["clr_eos"]}" ; }
-term::delete_character()    { echo -n "${TERM_CURSOR["delete_character"]}" ; }
-term::delete_line()         { echo -n "${TERM_CURSOR["delete_line"]}" ; }
-term::down()                { echo -n "${TERM_CURSOR["down"]}" ; }
-term::hide()                { echo -n "${TERM_CURSOR["hide"]}" ; }
-term::home()                { echo -n "${TERM_CURSOR["home"]}" ; }
-# term::insert_character()    { echo -n "${TERM_CURSOR["insert_character"]}" ; }
-term::insert_line()         { echo -n "${TERM_CURSOR["insert_line"]}" ; }
-term::invisible()           { echo -n "${TERM_CURSOR["invisible"]}" ; }
-term::left()                { echo -n "${TERM_CURSOR["left"]}" ; }
-term::normal()              { echo -n "${TERM_CURSOR["normal"]}" ; }
-term::restore()             { echo -n "${TERM_CURSOR["restore"]}" ; }
-term::right()               { echo -n "${TERM_CURSOR["right"]}" ; }
-term::save()                { echo -n "${TERM_CURSOR["save"]}" ; }
-term::show()                { echo -n "${TERM_CURSOR["show"]}" ; }
-# term::to_ll()               { echo -n "${TERM_CURSOR["to_ll"]}" ; }
-term::up()                  { echo -n "${TERM_CURSOR["up"]}" ; }
-term::visible()             { echo -n "${TERM_CURSOR["visible"]}" ; }
+term::clr_bol()             { echo -n "${TERM_ATTR["clr_bol"]}" ; }
+term::clr_eol()             { echo -n "${TERM_ATTR["clr_eol"]}" ; }
+term::clr_eos()             { echo -n "${TERM_ATTR["clr_eos"]}" ; }
+term::delete_character()    { echo -n "${TERM_ATTR["delete_character"]}" ; }
+term::delete_line()         { echo -n "${TERM_ATTR["delete_line"]}" ; }
+term::down()                { echo -n "${TERM_ATTR["down"]}" ; }
+term::hide()                { echo -n "${TERM_ATTR["hide"]}" ; }
+term::home()                { echo -n "${TERM_ATTR["home"]}" ; }
+# term::insert_character()    { echo -n "${TERM_ATTR["insert_character"]}" ; }
+term::insert_line()         { echo -n "${TERM_ATTR["insert_line"]}" ; }
+term::left()                { echo -n "${TERM_ATTR["left"]}" ; }
+term::normal()              { echo -n "${TERM_ATTR["normal"]}" ; }
+term::restore()             { echo -n "${TERM_ATTR["restore"]}" ; }
+term::right()               { echo -n "${TERM_ATTR["right"]}" ; }
+term::save()                { echo -n "${TERM_ATTR["save"]}" ; }
+term::show()                { echo -n "${TERM_ATTR["show"]}" ; }
+# term::to_ll()               { echo -n "${TERM_ATTR["to_ll"]}" ; }
+term::up()                  { echo -n "${TERM_ATTR["up"]}" ; }
+term::visible()             { echo -n "${TERM_ATTR["visible"]}" ; }
 
 # Boxes:
 term::box_l_lh() { echo -n "${TERM_BOX_L_LH}" ; } # ─ Box Drawings Light Horizontal
