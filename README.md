@@ -2,10 +2,10 @@
 
 A library to simplify working with the terminal in bash.
 
-* [TODO](#todo)
-* [Requirements](#requirements)
 * [Overview](#overview)
 * [Why?](#why)
+* [Requirements](#requirements)
+* [TODO](#todo)
 * [Terminal Attributes - `attr.sh`](#terminal-attributes---attrsh)
   * [Primary interface](#primary-interface)
   * [Shortcuts](#shortcuts)
@@ -48,25 +48,9 @@ A library to simplify working with the terminal in bash.
 * [Other Projects](#other-projects)
 * [LICENSE](#license)
 
-## TODO
-
-* Draw boxes. Could do this with AWK.
-* Unit tests.
-* Write an actual test for the cursor library.
-
-## Requirements
-
-This library requires Bash 4.
-There are some features that only work with 4.
-For example Unicode characters `$'\u2500'` and associative arrays.
-
-MacOS still ships with Bash 3.
-For MacOS check out [Homebrew](https://brew.sh/) for a modern version of bash.
-
 ## Overview
 
-This library provides a variable interface with a few functions.
-When the library loads it calls `tput` to get the escape codes for terminal functionality.
+This library provides a terminal interface for Bash using variables and a few functions.
 
 The primary interface is using associative arrays.
 For example the following will draw the word `Underline` underlined.
@@ -86,9 +70,9 @@ source "./attr.sh"
 echo "Normal ${TERM_BOLD}Bold${TERM_RESET} not bold"
 ```
 
-This us done by using the command `tput` to generate the escape codes.
+This us done by using the command `tput` to generate the escape codes when the library files load.
 First the associative arrays are built.
-Then the shortcut variables are created.
+hen the shortcut variables are created.
 See the file `attr.sh` for more details.
 
 ## Why?
@@ -97,13 +81,35 @@ Because there isn't a simple solution out there that can be easily customized fo
 There are more complicated libraries that don't cover many cases.
 And plenty of snippets and Gists.
 But nothing with broad coverage that is easy to use.
-I created this after having to dig up all of this for a simple world clock.
+I created this after having to dig up some of this for a simple world clock.
+I had to find the attributes, colors, and box characters separately.
 
 The goal is not to provide an all encompassing library that solves all of your problems.
 
 The goal is to make something simple that can be easily customized to suit YOUR needs.
 
 To that end I recommend picking and choosing the bits and pieces you want in your script.
+
+Don't like how something is named? Change it! \
+Don't need attribute aliases? Don't include the code. \
+Don't care about drawing boxes? Delete all of the boxy stuff.
+
+## Requirements
+
+This library requires Bash 4.
+There are some features that only work with 4.
+For example Unicode characters `$'\u2500'` and associative arrays.
+
+MacOS still ships with Bash 3.
+For MacOS check out [Homebrew](https://brew.sh/) for a modern version of bash.
+
+AWK is used by the printf library and the script `examples/spinner_example.sh`.
+
+## TODO
+
+* Draw boxes. Could do this with AWK. `examples/draw.sh`
+* Unit tests.
+* Write an actual test for the cursor library.
 
 ## Terminal Attributes - `attr.sh`
 
