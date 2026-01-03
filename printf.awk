@@ -15,7 +15,7 @@ BEGIN {
     setup_color_lookup()
 
     # Setup the translation from short code to attribute.
-    short_attrs="-,reset:d,dim:h,hide:H,home:i,insert:I,exit insert:l,bold:L,clear:o,orig:s,standout:S,exit_standout:t,italics:T,exit_italics:u,underline:U,exit_underline:v,reverse:V,invisible:z,visible:k,black:r,red:g,green:y,yellow:b,blue:m,magenta:c,cyan:w,white:K,BLACK:R,RED:G,GREEN:Y,YELLOW:B,BLUE:M,MAGENTA:C,CYAN:W,WHITE"
+    short_attrs="-,reset:d,dim:h,hide:H,home:i,insert:I,exit_insert:l,bold:L,clear:o,orig:s,standout:S,exit_standout:t,italics:T,exit_italics:u,underline:U,exit_underline:v,reverse:V,invisible:z,normal:k,black:r,red:g,green:y,yellow:b,blue:m,magenta:c,cyan:w,white:K,BLACK:R,RED:G,GREEN:Y,YELLOW:B,BLUE:M,MAGENTA:C,CYAN:W,WHITE"
     delete short_attributes
     setup_short_attributes()
 
@@ -99,7 +99,7 @@ function handle_attribute(    attribute, attr_list, new_position) {
     new_position = find_char("\051") # ()
     attribute = substr(format_string, (format_position + 1), ((new_position - format_position) - 1))
     format_position = new_position
-    split(attribute, attr_list, ",")
+    split(attribute, attr_list, / *, */)
     character = ""
     for (attribute in attr_list) {
         character = character get_attribute(attr_list[attribute])
@@ -122,7 +122,7 @@ function handle_tput(    attribute, attr_list, new_position) {
     new_position = find_char("\175") # {}
     attribute = substr(format_string, (format_position + 1), ((new_position - format_position) - 1))
     format_position = new_position
-    split(attribute, attr_list, ",")
+    split(attribute, attr_list, / *, */)
     character = ""
     for (attribute in attr_list) {
         character = character call_tput(attr_list[attribute])
