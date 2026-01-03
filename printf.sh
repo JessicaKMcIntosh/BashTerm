@@ -1,9 +1,35 @@
 #!/usr/bin/env bash
+# shellcheck source=attr.sh
+# shellcheck source=boxes.sh
+# shellcheck source=color.sh
+# shellcheck source=cursor.sh
 
 # A printf implementation with terminal attributes.
 
 # This is really only an example.
 # Adapt to your needs.
+
+# Load the libraries.
+find_library(){
+    local library="${1}"
+    for file_name in {./,../}${library} ; do
+        if [[ -f  "${file_name}" ]] ; then
+            echo "${file_name}"
+        fi
+done
+}
+source "$(find_library "attr.sh")"
+source "$(find_library "boxes.sh")"
+source "$(find_library "color.sh")"
+source "$(find_library "cursor.sh")"
+
+# Find the printf.awk file.
+AWK_FILE="$(find_library "printf.awk")"
+if [[ ! -f "${AWK_FILE}" ]] ; then
+    echo "Unable to locate 'printf.awk' in the current or parent directories."
+    echo "ABORTING!!"
+    exit 1
+fi
 
 # Short attribute codes.
 # - reset
@@ -41,21 +67,10 @@
 # C cyan background
 # W white background
 
-source "./attr.sh"
-source "./color.sh"
-source "./cursor.sh"
-
 term::printf(){
     while [[ "$#" -gt 0 ]]; do
         echo "${1}"
         shift
-    done | awk -f printf.awk
-    # done | gawk --lint -f printf.awk # For development.
+    done | awk -f "${AWK_FILE}"
+    # done | gawk --lint -f "${AWK_FILE}" # For development.
 }
-
-term::printf "This%{rev}is%{sgr0} a %%%(underline)format%(UNDERLINE) %s.%(reset)\n" "test" # | hexdump -C
-term::printf "Color %(green)Green%(reset) Normal %(CYAN)More%(reset)\n"
-term::printf "Short %[m]color%[r] codes%[o] and %[byB]Attributes%[-]\n"
-# Be careful with backslashes in double quotes.
-# '\x22\\\x3d\x22' == "\x22\\\\\x3d\x22"
-term::printf 'Backslash escapes: \x7e \x22\\\x3d\x22 => \042\075\042 \176\012'
