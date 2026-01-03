@@ -28,6 +28,9 @@ A library to simplify working with the terminal in bash.
 * [Box drawing Unicode characters - `boxes.sh`](#box-drawing-unicode-characters---boxessh)
   * [Primary interface](#primary-interface-3)
   * [Variable meaning](#variable-meaning)
+* [Printf - `printf.sh` and `printf.awk`](#printf---printfsh-and-printfawk)
+  * [Backslashes](#backslashes)
+* [Short Attribute Codes](#short-attribute-codes)
 * [Functional Interface - `function.sh`](#functional-interface---functionsh)
 * [Examples](#examples)
   * [Attributes - `examples/attr_example.sh`](#attributes---examplesattr_examplesh)
@@ -461,6 +464,91 @@ Examples of box parts.
 | Heavy      | H_ML | Middle Left `┣` | H_MC | Middle Center `╋` | H_MR | Middle Right `┫` |
 | Double     | D_BL | Bottom Left `╚` | D_BC | Bottom Center `╩` | D_BR | Bottom Right `╝` |
 | Rounded    | R_BL | Bottom Left `╰` | R_BC | Bottom Center `┴` | R_BR | Bottom Right `╯` |
+
+## Printf - `printf.sh` and `printf.awk`
+
+This is a custom implementation of printf in AWK.
+With the ability to set attributes and call `tput`.
+
+There are some limitations with this library.
+Backslashes are a nightmare.
+Be careful and don't put more than one together.
+The AWK implementation of `sprintf()` is used.
+
+This library is composed of two files:
+
+* `printf.awk` -
+  The implementation of printf.
+* `printf.sh` -
+  Bash function to call `printf.awk`.
+
+Printf has five features:
+
+* Backslash characters are properly interpreted.
+  Provided the backslash characters make it to AWK.
+* Normal `%` based format statements.
+  These are passed to the AWK `sprintf()` function.
+* Call `tput` directly.
+  Using `%{STRING}}` will call `tput` with the contents of `STRING`.
+  The string can contain multiple attributes separated by a comma. \
+  For example: `"%{sgr0,clear}"` will reset all attributes then clear the screen using tput.
+* Lookup the environment variable for an attribute.
+  Using `%(STRING)` will attempt to fetch the attribute from the `$TERM_` shortcut environment variables.
+  Some special allowances are made:
+
+  * If the attribute is a color name such as `red` or `BRIGHTBLUE` they will be translated to the correct color variable.
+    In this example they translate to `$TERM_FG_RED` and `$TERM_BG_BRIGHTBLUE`.
+  * Upper and lower case attribute names have different meanings.
+    Lowercase means to set the attribute, uppercase means to unset it (use the variable `$TERM_EXIT_ATTRIBUTE`)
+    Lowercase color means foreground, uppercase color means background.
+
+* Lookup the environment variable for an attribute using single letter short codes.
+  Using `%[CHARS]` to specify attributes using single characters.
+  See the table below for details.
+
+### Backslashes
+
+All of the supported backslash escape codes.
+
+| Code | Meaning |
+| --- | --- |
+| \\\\ | A single backslash character. |
+| \\a | Alert, bell. |
+| \\b | Backspace. |
+| \\e | Escape. |
+| \\E | Escape. |
+| \\f | Form feed. |
+| \\n | Newline. |
+| \\r | Carriage return. |
+| \\t | Tab. |
+| \\v | Vertical tab. |
+| \\0dd or \\1dd | Convert three octal digits `0dd` or `1dd` into an ASCII character. |
+| \\xhh | Converts the two hexadecimal digits `hh` into an ASCII character. |
+
+## Short Attribute Codes
+
+These are single characters that translate to an attribute.
+Put as many characters inside `$[]` as desired.
+
+| Code | Attribute | Code | Attribute |
+| --- | --- | --- | --- |
+| - | Reset attributes. (sgr0) | o | Original colors. (orig) |
+| d | Dim mode. (dim) | k | Black Foreground |
+| h | Hide the cursor. (hide) | r | Red Foreground |
+| H | Moe the cursor home. (home) | g | Green Foreground |
+| i | Insert mode. (smir) | y | Yellow Foreground |
+| I | Exit insert. (rmir) | b | Blue Foreground |
+| l | Bold mode. (bold) | m | Magenta Foreground |
+| L | Clear the screen. (clear) | c | Cyan Foreground |
+| s | Standout mode (smso) | w | White Foreground |
+| S | Exit standout mode. (rmso) | K | Black Background |
+| t | Italics Mode. (sitm) | R | Red Background |
+| T | Exit Italics mode. (ritm) | G | Green Background |
+| u | Underline mode. (smul) | Y | Yellow Background |
+| U | Exit underline mode. (rmul) | B | Blue Background |
+| v | Reverse mode. (rev) | M | Magenta Background |
+| V | Invisible mode. (invis) | C | Cyan Background |
+| z | Show the cursor. (cnorm) | W | White Background |
 
 ## Functional Interface - `function.sh`
 
