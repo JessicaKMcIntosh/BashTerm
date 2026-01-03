@@ -60,6 +60,9 @@ done
 for name in $(compgen -e TERM_FG); do
     declare -p "${name}"
 done
-for name in $(compgen -e TERM_CURSOR); do
-    declare -p "${name}"
+echo ""
+
+echo "# Functions."
+for name in $(compgen -A function term::); do
+    declare -f "${name}"
 done

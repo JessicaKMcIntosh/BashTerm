@@ -646,11 +646,8 @@ A rather complex demonstration of what the printf library can do.
 
 ## Export - `examples/export.sh`
 
-This script will print variable declarations that Bash can read back.
-All of the environment variables for the above libraries are output.
-
-**NOTE:**
-Functions are not included in the export!
+This script will print variable and function declarations that Bash can read back.
+All of the environment variables and functions for the libraries `attr.sh`, `boxes.sh`, `color.sh`, and `cursor.sh` are output.
 
 This is really only useful for adding the escape codes for a specific terminal directly to your script.
 
