@@ -89,6 +89,8 @@ function handle_percent() {
         handle_short()
     else if (character == "\173") # {}
         handle_tput()
+    else if (character == "\074") # <>
+        handle_box()
     else if (character != "%")
         handle_printf()
 }
@@ -96,7 +98,7 @@ function handle_percent() {
 # Process attributes.
 # Retrieve the escape code from the environment variables.
 function handle_attribute(    attribute, attr_list, new_position) {
-    new_position = find_char("\051") # ()
+    new_position = find_character("\051") # ()
     attribute = substr(format_string, (format_position + 1), ((new_position - format_position) - 1))
     format_position = new_position
     split(attribute, attr_list, / *, */)
@@ -106,9 +108,24 @@ function handle_attribute(    attribute, attr_list, new_position) {
     }
 }
 
+# Process box characters.
+# Retrieve the escape code from the environment variables.
+function handle_box(    attribute, attr_list, new_position) {
+    new_position = find_character("\076") # <>
+    attribute = substr(format_string, (format_position + 1), ((new_position - format_position) - 1))
+    format_position = new_position
+    split(attribute, attr_list, / *, */)
+    character = ""
+    for (attribute in attr_list) {
+        character = character get_attribute("BOX_" attr_list[attribute])
+    }
+}
+
 # Process short attribute codes.
+# Convert to an attribute then retrieve the
+# escape code from the environment variables.
 function handle_short(    attribute, new_position) {
-    new_position = find_char("\135") # []
+    new_position = find_character("\135") # []
     attribute = substr(format_string, (format_position + 1), ((new_position - format_position) - 1))
     format_position = new_position
     character = ""
@@ -131,7 +148,7 @@ function handle_tput(    attribute, attr_list, new_position) {
 
 # Handles the normal printf format statements.
 function handle_printf(    attribute, new_position) {
-    new_position = find_char("[a-zA-Z]")
+    new_position = find_pattern("[a-zA-Z]")
     attribute = substr(format_string, (format_position - 1), (new_position - format_position + 2))
     format_position = new_position
     if (input_pointer == input_count)
@@ -141,13 +158,25 @@ function handle_printf(    attribute, new_position) {
 
 # Search from format_position for a character matching search_pattern.
 # Returns the position of the character.
-function find_char(search_pattern,    found_position) {
+function find_character(search_character,    found_position) {
+    for (found_position = format_position; found_position <= format_length; found_position++) {
+        if (substr(format_string, found_position, 1) == search_character)
+            break
+    }
+    if (found_position > format_length)
+        error("find_character", "End of format string!")
+    return found_position
+}
+
+# Search from format_position for a character matching search_pattern.
+# Returns the position of the character.
+function find_pattern(search_pattern,    found_position) {
     for (found_position = format_position; found_position <= format_length; found_position++) {
         if (substr(format_string, found_position, 1) ~ search_pattern)
             break
     }
     if (found_position > format_length)
-        error("find_char", "End of format string!")
+        error("find_pattern", "End of format string!")
     return found_position
 }
 
@@ -157,6 +186,9 @@ function find_char(search_pattern,    found_position) {
 function get_attribute(attribute) {
     if (attribute in color_lookup) {
         return ENVIRON["TERM_" color_lookup[attribute]]
+    }
+    if (attribute ~ /^BOX_/) {
+        return ENVIRON["TERM_" toupper(attribute)]
     }
     if (attribute == toupper(attribute))
         attribute = "exit_" attribute

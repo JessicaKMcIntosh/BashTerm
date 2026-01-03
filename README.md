@@ -29,8 +29,9 @@ A library to simplify working with the terminal in bash.
   * [Primary interface](#primary-interface-3)
   * [Variable meaning](#variable-meaning)
 * [Printf - `printf.sh` and `printf.awk`](#printf---printfsh-and-printfawk)
+  * [Primary interface](#primary-interface-4)
   * [Backslashes](#backslashes)
-* [Short Attribute Codes](#short-attribute-codes)
+  * [Short Attribute Codes](#short-attribute-codes)
 * [Functional Interface - `function.sh`](#functional-interface---functionsh)
 * [Examples](#examples)
   * [Attributes - `examples/attr_example.sh`](#attributes---examplesattr_examplesh)
@@ -470,10 +471,13 @@ Examples of box parts.
 This is a custom implementation of printf in AWK.
 With the ability to set attributes and call `tput`.
 
-There are some limitations with this library.
-Backslashes are a nightmare.
-Be careful and don't put more than one together.
-The AWK implementation of `sprintf()` is used.
+There are some limitations with this library:
+
+* Backslashes are a nightmare, just use single quotes.
+  Be careful and don't put more than one together if using double quotes.
+* The AWK implementation of `sprintf()` is used.
+  This limits what can be done depending on your version of AWK.
+* Every time the function `term::printf` is called the AWK program is parsed and lookup tables are built.
 
 This library is composed of two files:
 
@@ -485,15 +489,15 @@ This library is composed of two files:
 Printf has five features:
 
 * Backslash characters are properly interpreted.
-  Provided the backslash characters make it to AWK.
+  Provided the backslash characters make it to AWK intact.
 * Normal `%` based format statements.
   These are passed to the AWK `sprintf()` function.
 * Call `tput` directly.
-  Using `%{STRING}}` will call `tput` with the contents of `STRING`.
+  Using `%{STRING}` will call `tput` with the contents of `STRING`.
   The string can contain multiple attributes separated by a comma. \
-  For example: `"%{sgr0,clear}"` will reset all attributes then clear the screen using tput.
+  For example: `"%{sgr0,clear, setaf 3}"` will reset all attributes then clear the screen using tput.
 * Lookup the environment variable for an attribute.
-  Using `%(STRING)` will attempt to fetch the attribute from the `$TERM_` shortcut environment variables.
+  Using `%(STRING)` will attempt to fetch the attribute from the `$TERM_ATTR_` shortcut environment variables.
   Some special allowances are made:
 
   * If the attribute is a color name such as `red` or `BRIGHTBLUE` they will be translated to the correct color variable.
@@ -505,6 +509,13 @@ Printf has five features:
 * Lookup the environment variable for an attribute using single letter short codes.
   Using `%[CHARS]` to specify attributes using single characters.
   See the table below for details.
+
+### Primary interface
+
+The primary interface for the printf library is the function `term::printf`.
+This acts like the shell `printf` command.
+The first parameter is the format string.
+Remaining parameters are for the format statements.
 
 ### Backslashes
 
@@ -525,7 +536,7 @@ All of the supported backslash escape codes.
 | \\0dd or \\1dd | Convert three octal digits `0dd` or `1dd` into an ASCII character. |
 | \\xhh | Converts the two hexadecimal digits `hh` into an ASCII character. |
 
-## Short Attribute Codes
+### Short Attribute Codes
 
 These are single characters that translate to an attribute.
 Put as many characters inside `$[]` as desired.

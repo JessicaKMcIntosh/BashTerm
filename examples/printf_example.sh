@@ -22,3 +22,13 @@ term::printf "Short %[m]color%[r] codes%[o] and %[byB]Attributes%[-]\n"
 # The downside of using this.
 # '\x22\\\x3d\x22' == "\x22\\\\\x3d\x22"
 term::printf 'Backslash escapes: \x7e \x22\\\x3d\x22 => \042\075\042 \176\012'
+echo "Box drawing characters:"
+term::printf "%<L_TL>%<L_LH>%<L_TC>%<L_TR>\n"
+term::printf "%<L_ML>%<L_LH>%<L_MC>%<L_MR>\n"
+term::printf "%<L_LV> %<L_LV>%<L_LV>\n"
+term::printf "%<L_BL>%<L_LH>%<L_BC>%<L_BR>\n"
+
+term::printf "%<L_TL>%<L_LH>%<L_TC>%<L_LH>%<L_TC>%<L_LH>%<L_LH>%<L_TR>\n"
+term::printf "%<L_ML>%<L_LH>%<L_MC>%<L_LH>%<L_MR>  %<L_LV>\n"
+term::printf "%<L_LV> %<L_ML>%<L_LH>%<L_MR>  %<L_LV>\n"
+term::printf "%<L_BL>%<L_LH>%<L_BC>%<L_LH>%<L_BC>%<L_LH>%<L_LH>%<L_BR>\n"
