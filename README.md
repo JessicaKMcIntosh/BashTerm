@@ -41,6 +41,7 @@ A library to simplify working with the terminal in bash.
   * [Cursor - `examples/cursor_example.sh`](#cursor---examplescursor_examplesh)
   * [Function - `examples/function_example.sh`](#function---examplesfunction_examplesh)
   * [Spinner - `examples/spinner_example.sh`](#spinner---examplesspinner_examplesh)
+* [Printf - `./examples/printf_example.sh`](#printf---examplesprintf_examplesh)
 * [Export - `examples/export.sh`](#export---examplesexportsh)
   * [Usage](#usage)
 * [Reference](#reference)
@@ -486,18 +487,25 @@ This library is composed of two files:
 * `printf.sh` -
   Bash function to call `printf.awk`.
 
-Printf has five features:
+Printf has six features:
 
 * Backslash characters are properly interpreted.
   Provided the backslash characters make it to AWK intact.
+  See the table [Backslashes](#backslashes) below for details.
+
 * Normal `%` based format statements.
   These are passed to the AWK `sprintf()` function.
+
 * Call `tput` directly.
   Using `%{STRING}` will call `tput` with the contents of `STRING`.
-  The string can contain multiple attributes separated by a comma. \
-  For example: `"%{sgr0,clear, setaf 3}"` will reset all attributes then clear the screen using tput.
+  The string can contain multiple attributes separated by a comma.
+
+  For example: `"%{sgr0,clear}"` will reset all attributes then clear the screen using tput.
+
 * Lookup the environment variable for an attribute.
   Using `%(STRING)` will attempt to fetch the attribute from the `$TERM_` shortcut environment variables.
+  The string can contain multiple attributes separated by a comma.
+
   Some special allowances are made:
 
   * If the attribute is a color name such as `red` or `BRIGHTBLUE` they will be translated to the correct color variable.
@@ -506,9 +514,22 @@ Printf has five features:
     Lowercase means to set the attribute, uppercase means to unset it (use the variable `$TERM_EXIT_ATTRIBUTE`)
     Lowercase color means foreground, uppercase color means background.
 
+    For example the string `"Color %(green, bold)Green%(orig)"` renders `Green` in green.
+
 * Lookup the environment variable for an attribute using single letter short codes.
   Using `%[CHARS]` to specify attributes using single characters.
-  See the table below for details.
+  See the table [Short Attribute Codes](#short-attribute-codes) below for details.
+
+  For example the string `"Short %[m]color %[r]codes%[o]"` renders `colors` in magenta and `codes` in red.
+
+* Draw with the Unicode box drawing chatacters from `boxes.sh`.
+  Using `%<STRING>` will attempt to fetch the attribute from the `$TERM_BOX_` shortcut environment variables.
+  The string can contain multiple attributes separated by a comma.
+  Use the part of the box variable name after `$TERM_BOX_`.
+  For example `%<D_BC>` will draw the character `╩`.
+  Use underscore, `_`, for a single space.
+
+  For example the string `"%<L_ML,L_LH,L_MC,L_LH,L_MR,_,_,L_LV>"` translates into `├─┼─┤  │`.
 
 ### Primary interface
 
@@ -612,6 +633,10 @@ Demonstrates the function interface by duplicating `examples/attr_example.sh`, `
 A simple demo of the spinner.
 Presents a menu to pick from the available animations.
 This is meant as an example, not a complete solution.
+
+## Printf - `./examples/printf_example.sh`
+
+A rather complex demonstration of what the printf library can do.
 
 ## Export - `examples/export.sh`
 

@@ -100,6 +100,8 @@ function handle_percent() {
 function handle_attribute(    attribute, attr_list, new_position) {
     new_position = find_character("\051") # ()
     attribute = substr(format_string, (format_position + 1), ((new_position - format_position) - 1))
+    sub(/^  */, "", attribute)
+    sub(/  *$/, "", attribute)
     format_position = new_position
     split(attribute, attr_list, / *, */)
     character = ""
@@ -113,11 +115,17 @@ function handle_attribute(    attribute, attr_list, new_position) {
 function handle_box(    attribute, attr_list, new_position) {
     new_position = find_character("\076") # <>
     attribute = substr(format_string, (format_position + 1), ((new_position - format_position) - 1))
+    sub(/^  */, "", attribute)
+    sub(/  *$/, "", attribute)
     format_position = new_position
     split(attribute, attr_list, / *, */)
     character = ""
     for (attribute in attr_list) {
-        character = character get_attribute("BOX_" attr_list[attribute])
+        if (attr_list[attribute] == "_") {
+            character = character " "
+        } else {
+            character = character ENVIRON["TERM_BOX_" attr_list[attribute]]
+        }
     }
 }
 
@@ -130,13 +138,13 @@ function handle_short(    attribute, new_position) {
     format_position = new_position
     character = ""
     for (new_position = 1; new_position <= length(attribute); new_position++) {
-        character = character get_short_attribute(substr(attribute, new_position, 1))
+        character = character get_attribute(short_attributes[substr(attribute, new_position, 1)])
     }
 }
 
 # Call tput directly for the given input.
 function handle_tput(    attribute, attr_list, new_position) {
-    new_position = find_char("\175") # {}
+    new_position = find_character("\175") # {}
     attribute = substr(format_string, (format_position + 1), ((new_position - format_position) - 1))
     format_position = new_position
     split(attribute, attr_list, / *, */)
@@ -182,29 +190,22 @@ function find_pattern(search_pattern,    found_position) {
 
 # Get the attribute escape code from the environment variables.
 # Colors are converted.
-# All uppercase have "exit_" prepended for friendliness.
+# All uppercase attributes have "exit_" prepended for friendliness.
 function get_attribute(attribute) {
     if (attribute in color_lookup) {
-        return ENVIRON["TERM_" color_lookup[attribute]]
-    }
-    if (attribute ~ /^BOX_/) {
-        return ENVIRON["TERM_" toupper(attribute)]
-    }
-    if (attribute == toupper(attribute))
+        attribute = color_lookup[attribute]
+    } else if (attribute == toupper(attribute))
         attribute = "exit_" attribute
-    return ENVIRON["TERM_ATTR_" toupper(attribute)]
-}
-
-# Convert a short attribute code to an escape code.
-function get_short_attribute(attribute) {
-    if (attribute in short_attributes) {
-        return get_attribute(short_attributes[attribute])
-    }
-    return ""
+    return ENVIRON["TERM_" toupper(attribute)]
 }
 
 # Directly call tput with the given attribute string.
+# Check if the attribute has unsafe chatacters.
 function call_tput(attribute,    escape_code) {
+    if (attribute ~ /[^a-zA-Z0-9]/) {
+        attribute = sprintf("Invalid characters being passed to tput. Input: %s", attribute)
+        error(attribute, "call_tput")
+    }
     attribute = "tput " attribute
     attribute | getline escape_code
     close(attribute)
@@ -213,18 +214,18 @@ function call_tput(attribute,    escape_code) {
 
 # Helpful debug text.
 function error(caller, error_text,  record) {
-    print "ERROR!"
-    print "Caller: " caller
-    print "Error: " error_text
-    print "New String: \042" output_string "\042"
-    print "Character: \042" character "\042"
-    print "Format String: \042" format_string "\042"
-    print "Position: " format_position
-    print "Format Left: \042" substr(format_string, format_position) "\042"
-    print "Input Pointer: " input_pointer
-    print "Input:"
+    print "ERROR!" | "cat 1>&2"
+    printf("Caller: %s\n", caller) | "cat 1>&2"
+    printf("Error: %s\n", error_text) | "cat 1>&2"
+    printf("New String: \042%s\042\n", output_string) | "cat 1>&2"
+    printf("Character: \042%s\042\n", character) | "cat 1>&2"
+    printf("Format String: \042%s\042\n", format_string) | "cat 1>&2"
+    printf("Position: %s\n", format_position) | "cat 1>&2"
+    printf("Format Left: \042%s\042\n", substr(format_string, format_position)) | "cat 1>&2"
+    printf("Input Pointer: %s\n", input_pointer) | "cat 1>&2"
+    printf("Input:\n") | "cat 1>&2"
     for (record in input_records)
-        printf("    \042%s\042\n", input_records[record])
+        printf("    \042%s\042\n", input_records[record]) | "cat 1>&2"
     exit(1)
 }
 

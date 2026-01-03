@@ -31,42 +31,6 @@ if [[ ! -f "${AWK_FILE}" ]] ; then
     exit 1
 fi
 
-# Short attribute codes.
-# - reset
-# d dim mode
-# h hide cursor
-# H home cursor
-# i insert mode
-# I exit insert mode
-# l bold mode
-# L clear screen
-# o default colors
-# s standout mode
-# S exit standout mode
-# t italics mode
-# T exit italics mode
-# u underline mode
-# U exit underline mode
-# v reverse mode
-# V secure mode (invisible)
-# z show cursor
-# k black foreground
-# r red foreground
-# g green foreground
-# y yellow foreground
-# b blue foreground
-# m magenta foreground
-# c cyan foreground
-# w white foreground
-# K black background
-# R red background
-# G green background
-# Y yellow background
-# B blue background
-# M magenta background
-# C cyan background
-# W white background
-
 term::printf(){
     while [[ "$#" -gt 0 ]]; do
         echo "${1}"
