@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # shellcheck source=../boxes.sh
 
+# BashTerm by Jessica K McIntosh is marked CC0 1.0.
+# To view a copy of this mark, visit:
+# https://creativecommons.org/publicdomain/zero/1.0/
+
 # Example of using the boxes library.
 
 # Load the library

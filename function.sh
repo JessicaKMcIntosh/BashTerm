@@ -4,6 +4,10 @@
 # shellcheck source=color.sh
 # shellcheck source=cursor.sh
 
+# BashTerm by Jessica K McIntosh is marked CC0 1.0.
+# To view a copy of this mark, visit:
+# https://creativecommons.org/publicdomain/zero/1.0/
+
 # This is a functional interface to the variables.
 # If that is something you want... :shrug:
 

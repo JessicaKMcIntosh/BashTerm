@@ -2,6 +2,10 @@
 # shellcheck source=../attr.sh
 # shellcheck source=../cursor.sh
 
+# BashTerm by Jessica K McIntosh is marked CC0 1.0.
+# To view a copy of this mark, visit:
+# https://creativecommons.org/publicdomain/zero/1.0/
+
 # Example of using the cursor library.
 
 # Load the libraries.

@@ -3,6 +3,10 @@
 # shellcheck source=../spinner.sh
 # shellcheck disable=SC2162 # Backspaces will not be read.
 
+# BashTerm by Jessica K McIntosh is marked CC0 1.0.
+# To view a copy of this mark, visit:
+# https://creativecommons.org/publicdomain/zero/1.0/
+
 # Example of using the spinner library.
 
 # Load libraries.

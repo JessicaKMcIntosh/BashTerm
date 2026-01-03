@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# BashTerm by Jessica K McIntosh is marked CC0 1.0.
+# To view a copy of this mark, visit:
+# https://creativecommons.org/publicdomain/zero/1.0/
+
 # Draw boxes
 
 source "./boxes.sh"

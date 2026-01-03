@@ -2,6 +2,10 @@
 # shellcheck source=../attr.sh
 # shellcheck source=../color.sh
 
+# BashTerm by Jessica K McIntosh is marked CC0 1.0.
+# To view a copy of this mark, visit:
+# https://creativecommons.org/publicdomain/zero/1.0/
+
 # Print a nice color and attribute table.
 
 # Load the libraries.
