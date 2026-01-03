@@ -1,24 +1,34 @@
 #!/usr/bin/env bash
+# shellcheck source=../attr.sh
+# shellcheck source=../boxes.sh
+# shellcheck source=../color.sh
+# shellcheck source=../cursor.sh
 
 # BashTerm by Jessica K McIntosh is marked CC0 1.0.
 # To view a copy of this mark, visit:
 # https://creativecommons.org/publicdomain/zero/1.0/
 
 # This generates source-able code for all of the variables defined in the
-# library.
-
-# If you only want to generate the variables once, and for a specific terminal,
-# use this script. The result can be sourced to define the variables.
+# libraries.
 
 # You might also want the functions from 'color.sh'.
 
 # Usage:
 # TERM=xterm ./export.sh > env_xterm.sh
 
-source "./attr.sh"
-source "./boxes.sh"
-source "./color.sh"
-source "./cursor.sh"
+# Load the libraries.
+find_library(){
+    local library="${1}"
+    for file_name in {./,../}${library} ; do
+        if [[ -f  "${file_name}" ]] ; then
+            echo "${file_name}"
+        fi
+done
+}
+source "$(find_library "attr.sh")"
+source "$(find_library "boxes.sh")"
+source "$(find_library "color.sh")"
+source "$(find_library "cursor.sh")"
 
 echo "# Generated: $(date)"
 echo "# TERM=${TERM}"

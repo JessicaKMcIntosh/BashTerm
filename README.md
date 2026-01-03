@@ -29,8 +29,6 @@ A library to simplify working with the terminal in bash.
   * [Primary interface](#primary-interface-3)
   * [Variable meaning](#variable-meaning)
 * [Functional Interface - `function.sh`](#functional-interface---functionsh)
-* [Export - `export.sh`](#export---exportsh)
-  * [Usage](#usage)
 * [Examples](#examples)
   * [Attributes - `examples/attr_example.sh`](#attributes---examplesattr_examplesh)
   * [Colors - `examples/color_example.sh`](#colors---examplescolor_examplesh)
@@ -39,6 +37,8 @@ A library to simplify working with the terminal in bash.
   * [Cursor - `examples/cursor_example.sh`](#cursor---examplescursor_examplesh)
   * [Function - `examples/function_example.sh`](#function---examplesfunction_examplesh)
   * [Spinner - `examples/spinner_example.sh`](#spinner---examplesspinner_examplesh)
+* [Export - `examples/export.sh`](#export---examplesexportsh)
+  * [Usage](#usage)
 * [Reference](#reference)
 * [Other Projects](#other-projects)
 * [LICENSE](#license)
@@ -468,25 +468,6 @@ Think of this as a little bonus.
 It is just functions to print the various escape codes.
 This is more a suggestion instead of something to use directly.
 
-## Export - `export.sh`
-
-This script will print variable declarations that Bash can read back.
-All of the environment variables for the above libraries are output.
-
-**NOTE:**
-Functions are not included in the export!
-
-This is really only useful for adding the escape codes for a specific terminal directly to your script.
-
-### Usage
-
-Run the script and redirect the output.
-Optionally set the environment variable `$TERM`.
-
-```shell
-TERM=xterm ./export.sh > env_xterm.sh
-```
-
 ## Examples
 
 Here is some example output of the various test scripts.
@@ -532,6 +513,25 @@ Demonstrates the function interface by duplicating `examples/attr_example.sh`, `
 A simple demo of the spinner.
 Presents a menu to pick from the available animations.
 This is meant as an example, not a complete solution.
+
+## Export - `examples/export.sh`
+
+This script will print variable declarations that Bash can read back.
+All of the environment variables for the above libraries are output.
+
+**NOTE:**
+Functions are not included in the export!
+
+This is really only useful for adding the escape codes for a specific terminal directly to your script.
+
+### Usage
+
+Run the script and redirect the output.
+Optionally set the environment variable `$TERM`.
+
+```shell
+TERM=xterm ./export.sh > env_xterm.sh
+```
 
 ## Reference
 
