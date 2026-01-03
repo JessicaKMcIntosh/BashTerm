@@ -311,7 +311,6 @@ Shortcut variables to make code a bit more friendly.
 | $TERM_ATTR_HOME | home | home | home cursor (if no cup) |
 | $TERM_ATTR_INSERT_CHAR | ich1 | insert_character | insert character (DISABLED, rarely present) |
 | $TERM_ATTR_INSERT_LINE | il1 | insert_line | insert line |
-| $TERM_ATTR_INVISIBLE | civis | invisible | make cursor invisible |
 | $TERM_ATTR_LEFT | cub1 | left | move left one space |
 | $TERM_ATTR_NORMAL | cnorm | normal | make cursor appear normal (undo civis/cvvis) |
 | $TERM_ATTR_RESTORE | rc | restore | restore cursor to position of last |
