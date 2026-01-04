@@ -60,7 +60,8 @@ _TERM_COLOR_ALIASES=(
     [grey]="brightblack"
 )
 for _TERM_TEMP_COLOR in "${!_TERM_COLOR_ALIASES[@]}"; do
-    _TERM_COLORS["${_TERM_TEMP_COLOR}"]="${_TERM_COLORS[${_TERM_COLOR_ALIASES[$_TERM_TEMP_COLOR]}]}"
+    TERM_FG[${_TERM_TEMP_COLOR}]="${TERM_FG[${_TERM_COLOR_ALIASES[$_TERM_TEMP_COLOR]}]}"
+    TERM_BG[${_TERM_TEMP_COLOR}]="${TERM_BG[${_TERM_COLOR_ALIASES[$_TERM_TEMP_COLOR]}]}"
 done
 
 # Some handy shortcuts for less typing.
