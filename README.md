@@ -201,14 +201,14 @@ Shortcut variables to make code a bit more friendly.
 | --- | --- |
 | $TERM_BG_BLACK | black background |
 | $TERM_BG_BLUE | blue background |
-| $TERM_BG_BRIGHT_BLACK | brightblack |
-| $TERM_BG_BRIGHT_BLUE | brightblue |
-| $TERM_BG_BRIGHT_CYAN | brightcyan |
-| $TERM_BG_BRIGHT_GREEN | brightgreen |
-| $TERM_BG_BRIGHT_MAGENTA | brightmagenta |
-| $TERM_BG_BRIGHT_RED | brightred |
-| $TERM_BG_BRIGHT_WHITE | brightwhite |
-| $TERM_BG_BRIGHT_YELLOW | brightyellow |
+| $TERM_BG_BRIGHTBLACK | brightblack background |
+| $TERM_BG_BRIGHTBLUE | brightblue background |
+| $TERM_BG_BRIGHTCYAN | brightcyan background |
+| $TERM_BG_BRIGHTGREEN | brightgreen background |
+| $TERM_BG_BRIGHTMAGENTA | brightmagenta background |
+| $TERM_BG_BRIGHTRED | brightred background |
+| $TERM_BG_BRIGHTWHITE | brightwhite background |
+| $TERM_BG_BRIGHTYELLOW | brightyellow background |
 | $TERM_BG_CYAN | cyan background |
 | $TERM_BG_GREEN | green background |
 | $TERM_BG_MAGENTA | magenta background |
@@ -216,20 +216,20 @@ Shortcut variables to make code a bit more friendly.
 | $TERM_BG_WHITE | white background |
 | $TERM_BG_YELLOW | yellow background |
 | $TERM_FG_BLACK | black  foreground |
-| $TERM_FG_BLUE | blue  foreground |
-| $TERM_FG_BRIGHT_BLACK | brightblack |
-| $TERM_FG_BRIGHT_BLUE | brightblue |
-| $TERM_FG_BRIGHT_CYAN | brightcyan |
-| $TERM_FG_BRIGHT_GREEN | brightgreen |
-| $TERM_FG_BRIGHT_MAGENTA | brightmagenta |
-| $TERM_FG_BRIGHT_RED | brightred |
-| $TERM_FG_BRIGHT_WHITE | brightwhite |
-| $TERM_FG_BRIGHT_YELLOW | brightyellow |
+| $TERM_FG_BLUE | blue foreground |
+| $TERM_FG_BRIGHTBLACK | brightblack foreground |
+| $TERM_FG_BRIGHTBLUE | brightblue foreground |
+| $TERM_FG_BRIGHTCYAN | brightcyan foreground |
+| $TERM_FG_BRIGHTGREEN | brightgreen foreground |
+| $TERM_FG_BRIGHTMAGENTA | brightmagenta foreground |
+| $TERM_FG_BRIGHTRED | brightred foreground |
+| $TERM_FG_BRIGHTWHITE | brightwhite foreground |
+| $TERM_FG_BRIGHTYELLOW | brightyellow foreground |
 | $TERM_FG_CYAN | cyan  foreground |
 | $TERM_FG_GREEN | green  foreground |
 | $TERM_FG_MAGENTA | magenta  foreground |
 | $TERM_FG_RED | red  foreground |
-| $TERM_FG_WHITE | white background |
+| $TERM_FG_WHITE | white foreground |
 | $TERM_FG_YELLOW | yellow  foreground |
 
 ### Colors
