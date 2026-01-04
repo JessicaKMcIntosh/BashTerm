@@ -32,6 +32,7 @@ A library to simplify working with the terminal in bash.
   * [Primary interface](#primary-interface-4)
   * [Backslashes](#backslashes)
   * [Short Attribute Codes](#short-attribute-codes)
+* [Unit Tests - `run_tests.sh`](#unit-tests---run_testssh)
 * [Functional Interface - `function.sh`](#functional-interface---functionsh)
 * [Examples](#examples)
   * [Attributes - `examples/attr_example.sh`](#attributes---examplesattr_examplesh)
@@ -587,6 +588,15 @@ Put as many characters inside `$[]` as desired.
 | v | Reverse mode. (rev) | M | Magenta Background |
 | V | Invisible mode. (invis) | C | Cyan Background |
 | z | Show the cursor. (cnorm) | W | White Background |
+
+## Unit Tests - `run_tests.sh`
+
+This script will run the tests in the subdirectory `tests`.
+Each file can contain multiple tests.
+Each test can contain multiple assertions.
+
+**TODO:**
+Better documentation.
 
 ## Functional Interface - `function.sh`
 
