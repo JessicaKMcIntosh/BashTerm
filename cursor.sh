@@ -101,10 +101,18 @@ unset _TERM_TEMP_CODE
 # Functions for cursor positions.
 
 # Move the cursor to an row and column position.
+# Can accept row and column as separate values or as
+# as a single "ROW;COLUMN" value as returned by term::pos().
 term::move(){
     local row="${1-0}"
     local col="${2-0}"
-    tput cup "${row}" "${col}"
+
+    # If the row contains a ; and the column is 0 just use the row value.
+    if [[ "${row}" =~ ";" && "${col}" -eq 0 ]] ; then
+        tput cup "${row}"
+    else
+        tput cup "${row}" "${col}"
+    fi
 }
 
 # Report the cursor position. row;col
