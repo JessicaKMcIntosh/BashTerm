@@ -11,7 +11,15 @@
 export TERM="xterm"
 
 # Test the attributes library.
-source "attr.sh"
+find_library(){
+    local library="${1}"
+    for file_name in {./,../}${library} ; do
+        if [[ -f  "${file_name}" ]] ; then
+            echo "${file_name}"
+        fi
+done
+}
+source "$(find_library "attr.sh")"
 
 # Define some metadata about this test.
 export TEST_TITLE="Test all attribute variables."
