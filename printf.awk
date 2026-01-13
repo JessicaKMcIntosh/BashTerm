@@ -1,4 +1,4 @@
-#!/usr/bin/env awk -f
+#!/usr/bin/env -S awk -f
 
 # BashTerm by Jessica K McIntosh is marked CC0 1.0.
 # To view a copy of this mark, visit:
@@ -206,7 +206,7 @@ function get_attribute(attribute) {
 }
 
 # Directly call tput with the given attribute string.
-# Check if the attribute has unsafe chatacters.
+# Check if the attribute has unsafe characters.
 function call_tput(attribute,    escape_code) {
     if (attribute ~ /[^a-zA-Z0-9]/) {
         attribute = sprintf("Invalid characters being passed to tput. Input: %s", attribute)
