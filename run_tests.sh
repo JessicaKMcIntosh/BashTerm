@@ -29,8 +29,8 @@ shopt -u failglob
 
 # Testing Variables:
 declare -g TEST_COUNT       # The number of tests that have been run.
-declare -g ASSERT_PASS      # The number of tests that have passed.
-declare -g ASSERT_FAIL      # The number of tests that have failed.
+declare -g ASSERT_PASS      # The number of assertions that have passed.
+declare -g ASSERT_FAIL      # The number of assertions that have failed.
 
 # ----~~~~++++====#### Assertion Functions ####====++++~~~~----
 
