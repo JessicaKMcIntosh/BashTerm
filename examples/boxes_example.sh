@@ -7,7 +7,7 @@
 
 # Example of using the boxes library.
 
-# Load the library
+# Load the library.
 find_library(){
     local library="${1}"
     for file_name in {./,../}${library} ; do
