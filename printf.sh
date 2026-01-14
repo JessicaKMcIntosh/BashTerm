@@ -13,8 +13,8 @@
 # This is really only an example.
 # Adapt to your needs.
 
-AWK_COMMAND="awk -f"
-#AWK_COMMAND="gawk --lint -f" # For development.
+AWK_COMMAND="awk"
+#AWK_COMMAND="gawk --lint" # For development.
 
 # Load the libraries.
 declare -a library_list=("attr.sh" "boxes.sh" "color.sh" "cursor.sh")
@@ -34,7 +34,7 @@ for library in "${library_list[@]}"; do
     source "$(find_library "${library}")" > /dev/null 2>&1 || exit 1
 done
 
-# Find the printf.awk file.
+# Find the file printf.awk.
 AWK_FILE="$(find_library "printf.awk" 2>/dev/null)"
 if [[ ! -f "${AWK_FILE}" ]] ; then
     echo "Unable to locate 'printf.awk' in the current or parent directories."
@@ -43,8 +43,5 @@ if [[ ! -f "${AWK_FILE}" ]] ; then
 fi
 
 term::printf(){
-    while [[ "$#" -gt 0 ]]; do
-        echo "${1}"
-        shift
-    done | $AWK_COMMAND "${AWK_FILE}"
+    printf "%s\n" "${@}" | $AWK_COMMAND -f "${AWK_FILE}"
 }

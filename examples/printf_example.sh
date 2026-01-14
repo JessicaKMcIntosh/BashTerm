@@ -27,7 +27,7 @@ source "$(find_library "printf.sh")" > /dev/null 2>&1 || exit 1
 term::printf "This %{rev}is%{sgr0} a (%% for no reason) %(underline)format%(UNDERLINE) %s.%(reset)\n" "test"
 
 # Lookup environment variables.
-term::printf "Color %(green)Green%(orig) Normal %(GREEN,red)More%(reset)\n"
+term::printf "Color %(green)Green%(orig) Normal %(GREEN,red)Red on Green%(reset)\n"
 
 # Short codes. These lookup environment variables.
 term::printf "Short %[m]color %[r]codes%[o] and %[byB]Attributes%[-]\n"
