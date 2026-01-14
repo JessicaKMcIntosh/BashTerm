@@ -15,18 +15,22 @@
 # TERM=xterm ./export.sh > env_xterm.sh
 
 # Load the libraries.
+declare -a library_list=("attr.sh" "boxes.sh" "color.sh" "cursor.sh")
 find_library(){
     local library="${1}"
-    for file_name in {./,../}${library} ; do
+    local file_name
+    for file_name in {../,./}${library} ; do
         if [[ -f  "${file_name}" ]] ; then
             echo "${file_name}"
+            exit
         fi
-done
+    done
+    echo "Unable to locate the library '${library}'." >&2
+    exit 1
 }
-source "$(find_library "attr.sh")"
-source "$(find_library "boxes.sh")"
-source "$(find_library "color.sh")"
-source "$(find_library "cursor.sh")"
+for library in "${library_list[@]}"; do
+    source "$(find_library "${library}")" > /dev/null 2>&1 || exit 1
+done
 
 echo "# Generated: $(date)"
 echo "# TERM=${TERM}"

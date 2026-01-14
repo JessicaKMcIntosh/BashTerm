@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck source=attr.sh
+# shellcheck source=../attr.sh
 
 # BashTerm by Jessica K McIntosh is marked CC0 1.0.
 # To view a copy of this mark, visit:
@@ -11,15 +11,24 @@
 export TERM="xterm"
 
 # Test the attributes library.
+
+# Load the libraries.
+declare -a library_list=("attr.sh")
 find_library(){
     local library="${1}"
-    for file_name in {./,../}${library} ; do
+    local file_name
+    for file_name in {../,./}${library} ; do
         if [[ -f  "${file_name}" ]] ; then
             echo "${file_name}"
+            exit
         fi
-done
+    done
+    echo "Unable to locate the library '${library}'." >&2
+    exit 1
 }
-source "$(find_library "attr.sh")"
+for file in "${library_list[@]}"; do
+    source "$(find_library "${file}")" > /dev/null 2>&1 || exit 1
+done
 
 # Define some metadata about this test.
 export TEST_TITLE="Test all attribute variables."

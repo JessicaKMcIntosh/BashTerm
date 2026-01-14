@@ -13,22 +13,29 @@
 # This is really only an example.
 # Adapt to your needs.
 
+AWK_COMMAND="awk -f"
+#AWK_COMMAND="gawk --lint -f" # For development.
+
 # Load the libraries.
+declare -a library_list=("attr.sh" "boxes.sh" "color.sh" "cursor.sh")
 find_library(){
     local library="${1}"
+    local file_name
     for file_name in {./,../}${library} ; do
         if [[ -f  "${file_name}" ]] ; then
             echo "${file_name}"
+            exit
         fi
-done
+    done
+    echo "Unable to locate the library '${library}'." >&2
+    exit 1
 }
-source "$(find_library "attr.sh")"
-source "$(find_library "boxes.sh")"
-source "$(find_library "color.sh")"
-source "$(find_library "cursor.sh")"
+for library in "${library_list[@]}"; do
+    source "$(find_library "${library}")" > /dev/null 2>&1 || exit 1
+done
 
 # Find the printf.awk file.
-AWK_FILE="$(find_library "printf.awk")"
+AWK_FILE="$(find_library "printf.awk" 2>/dev/null)"
 if [[ ! -f "${AWK_FILE}" ]] ; then
     echo "Unable to locate 'printf.awk' in the current or parent directories."
     echo "ABORTING!!"
@@ -39,6 +46,5 @@ term::printf(){
     while [[ "$#" -gt 0 ]]; do
         echo "${1}"
         shift
-    done | awk -f "${AWK_FILE}"
-    # done | gawk --lint -f "${AWK_FILE}" # For development.
+    done | $AWK_COMMAND "${AWK_FILE}"
 }

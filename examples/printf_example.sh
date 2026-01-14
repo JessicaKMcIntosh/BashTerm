@@ -7,16 +7,21 @@
 
 # Example of using the printf library.
 
-# Load the library.
+# Load the libraries.
 find_library(){
     local library="${1}"
-    for file_name in {./,../}${library} ; do
+    local file_name
+    for file_name in {../,./}${library} ; do
         if [[ -f  "${file_name}" ]] ; then
             echo "${file_name}"
+            exit
         fi
-done
+    done
+    echo "Unable to locate the library '${library}'." >&2
+    exit 1
 }
-source "$(find_library "printf.sh")"
+# Do this different in this file because ShellCheck gets confused.
+source "$(find_library "printf.sh")" > /dev/null 2>&1 || exit 1
 
 # Call tput directly.
 term::printf "This %{rev}is%{sgr0} a (%% for no reason) %(underline)format%(UNDERLINE) %s.%(reset)\n" "test"
@@ -30,7 +35,7 @@ term::printf "Short %[m]color %[r]codes%[o] and %[byB]Attributes%[-]\n"
 # Be careful with backslashes in double quotes.
 # The downside of using this.
 # '\x22\\\x3d\x22' == "\x22\\\\\x3d\x22"
-term::printf 'Backslash escapes: \x7e \x22\\\x3d\x22 => \042\075\042 \176\012'
+term::printf 'Backslash escapes: \x7e \x22\\\x3d\x22 => \042\134\075\042 \176\012'
 
 # Have some fun.
 # Use the part of the box variable name after "$TERM_BOX_".
@@ -42,7 +47,7 @@ term::printf "%<LTL>%<LLH>%<LTC>%<LTR>\n"
 term::printf "%<LML>%<LLH>%<LMC>%<LMR>\n"
 term::printf "%<LBL>%<LLH>%<LBC>%<LBR>\n"
 
-# Multiple box chatacters separated by a comma.
+# Multiple box characters separated by a comma.
 # Use "_" to print a space.
 term::printf "%<LTL,LLH,LTC,LLH,LTC,LLH,LLH,LTR>\n"
 term::printf "%<LML,LLH,LMC,LLH,LMR,_  ,_  ,LLV>\n"

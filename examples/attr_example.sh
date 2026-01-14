@@ -7,16 +7,23 @@
 
 # Example of using the attribute library.
 
-# Load the library.
+# Load the libraries.
+declare -a library_list=("attr.sh")
 find_library(){
     local library="${1}"
+    local file_name
     for file_name in {./,../}${library} ; do
         if [[ -f  "${file_name}" ]] ; then
             echo "${file_name}"
+            exit
         fi
-done
+    done
+    echo "Unable to locate the library '${library}'." >&2
+    exit 1
 }
-source "$(find_library "attr.sh")"
+for library in "${library_list[@]}"; do
+    source "$(find_library "${library}")" > /dev/null 2>&1 || exit 1
+done
 
 echo "Testing attributes:"
 echo "Normal text ${TERM_BOLD}Bold text${TERM_ATTR[sgr0]} not bold"
