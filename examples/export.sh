@@ -11,8 +11,6 @@
 # This generates source-able code for all of the variables defined in the
 # libraries.
 
-# You might also want the functions from 'color.sh'.
-
 # Usage:
 # TERM=xterm ./export.sh > env_xterm.sh
 
@@ -32,6 +30,7 @@ source "$(find_library "cursor.sh")"
 
 echo "# Generated: $(date)"
 echo "# TERM=${TERM}"
+echo "# System: $(uname -s -r -m -o)"
 echo ""
 
 echo "# Stores terminal attribute escape sequences."
