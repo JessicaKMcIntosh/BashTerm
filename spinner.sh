@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# shellcheck source=attr.sh
+# shellcheck source=cursor.sh
+# shellcheck disable=SC2034
 
 # BashTerm by Jessica K McIntosh is marked CC0 1.0.
 # To view a copy of this mark, visit:
@@ -15,18 +18,30 @@ if [[ "${BASH_VERSINFO[0]}" -lt "4" ]] ; then
     exit 1
 fi
 
+# Load the libraries.
+find_library(){
+    local library="${1}"
+    for file_name in {./,../}${library} ; do
+        if [[ -f  "${file_name}" ]] ; then
+            echo "${file_name}"
+        fi
+done
+}
+source "$(find_library "attr.sh")"
+source "$(find_library "cursor.sh")"
+
 # These are the main variables for the Library.
 declare -g TERM_SPIN_SLEEP="0.1"
-declare -a _TERM_SPIN_FRAMES_SIX
-declare -a _TERM_SPIN_FRAMES_SIX_IN_OUT
-declare -a _TERM_SPIN_FRAMES_EIGHT
-declare -a _TERM_SPIN_FRAMES_EIGHT_IN_OUT
-declare -a _TERM_SPIN_FRAMES_ARROWS
-declare -a _TERM_SPIN_FRAMES_ASCII
-declare -a _TERM_SPIN_FRAMES_LINES
+declare -a TERM_SPIN_FRAMES_SIX
+declare -a TERM_SPIN_FRAMES_SIX_IN_OUT
+declare -a TERM_SPIN_FRAMES_EIGHT
+declare -a TERM_SPIN_FRAMES_EIGHT_IN_OUT
+declare -a TERM_SPIN_FRAMES_ARROWS
+declare -a TERM_SPIN_FRAMES_ASCII
+declare -a TERM_SPIN_FRAMES_LINES
 
 # _TERM_SPIN_SIX_SOLID=$'\u283F' # ⠿ Braille Pattern Dots-123456
-_TERM_SPIN_FRAMES_SIX=(
+TERM_SPIN_FRAMES_SIX=(
     $'\u2837' # ⠷ Braille Pattern Dots-12356
     $'\u282F' # ⠯ Braille Pattern Dots-12346
     $'\u281F' # ⠟ Braille Pattern Dots-12345
@@ -35,7 +50,7 @@ _TERM_SPIN_FRAMES_SIX=(
     $'\u283E' # ⠾ Braille Pattern Dots-23456
 )
 
-_TERM_SPIN_FRAMES_SIX_IN_OUT=(
+TERM_SPIN_FRAMES_SIX_IN_OUT=(
     $'\u283F' # ⠿ Braille Pattern Dots-123456
     $'\u2837' # ⠷ Braille Pattern Dots-12356
     $'\u2827' # ⠧ Braille Pattern Dots-1236
@@ -51,7 +66,7 @@ _TERM_SPIN_FRAMES_SIX_IN_OUT=(
 )
 
 # _TERM_SPIN_EIGHT_SOLID=$'\u28FF' # ⣿ Braille Pattern Dots-12345678
-_TERM_SPIN_FRAMES_EIGHT=(
+TERM_SPIN_FRAMES_EIGHT=(
     $'\u28F7' # ⣷ Braille Pattern Dots-1235678
     $'\u28EF' # ⣯ Braille Pattern Dots-1234678
     $'\u28DF' # ⣟ Braille Pattern Dots-1234578
@@ -62,7 +77,7 @@ _TERM_SPIN_FRAMES_EIGHT=(
     $'\u28FE' # ⣾ Braille Pattern Dots-2345678
 )
 
-_TERM_SPIN_FRAMES_EIGHT_IN_OUT=(
+TERM_SPIN_FRAMES_EIGHT_IN_OUT=(
     $'\u28FF' # ⣿ Braille Pattern Dots-12345678
     $'\u28F7' # ⣷ Braille Pattern Dots-1235678
     $'\u28E7' # ⣧ Braille Pattern Dots-123678
@@ -81,7 +96,7 @@ _TERM_SPIN_FRAMES_EIGHT_IN_OUT=(
     $'\u28FE' # ⣾ Braille Pattern Dots-2345678
 )
 
-_TERM_SPIN_FRAMES_ARROWS=(
+TERM_SPIN_FRAMES_ARROWS=(
     $'\u2191' # ↑ Upwards Arrow
     $'\u2197' # ↗ North East Arrow
     $'\u2192' # → Rightwards Arrow
@@ -92,7 +107,7 @@ _TERM_SPIN_FRAMES_ARROWS=(
     $'\u2196' # ↖ North West Arrow
 )
 
-_TERM_SPIN_FRAMES_LINES=(
+TERM_SPIN_FRAMES_LINES=(
     ' '
     $'\u2575' # ╵ Box Drawings Light Up
     $'\u2514' # └ Box Drawings Light Up and Right
@@ -111,38 +126,40 @@ _TERM_SPIN_FRAMES_LINES=(
     $'\u2574' # ╴ Box Drawings Light Left
 )
 
-_TERM_SPIN_FRAMES_ASCII=(
+TERM_SPIN_FRAMES_ASCII=(
     "|"
     "/"
     "-"
     "\\"
 )
 
-# State variables.
+# State variables used internally.
 declare -a _TERM_SPIN_FRAMES
 declare -g _TERM_SPIN_NEXT_FRAME
 declare -g _TERM_SPIN_TOTAL_FRAMES
+declare -g _TERM_SPIN_PID
 
 # This is just an example of how to use these.
+# Adjust to suit your own needs.
+# NOTE: This code only works with single character spinner frames.
 
-# Starts the spinner.
-# Prints the first character and initializes state information.
-# If an array of frames is not passed then default to _TERM_SPIN_SIX.
-term::spin_start(){
-    _TERM_SPIN_FRAMES=("${@}")
-    if [[ "${#_TERM_SPIN_FRAMES[@]}" -eq 0 ]] ; then
-        _TERM_SPIN_FRAMES=("${_TERM_SPIN_SIX[@]}")
+# Initialize the spinner state variables.
+# If an array of frames is not passed then default to TERM_SPIN_FRAMES_SIX.
+term::spin_init(){
+    if [[ "$#" -gt 0 ]] ; then
+        _TERM_SPIN_FRAMES=("${@}")
+    else
+        _TERM_SPIN_FRAMES=("${TERM_SPIN_FRAMES_SIX[@]}")
     fi
-    _TERM_SPIN_NEXT_FRAME=0
     _TERM_SPIN_TOTAL_FRAMES="${#_TERM_SPIN_FRAMES[@]}"
+    _TERM_SPIN_NEXT_FRAME=0
 }
 
 # Print the next spinner character.
-# Erases the previous character.
+# Moves the cursor left after printing the character.
 # You would call this for each step to make the spinner advance.
 term::spin_step(){
-    echo -n "${_TERM_SPIN_FRAMES[${_TERM_SPIN_NEXT_FRAME}]}"
-    tput cub1
+    echo -n "${_TERM_SPIN_FRAMES[${_TERM_SPIN_NEXT_FRAME}]}${TERM_LEFT}"
     # Doing the math this way eliminates pauses in the spinner.
     # Make sure the exact same work is done for each loop for consistent timing.
     _TERM_SPIN_NEXT_FRAME=$(((_TERM_SPIN_NEXT_FRAME + 1) % _TERM_SPIN_TOTAL_FRAMES))
@@ -151,14 +168,13 @@ term::spin_step(){
 # Spin until a key is pressed.
 # Modify this to suit your needs.
 term::spin_spin(){
-    _TERM_SPIN_FRAMES=("${@}")
-    tput civis
-    term::spin_start "${SPINNER_FRAMES[@]}"
+    echo -n "${TERM_HIDE}"
+    term::spin_init "${@}"
     while true; do
         term::spin_step
         if read -n 1 -s -t "${TERM_SPIN_SLEEP}" ; then
             break
         fi
     done
-    tput cnorm
+    echo -n "${TERM_NORMAL}"
 }

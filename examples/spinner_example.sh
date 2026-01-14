@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# shellcheck source=../function.sh
 # shellcheck source=../spinner.sh
 # shellcheck disable=SC2162 # Backspaces will not be read.
 
@@ -9,7 +8,6 @@
 
 # Example of using the spinner library.
 
-# Load libraries.
 # Load the libraries.
 find_library(){
     local library="${1}"
@@ -19,7 +17,6 @@ find_library(){
         fi
 done
 }
-source "$(find_library "function.sh")"
 source "$(find_library "spinner.sh")"
 
 echo "Spinner demo!"
@@ -27,24 +24,23 @@ echo "Spinner demo!"
 declare -a SPINNER_FRAMES   # Frame set to use.
 declare -a SPINNER_MENU     # User menu.
 SPINNER_MENU=(
-    "Six dots (${_TERM_SPIN_FRAMES_SIX[*]})"
-    "Six dots in and out (${_TERM_SPIN_FRAMES_SIX_IN_OUT[*]})"
-    "Eight dots (${_TERM_SPIN__TERM_SPIN_FRAMES_EIGHT[*]})"
-    "Eight dots in and out (${_TERM_SPIN__TERM_SPIN_FRAMES_EIGHT_IN_OUT[*]})"
-    "Arrows (${_TERM_SPIN_FRAMES_ARROWS[*]})"
-    "Lines (${_TERM_SPIN_FRAMES_LINES[*]})"
-    "ASCII (${_TERM_SPIN_FRAMES_ASCII[*]})"
+    "Six dots (${TERM_SPIN_FRAMES_SIX[*]})"
+    "Six dots in and out (${TERM_SPIN_FRAMES_SIX_IN_OUT[*]})"
+    "Eight dots (${_TERM_SPIN_TERM_SPIN_FRAMES_EIGHT[*]})"
+    "Eight dots in and out (${_TERM_SPIN_TERM_SPIN_FRAMES_EIGHT_IN_OUT[*]})"
+    "Arrows (${TERM_SPIN_FRAMES_ARROWS[*]})"
+    "Lines (${TERM_SPIN_FRAMES_LINES[*]})"
+    "ASCII (${TERM_SPIN_FRAMES_ASCII[*]})"
 )
 
 # Make sure the cursor returns.
 # Otherwise if Ctrl-C is pressed while spinning
 # the cursor would stay hidden.
-trap_exit(){
-    echo ""
-    term::normal
+reset_cursor(){
+    echo "${TERM_NORMAL}"
     exit
 }
-trap trap_exit SIGINT
+trap reset_cursor EXIT
 
 # Simple floating point math.
 float_math(){
@@ -54,7 +50,7 @@ float_math(){
 # Run the demo.
 while true; do
     # What frame type do they want to demo?
-    term::clear
+    echo -n "${TERM_CLEAR}"
     echo "Available frame types:"
     for option in "${!SPINNER_MENU[@]}"; do
         echo "$((option + 1)): ${SPINNER_MENU[$option]}"
@@ -64,15 +60,15 @@ while true; do
     read -n 1 -p "Select the frame set to demo: "
     echo ""
     case "${REPLY}" in
-        1) SPINNER_FRAMES=("${_TERM_SPIN_FRAMES_SIX[@]}");;
-        2) SPINNER_FRAMES=("${_TERM_SPIN_FRAMES_SIX_IN_OUT[@]}");;
-        3) SPINNER_FRAMES=("${_TERM_SPIN_FRAMES_EIGHT[@]}");;
-        4) SPINNER_FRAMES=("${_TERM_SPIN_FRAMES_EIGHT_IN_OUT[@]}");;
-        5) SPINNER_FRAMES=("${_TERM_SPIN_FRAMES_ARROWS[@]}");;
-        6) SPINNER_FRAMES=("${_TERM_SPIN_FRAMES_LINES[@]}");;
-        7) SPINNER_FRAMES=("${_TERM_SPIN_FRAMES_ASCII[@]}");;
+        1) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_SIX[@]}");;
+        2) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_SIX_IN_OUT[@]}");;
+        3) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_EIGHT[@]}");;
+        4) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_EIGHT_IN_OUT[@]}");;
+        5) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_ARROWS[@]}");;
+        6) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_LINES[@]}");;
+        7) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_ASCII[@]}");;
         0|""|" ") exit;;
-        +) TERM_SPIN_SLEEP="$(float_math "+" "${TERM_SPIN_SLEEP}" "0.1")"; continue;;
+        +|=) TERM_SPIN_SLEEP="$(float_math "+" "${TERM_SPIN_SLEEP}" "0.1")"; continue;;
         -) TERM_SPIN_SLEEP="$(float_math "-" "${TERM_SPIN_SLEEP}" "0.1")"; continue;;
         *) echo "Invalid option: '${REPLY}'"; exit;;
     esac
@@ -81,6 +77,5 @@ while true; do
 
     # Spin the spinner.
     term::spin_spin "${SPINNER_FRAMES[@]}"
-    term::reset
     echo ""
 done

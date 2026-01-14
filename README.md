@@ -362,13 +362,13 @@ The code assumes the characters are single width.
 
 | Variable | Description | Characters |
 | --- | --- | --- |
-| $_TERM_SPIN_FRAMES_SIX | Six brail dots. Blank dot chasing counter clockwise. | `⠷⠯⠟⠻⠽⠾` |
-| $_TERM_SPIN_FRAMES_SIX_IN_OUT | Six brail dots. Disappearing then appearing. | `⠿⠷⠧⠇⠃⠁⠀⠈⠘⠸⠼⠾` |
-| $_TERM_SPIN_FRAMES_EIGHT | Eight brail dots. Blank dot chasing counter clockwise. | `⣷⣯⣟⡿⢿⣻⣽⣾` |
-| $_TERM_SPIN_FRAMES_EIGHT_IN_OUT | Eight brail dots. Disappearing then appearing. | `⣿⣷⣧⣇⡇⠇⠃⠁⠀⠈⠘⠸⢸⣸⣼⣾` |
-| $_TERM_SPIN_FRAMES_ARROWS | An arrow spinning clockwise. | `↑↗→↘↓↙←↖` |
-| $_TERM_SPIN_FRAMES_LINES | A silly example. | `╵└├┼╀╄╊╋╈╅┽┼┬┐╴` |
-| $_TERM_SPIN_FRAMES_ASCII | Simple ASCII characters. | `\|/-\` |
+| $TERM_SPIN_FRAMES_SIX | Six brail dots. Blank dot chasing counter clockwise. | `⠷⠯⠟⠻⠽⠾` |
+| $TERM_SPIN_FRAMES_SIX_IN_OUT | Six brail dots. Disappearing then appearing. | `⠿⠷⠧⠇⠃⠁⠀⠈⠘⠸⠼⠾` |
+| $TERM_SPIN_FRAMES_EIGHT | Eight brail dots. Blank dot chasing counter clockwise. | `⣷⣯⣟⡿⢿⣻⣽⣾` |
+| $TERM_SPIN_FRAMES_EIGHT_IN_OUT | Eight brail dots. Disappearing then appearing. | `⣿⣷⣧⣇⡇⠇⠃⠁⠀⠈⠘⠸⢸⣸⣼⣾` |
+| $TERM_SPIN_FRAMES_ARROWS | An arrow spinning clockwise. | `↑↗→↘↓↙←↖` |
+| $TERM_SPIN_FRAMES_LINES | A silly example. | `╵└├┼╀╄╊╋╈╅┽┼┬┐╴` |
+| $TERM_SPIN_FRAMES_ASCII | Simple ASCII characters. | `\|/-\` |
 
 ### Configuration
 
@@ -400,20 +400,19 @@ These are used to track the state of the spinner.
 Again, this is just an example.
 Adapt this code to your needs.
 
-* `term::spin_start()` -
-  Starts the spinner.
+* `term::spin_init()` -
+  Sets the internal state variables.
   Pass in the frame array.
-  Sets the internal variables.
 
-  Example: `term::spin_start "${_TERM_SPIN_FRAMES_SIX[@]}"`
+  Example: `term::spin_init "${_TERM_SPIN_FRAMES_SIX[@]}"`
 
 * `term::spin_step()` -
-  Prints the next frame.w
+  Prints the next frame.
 
 * `term::spin_spin` -
   Runs the spinner until a key is pressed.
-  Calls `term::spin_start()` then loops forever calling `term::spin_step()`.
-  Pass in the frame array.
+  Calls `term::spin_init()` then loops forever calling `term::spin_step()`.
+  Pass in the frame array to use.
 
   Example: `term::spin_spin "${_TERM_SPIN_FRAMES_SIX[@]}"`
 
