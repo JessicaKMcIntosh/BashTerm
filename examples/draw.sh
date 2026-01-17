@@ -17,3 +17,6 @@ find_library(){
 done
 }
 source "$(find_library "boxes.sh")"
+
+# Thoughts for later:
+# Strip non-printable characters: foo="$(echo -e "This is a \ntest.")"; echo ">>${foo}<<"; echo "${foo//[[:cntrl:]]/}"
