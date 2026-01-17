@@ -56,12 +56,14 @@ declare _TERM_MENU_PROMPT="Select the option [~]: "
 # Menu item array:
 #   These are composed of three fields separated by the vertical tab ("|") character.
 #   ( "Key|Return|Text" )
-#   Text -   The text to print for the menu item. Required!
-#            If Text is "~" then the item is not printed.
-#            Use this for the sideeffect of a key and return code.
-#   Key -    The optional key the user should press.
-#            If not present the key is the positional number + 1.
-#            If Key is "~" then the key is ignored and the text is printed verbatim.
+#   Text -  The text to print for the menu item. Required!
+#           If Text is "~" then the item is not printed.
+#           Use this for the sideeffect of a key and return code.
+#   Key -   The optional key the user should press.
+#           If not present the key is the positional number + 1.
+#           If Key is "~" then the key is ignored and the text is printed verbatim.
+#           If the key is more than one character an error is thrown.
+#           This can happen if you use the positional number.
 #   Return - The optional return code. The default is the positional number.
 #   If either the key or return code are used both colons are required.
 # Options:
@@ -84,6 +86,8 @@ declare _TERM_MENU_PROMPT="Select the option [~]: "
 #   https://en.wikibooks.org/wiki/Bash_Shell_Scripting/Whiptail
 #   251 - Invalid key entered and option "one" was given.
 #   252 - Insufficient args passed.
+#   253 - Key is not a single character.
+#   254 - Return code is more than 250.
 #   255 - Error while building the menu.
 # Notes:
 #   The character "~" is used because it is uncommon and unlikely to appear in menu text.
@@ -98,11 +102,10 @@ term::menu() {
     local menu_items=("$@")
 
     # Internal variables.
-    local item              # Current array item being worked on.
+    local item              # Current array element or option being processed.
     local key               # The pressed key, also used for building the menu.
     local rc                # Return code.
-    local text              # Temporary variable.
-    local error_text=""     # Error to present the user.
+    local text              # Text for the menu or an error message.
     local valid_keys=""     # The list of valid keys.
     local -a menu_list      # The rendered menu list to print.
     local -A key_list       # Translate key to return code.
@@ -144,18 +147,28 @@ term::menu() {
         fi
 
         # Check that the return code is in range.
-        if (( rc > 250 )) ; then
+        if [[ "${rc}" != "~" && "${rc}" -gt "250" ]] ; then
             echo "MENU ERROR: Return code (${rc}) invalid! Must be 250 or less." >&2
-            return 255
+            return 254
+        fi
+
+        # Check the key is one character.
+        if [[ "${#key}" -gt "1" ]] ; then
+            echo "MENU ERROR: Key (${key}) is not a single character." >&2
+            return 253
         fi
 
         # Save the menu item.
-        if [[ "${key}" == "~" && "${text}" != "~" ]] ; then
-            # No key, just the text.
-            menu_list+=("${text}")
+        if [[ "${key}" == "~" ]] ; then
+            if [[ "${text}" != "~" ]] ; then
+                # No key, just the text.
+                menu_list+=("${text}")
+            fi
         else
             # Save the key and return code.
-            key_list[$key]=$rc
+            if [[ "${rc}" != "~" ]] ; then
+                key_list[$key]=$rc
+            fi
             if [[ "${text}" != "~" ]] ; then
                 # There is text to print so save the menu item.
                 valid_keys+="${key}"
@@ -179,6 +192,7 @@ term::menu() {
     fi
 
     # Menu loop.
+    text=""
     while true; do
         # Print the menu.
         if [[ -v option_list[clear] ]] ; then
@@ -190,8 +204,8 @@ term::menu() {
         done
 
         # Print the error text if present and quiet is not set.
-        if [[ -n "${error_text}" && ! (-v option_list[quiet]) ]] ; then
-            echo "ERROR: ${error_text}"
+        if [[ -n "${text}" && ! (-v option_list[quiet]) ]] ; then
+            echo "ERROR: ${text}"
         fi
 
         # Handle user input.
@@ -201,17 +215,16 @@ term::menu() {
             return "${key_list["${REPLY}"]}"
         else
             if [[ -n "${REPLY}" ]] ; then
-                error_text="Invalid option ($REPLY)."
+                echo ""
+                text="Invalid option ($REPLY)."
             else
-                error_text="Please select a key."
+                text="Please select a key."
             fi
             if [[ -v option_list[one] ]] ; then
                 if [[ ! (-v option_list[quiet]) ]] ; then
-                    echo "${error_text}"
+                    echo "${text}"
                 fi
                 return 251
-            else
-                echo ""
             fi
         fi
     done
