@@ -17,10 +17,8 @@ BEGIN {
     character = ""      # Current character being handled.
     format_length = 0   # The length of the format string.
     format_position = 0 # The position in the format string.
-    input_count = 0     # The number of input records.
-    input_pointer = 0   # The input record last used.
+    format_string = ""  # The format string.
     output_string = ""  # The new string to be printed.
-    delete input_records# For sprintf.
 
     # Setup the translation from color to environment variable.
     all_colors="black,red,green,yellow,blue,magenta,cyan,white,brightblack,brightred,brightgreen,brightyellow,brightblue,brightmagenta,brightcyan,brightwhite"
@@ -32,34 +30,25 @@ BEGIN {
     delete short_attributes
     setup_short_attributes()
 
-    # The format string.
-    format_string = ""
-    getline format_string
-    format_length = length(format_string)
+    # Process input.
+    read_format_print_loop()
 }
 
-# All remaining input is for sprintf.
-{
-    input_records[++input_count] = $0
-}
+# ----~~~~++++====#### RFPL (Read, Format, Print, Loop) ####====++++~~~~----
 
-# Format the input.
-END {
-    my_printf()
-    printf("%s", output_string)
-}
-
-# ----~~~~++++====#### Printf Function ####====++++~~~~----
-
-# Transform the format string into the output_string.
-function my_printf() {
-    for (format_position = 1; format_position <= format_length; format_position++) {
-        character = substr(format_string, format_position, 1)
-        if (character == "\\")
-            handle_backslash()
-        else if (character == "%")
-            handle_percent()
-        output_string = output_string character
+function read_format_print_loop() {
+    while (getline format_string == 1) {
+        output_string=""
+        format_length = length(format_string)
+        for (format_position = 1; format_position <= format_length; format_position++) {
+            character = substr(format_string, format_position, 1)
+            if (character == "\\")
+                handle_backslash()
+            else if (character == "%")
+                handle_percent()
+            output_string = output_string character
+        }
+        printf("%s", output_string)
     }
 }
 
@@ -165,13 +154,16 @@ function handle_tput(    attribute, attr_list, new_character) {
 }
 
 # Handles the normal printf format statements.
-function handle_printf(    attribute, new_position) {
+function handle_printf(    attribute, new_position, format_input, rc) {
     new_position = find_pattern("[a-zA-Z]", "handle_printf")
     attribute = substr(format_string, (format_position - 1), (new_position - format_position + 2))
     format_position = new_position
-    if (input_pointer == input_count)
-        error("handle_printf", "Ran out of input records!")
-    character = sprintf(attribute, input_records[++input_pointer])
+    rc = getline format_input
+    if (rc == 0)
+        error("handle_printf", "Ran out of input for sprintf.")
+    else if (rc == -1)
+        error("handle_printf", sprintf("getline error: %s", ERRNO))
+    character = sprintf(attribute, format_input)
 }
 
 # ----~~~~++++====#### Utility Functions ####====++++~~~~----
@@ -197,10 +189,6 @@ function error(caller, error_text,    record) {
     printf("Format String: \042%s\042\n", format_string) | "cat 1>&2"
     printf("Position: %s\n", format_position) | "cat 1>&2"
     printf("Format Left: \042%s\042\n", substr(format_string, format_position)) | "cat 1>&2"
-    printf("Input Pointer: %s\n", input_pointer) | "cat 1>&2"
-    printf("Input:\n") | "cat 1>&2"
-    for (record in input_records)
-        printf("    \042%s\042\n", input_records[record]) | "cat 1>&2"
     printf("END Report\n\n") | "cat 1>&2"
     close("cat 1>&2")
     exit(1)
