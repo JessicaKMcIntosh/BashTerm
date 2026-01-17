@@ -13,19 +13,35 @@
 
 # I recommend picking and choosing what you want.
 
+# Only load the library once.
+declare -A _TERM_LOADED # Track loaded files.
+declare _TERM_FILE_NAME="${BASH_SOURCE[0]##*/}"
+if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]] ; then
+    [[ -v TERM_VERBOSE ]] && echo "Already loaded '${_TERM_FILE_NAME}'."
+    return 0
+fi
+_TERM_LOADED[${_TERM_FILE_NAME}]="${BASH_SOURCE[0]}"
+[[ -v TERM_VERBOSE ]] && echo "Loading '${_TERM_FILE_NAME}'..."
+unset _TERM_FILE_NAME
+
 # Load the libraries.
+declare -a library_list=("attr.sh" "boxes.sh" "color.sh" "cursor.sh")
 find_library(){
     local library="${1}"
-    for file_name in {./,../}${library} ; do
+    local file_name
+    for file_name in {../,./}${library} ; do
         if [[ -f  "${file_name}" ]] ; then
             echo "${file_name}"
+            exit
         fi
-done
+    done
+    echo "Unable to locate the library '${library}'." >&2
+    exit 1
 }
-source "$(find_library "attr.sh")"
-source "$(find_library "boxes.sh")"
-source "$(find_library "color.sh")"
-source "$(find_library "cursor.sh")"
+#TERM_VERBOSE=0 # Uncomment for verbose library loading.
+for library in "${library_list[@]}"; do
+    source "$(find_library "${library}")" || exit 1
+done
 
 # Directly call 'tput'
 term::tput() {

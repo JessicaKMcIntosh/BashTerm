@@ -8,6 +8,7 @@
 # Draw boxes
 
 # Load the library.
+declare -a library_list=("boxes.sh")
 find_library(){
     local library="${1}"
     for file_name in {../,./}${library} ; do
@@ -16,7 +17,10 @@ find_library(){
         fi
 done
 }
-source "$(find_library "boxes.sh")"
+#TERM_VERBOSE=0 # Uncomment for verbose library loading.
+for library in "${library_list[@]}"; do
+    source "$(find_library "${library}")" || exit 1
+done
 
 # Thoughts for later:
 # Strip non-printable characters: foo="$(echo -e "This is a \ntest.")"; echo ">>${foo}<<"; echo "${foo//[[:cntrl:]]/}"

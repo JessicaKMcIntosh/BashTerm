@@ -13,10 +13,6 @@
 # But it does have the advantage of using variables and tput is only called once.
 # Functions either print the variable or call tput.
 
-# Customization:
-# Change the array _TERM_CURSOR_ATTRIBUTES to customize the attributes to fetch
-# escape codes for.
-
 # See 'man 5 terminfo' for more information.
 
 # This requires bash version 4.
@@ -25,6 +21,17 @@ if [[ "${BASH_VERSINFO[0]}" -lt "4" ]] ; then
     echo "Current version: ${BASH_VERSION}"
     exit 1
 fi
+
+# Only load the library once.
+declare -A _TERM_LOADED # Track loaded files.
+declare _TERM_FILE_NAME="${BASH_SOURCE[0]##*/}"
+if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]] ; then
+    [[ -v TERM_VERBOSE ]] && echo "Already loaded '${_TERM_FILE_NAME}'."
+    return 0
+fi
+_TERM_LOADED[${_TERM_FILE_NAME}]="${BASH_SOURCE[0]}"
+[[ -v TERM_VERBOSE ]] && echo "Loading '${_TERM_FILE_NAME}'..."
+unset _TERM_FILE_NAME
 
 # These are the main variables for the Library.
 declare -A TERM_CURSOR  # Stores terminal cursor escape sequences.

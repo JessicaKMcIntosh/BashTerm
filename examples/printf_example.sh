@@ -8,6 +8,7 @@
 # Example of using the printf library.
 
 # Load the libraries.
+declare -a library_list=("printf.sh")
 find_library(){
     local library="${1}"
     local file_name
@@ -20,8 +21,11 @@ find_library(){
     echo "Unable to locate the library '${library}'." >&2
     exit 1
 }
-# Do this different in this file because ShellCheck gets confused.
-source "$(find_library "printf.sh")" > /dev/null 2>&1 || exit 1
+#TERM_VERBOSE=0 # Uncomment for verbose library loading.
+# shellcheck disable=SC2167 # Go home Shellcheck, you are drunk.
+for library in "${library_list[@]}"; do
+    source "$(find_library "${library}")" || exit 1
+done
 
 # Call tput directly.
 term::printf "This %{rev}is%{sgr0} a (%% for no reason) %(underline)format%(UNDERLINE) %s.%(reset)\n" "test"

@@ -20,6 +20,17 @@ if __ "${BASH_VERSINFO_0}" -lt "4"  ; then
     exit 1
 fi
 
+# Only load the library once.
+declare -A _TERM_LOADED # Track loaded files.
+declare _TERM_FILE_NAME="${BASH_SOURCE[0]##*/}"
+if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]] ; then
+    [[ -v TERM_VERBOSE ]] && echo "Already loaded '${_TERM_FILE_NAME}'."
+    return 0
+fi
+_TERM_LOADED[${_TERM_FILE_NAME}]="${BASH_SOURCE[0]}"
+[[ -v TERM_VERBOSE ]] && echo "Loading '${_TERM_FILE_NAME}'..."
+unset _TERM_FILE_NAME
+
 TERM_BOX_BDLH=$'\u2500'     # ─ Box Drawings Light Horizontal
 TERM_BOX_BDHH=$'\u2501'     # ━ Box Drawings Heavy Horizontal
 TERM_BOX_BDLV=$'\u2502'     # │ Box Drawings Light Vertical

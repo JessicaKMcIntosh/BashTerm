@@ -28,8 +28,9 @@ find_library(){
     echo "Unable to locate the library '${library}'." >&2
     exit 1
 }
+#TERM_VERBOSE=0 # Uncomment for verbose library loading.
 for library in "${library_list[@]}"; do
-    source "$(find_library "${library}")" > /dev/null 2>&1 || exit 1
+    source "$(find_library "${library}")" || exit 1
 done
 
 echo "# Generated: $(date)"

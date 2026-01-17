@@ -14,6 +14,17 @@ if [[ "${BASH_VERSINFO[0]}" -lt "4" ]] ; then
     exit 1
 fi
 
+# Only load the library once.
+declare -A _TERM_LOADED # Track loaded files.
+declare _TERM_FILE_NAME="${BASH_SOURCE[0]##*/}"
+if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]] ; then
+    [[ -v TERM_VERBOSE ]] && echo "Already loaded '${_TERM_FILE_NAME}'."
+    return 0
+fi
+_TERM_LOADED[${_TERM_FILE_NAME}]="${BASH_SOURCE[0]}"
+[[ -v TERM_VERBOSE ]] && echo "Loading '${_TERM_FILE_NAME}'..."
+unset _TERM_FILE_NAME
+
 # Load the libraries.
 declare -a library_list=("attr.sh")
 find_library(){
@@ -28,9 +39,9 @@ find_library(){
     echo "Unable to locate the library '${library}'." >&2
     exit 1
 }
-TERM_VERBOSE=0 # Uncomment for verbose library loading.
+#TERM_VERBOSE=0 # Uncomment for verbose library loading.
 for library in "${library_list[@]}"; do
-    source "$(find_library "${library}")" #> /dev/null 2>&1 || exit 1
+    source "$(find_library "${library}")" || exit 1
 done
 
 # Default settings.
@@ -195,7 +206,9 @@ term::menu() {
                 error_text="Please select a key."
             fi
             if [[ -v option_list[one] ]] ; then
-                echo "${error_text}"
+                if [[ ! (-v option_list[quiet]) ]] ; then
+                    echo "${error_text}"
+                fi
                 return 251
             else
                 echo ""
@@ -225,6 +238,7 @@ DEMO_MENU=(
     " |250|~" # No text. Just the sideeffect of the key.
     # Common keys to exit the menu.
     "x|0|~"
+    "X|0|~"
     # "q|0|~"
     "" # Replaced with the options later.
 )

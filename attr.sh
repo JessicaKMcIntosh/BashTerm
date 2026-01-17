@@ -15,6 +15,17 @@ if [[ "${BASH_VERSINFO[0]}" -lt "4" ]] ; then
     exit 1
 fi
 
+# Only load the library once.
+declare -A _TERM_LOADED # Track loaded files.
+declare _TERM_FILE_NAME="${BASH_SOURCE[0]##*/}"
+if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]] ; then
+    [[ -v TERM_VERBOSE ]] && echo "Already loaded '${_TERM_FILE_NAME}'."
+    return 0
+fi
+_TERM_LOADED[${_TERM_FILE_NAME}]="${BASH_SOURCE[0]}"
+[[ -v TERM_VERBOSE ]] && echo "Loading '${_TERM_FILE_NAME}'..."
+unset _TERM_FILE_NAME
+
 # These are the main variables for the Library.
 declare -A TERM_ATTR    # Stores terminal attribute escape sequences.
 
