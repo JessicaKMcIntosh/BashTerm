@@ -36,10 +36,10 @@ done
 # Example menu.
 declare -a EXAMPLE_MENU
 EXAMPLE_MENU=(
-    "Set the separator to: ']'"
-    "||Set the separator to: ')'"
+    "Set the separator to: ']'" # Simple, but may not contain '|'.
+    "||Set the separator to: ')'" # Still simple, may contain '|'.
     "Set the separator to: ':'"
-    "|99|Set the separator to: '=>'"
+    "|99|Set the separator to: '=>'" # Different return code.
     "c|100|Toggle the option 'clear'."
     "q|101|Toggle the option 'quiet'."
     "b|110|Toggle printing the key in bold."
@@ -50,16 +50,16 @@ EXAMPLE_MENU=(
     "p|131|Simple Prompt."
     "D|200|Toggle debug mode."
     "0|0|Exit"
-    "~||Press space for a surprise."
-    " |250|~" # No text. Just the sideeffect of the key.
+    "~||Press space for a surprise." # Print only the text, no key.
+    " |250|~" # No text. Just the side effect of the space key.
     # Common keys to exit the menu.
     "x|0|~"
     "X|0|~"
-    # "q|0|~"
+    "~|~|~" # This should not print.
     "" # Replaced with the options later.
 )
 
-# Allow the user to toggle options.
+# Allow the user to change the options.
 declare -A EXAMPLE_OPTIONS
 EXAMPLE_OPTIONS=(
     [clear]=""
