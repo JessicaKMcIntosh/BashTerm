@@ -60,3 +60,14 @@ fi
 term::printf(){
     printf "%s\n" "${@}" | $_TERM_AWK_COMMAND -f "${_TERM_AWK_FILE}"
 }
+
+term::printf-v(){
+    local -n variable="${1}"
+    shift
+    variable="$(printf "%s\n" "${@}" | $_TERM_AWK_COMMAND -f "${_TERM_AWK_FILE}")"
+}
+
+# If called as './printf.sh' then run printf.
+if [[ "${#}" -ne "0" ]] ; then
+    term::printf "${@}"
+fi
