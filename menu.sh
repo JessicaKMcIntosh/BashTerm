@@ -28,8 +28,9 @@ find_library(){
     echo "Unable to locate the library '${library}'." >&2
     exit 1
 }
+TERM_VERBOSE=0 # Uncomment for verbose library loading.
 for library in "${library_list[@]}"; do
-    source "$(find_library "${library}")" > /dev/null 2>&1 || exit 1
+    source "$(find_library "${library}")" #> /dev/null 2>&1 || exit 1
 done
 
 # Default settings.
@@ -60,6 +61,7 @@ declare _TERM_MENU_PROMPT="Select the option [~]: "
 #   debug       - Print some debug information.
 #   one         - Exit after the first attempt. Returns 251 if a key was not selected.
 #   prompt      - The user prompt. "~" is replaced with the valid keys.
+#   quiet       - Do not print error text.
 #   reverse     - The key text is printed in reverse.
 #   sep         - The key and text separator text follows.
 #                 For example "sep =>" results in "0 => Menu Text."
@@ -67,14 +69,16 @@ declare _TERM_MENU_PROMPT="Select the option [~]: "
 # Returns:'
 #   The item selected in the exit status.
 #   All return codes MUST be less than or equal to 250.
-#   251 - Invalid key entered and option "O" was given.
+#   If you need more than 250 menu items consider Whiptail.
+#   https://en.wikibooks.org/wiki/Bash_Shell_Scripting/Whiptail
+#   251 - Invalid key entered and option "one" was given.
 #   252 - Insufficient args passed.
 #   255 - Error while building the menu.
 # Notes:
 #   The character "~" is used because it is uncommon and unlikely to appear in menu text.
 term::menu() {
     if [[ "${#}" -lt "3" ]] ; then
-        echo "INSUFFICIENT PARAMETERS PASSED!!!" >&2
+        echo "MENU ERROR: Insufficient parameters passed!" >&2
         exit 252
     fi
     local title="${1}"
@@ -91,41 +95,44 @@ term::menu() {
     local valid_keys=""     # The list of valid keys.
     local -a menu_list      # The rendered menu list to print.
     local -A key_list       # Translate key to return code.
-    local -a scratch        # Scratch array.
     local -A option_list    # The various options set for the menu.
 
     # Setup the options.
     option_list[sep]="${_TERM_MENU_SEPARATOR}"
     option_list[prompt]="${_TERM_MENU_PROMPT}"
-    mapfile -t -d "|" scratch < <(echo -n "${options}")
-    for item in "${scratch[@]}"; do
+    option_list[attr]="" # Attributes for the key character in the menu.
+    while IFS="" read -r item; do
+        [[ -z "${item}" ]] && continue
         case "${item}" in
-            sep*)   option_list[sep]="${item:3}";;
-            prompt*)   option_list[prompt]="${item:6}";;
-            *)      option_list[${item}]="${item}";;
+            sep*)       option_list[sep]="${item:3}";;
+            prompt*)    option_list[prompt]="${item:6}";;
+            bold)       option_list[attr]+="${TERM_BOLD}";;
+            reverse)    option_list[attr]+="${TERM_REVERSE}";;
+            underline)  option_list[attr]+="${TERM_UNDERLINE}";;
+            *)          option_list[${item}]="${item}";;
         esac
-    done
+    done <<< "${options//|/$'\n'}"
 
     # Build the menu.
     for item in "${!menu_items[@]}"; do
-        # Defaults.
-        key="$((item + 1))"
-        rc="$((item + 1))"
-        text="${menu_items[$item]}"
-
         # Check for parameters to the menu item.
-        mapfile -t -d "|" scratch < <(echo -n "${menu_items[$item]}")
-        if [[ "${#scratch[@]}" -gt "1" ]] ; then
-            if [[ -n "${scratch[0]}" ]] ; then
-                key="${scratch[0]}"
+        IFS="|" read -r key rc text <<< "${menu_items[$item]}"
+        if [[ -z "${rc}" && -z "${text}" ]] ; then
+            # No parameters so use the defaults.
+            key="$((item + 1))"
+            rc="$((item + 1))"
+            text="${menu_items[$item]}"
+        else
+            # Check for empty parameters.
+            if [[ -z "${rc}" ]] ; then
+                rc="$((item + 1))"
             fi
-            if [[ "${#scratch[@]}" -gt "2" && -n "${scratch[1]}" ]] ; then
-                rc="${scratch[1]}"
+            if [[ -z "${key}" ]] ; then
+                key="$((item + 1))"
             fi
-            text="${scratch[-1]}" # The menu item text is the last array element.
         fi
 
-        # Check the return code.
+        # Check that the return code is in range.
         if (( rc > 250 )) ; then
             echo "MENU ERROR: Return code (${rc}) invalid! Must be 250 or less." >&2
             return 255
@@ -139,14 +146,10 @@ term::menu() {
             # Save the key and return code.
             key_list[$key]=$rc
             if [[ "${text}" != "~" ]] ; then
-                # there is text to print.
+                # There is text to print so save the menu item.
                 valid_keys+="${key}"
-                if [[ -v option_list[bold] ]] ; then
-                    key="${TERM_BOLD}${key}${TERM_RESET}"
-                elif [[ -v option_list[underline] ]] ; then
-                    key="${TERM_UNDERLINE}${key}${TERM_RESET}"
-                elif [[ -v option_list[reverse] ]] ; then
-                    key="${TERM_REVERSE}${key}${TERM_RESET}"
+                if [[ -v option_list[attr] ]] ; then
+                    key="${option_list[attr]}${key}${TERM_RESET}"
                 fi
                 menu_list+=("${key}${option_list[sep]} ${text}")
             fi
@@ -174,7 +177,9 @@ term::menu() {
         for item in "${menu_list[@]}"; do
             echo "$item"
         done
-        if [[ -n "${error_text}" ]] ; then
+
+        # Print the error text if present and quiet is not set.
+        if [[ -n "${error_text}" && ! (-v option_list[quiet]) ]] ; then
             echo "ERROR: ${error_text}"
         fi
 
@@ -202,10 +207,12 @@ term::menu() {
 # Demonstration menu.
 declare -a DEMO_MENU
 DEMO_MENU=(
-    "||Set the separator to: ']'"
-    "||Set the separator to: ':'"
+    "Set the separator to: ']'"
+    "||Set the separator to: ')'"
+    "Set the separator to: ':'"
     "|99|Set the separator to: '=>'"
     "c|100|Toggle the option 'clear'."
+    "q|101|Toggle the option 'quiet'."
     "b|110|Toggle printing the key in bold."
     "u|111|Toggle printing the key underlined."
     "r|112|Toggle printing the key reversed."
@@ -214,10 +221,15 @@ DEMO_MENU=(
     "p|131|Simple Prompt."
     "D|200|Toggle debug mode."
     "0|0|Exit"
-    "Press space for a surprise."
-    " |250|~"
+    "~||Press space for a surprise."
+    " |250|~" # No text. Just the sideeffect of the key.
+    # Common keys to exit the menu.
+    "x|0|~"
+    # "q|0|~"
+    "" # Replaced with the options later.
 )
 
+# Allow the user to toggle options.
 declare -A DEMO_OPTIONS
 DEMO_OPTIONS=(
     [clear]=""
@@ -225,13 +237,20 @@ DEMO_OPTIONS=(
     [sep]="]"
 )
 
+# String of options passed to term::menu().
 declare OPTION_STRING
 
+# Toggle an option on or off.
 menu_toggle_option(){
     local item="${1}"
-    [[ -v DEMO_OPTIONS[$item] ]] && unset "DEMO_OPTIONS[${item}]" || DEMO_OPTIONS[$item]=""
+    if [[ -v DEMO_OPTIONS[$item] ]] ; then
+        unset "DEMO_OPTIONS[${item}]"
+    else
+        DEMO_OPTIONS[$item]=""
+    fi
 }
 
+# Build the option string from the options.
 menu_build_options(){
     OPTION_STRING=""
     for item in "${!DEMO_OPTIONS[@]}"; do
@@ -239,23 +258,26 @@ menu_build_options(){
     done
 }
 
+# A rather contrived example. :shrug:
 menu_demo(){
-    local item
+    local rc
 
     while true; do
-
         # Present the menu.
+        DEMO_MENU[-1]="~||Options: ${OPTION_STRING}"
         term::menu "Test Menu!" "${OPTION_STRING}" "${DEMO_MENU[@]}"
-        RC="${?}"
-        echo "Returned: ${RC}"
+        rc="${?}"
+        echo "Returned: ${rc}"
 
         # Process the result.
-        case "${RC}" in
+        case "${rc}" in
             0) exit;;
             1) DEMO_OPTIONS[sep]="]";;
-            2) DEMO_OPTIONS[sep]=":";;
+            2) DEMO_OPTIONS[sep]=")";;
+            3) DEMO_OPTIONS[sep]=":";;
             99) DEMO_OPTIONS[sep]="=>";;
             100) menu_toggle_option "clear";;
+            101) menu_toggle_option "quiet";;
             110) menu_toggle_option "bold";;
             111) menu_toggle_option "underline";;
             112) menu_toggle_option "reverse";;
@@ -263,12 +285,14 @@ menu_demo(){
             130) DEMO_OPTIONS[prompt]="${_TERM_MENU_PROMPT}";;
             131) DEMO_OPTIONS[prompt]="Press a key: ";;
             200) menu_toggle_option "debug";;
+            250) printf "\nSURPRISE!!!\n";;
         esac
 
         # Rebuild the options
         menu_build_options
         echo "Options: ${OPTION_STRING}"
         read -rsn1 -p "Press any key to continue..." >&2
+        echo ""
     done
 }
 
