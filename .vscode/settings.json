@@ -18,6 +18,7 @@
         "infocmp",
         "invis",
         "nullglob",
+        "RFPL",
         "ritm",
         "rmir",
         "rmso",
