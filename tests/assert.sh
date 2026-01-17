@@ -13,8 +13,8 @@ export TEST_TITLE="Make sure the assert tests work."
 
 # Any setup that may need to be performed.
 test_setup(){
-    # Nothing done.
-    :
+    # Failures are fatal for this test.
+    declare -x TestFailFatal=true
 }
 
 # Any cleanup that may need to be performed.
@@ -24,11 +24,36 @@ test_cleanup(){
 }
 
 test::assert_equals(){
-    assert_equals "Foo" "Foo" "Foo should be Foo."
+    assert_equals "Foo" "Foo" "'Foo' should be 'Foo'."
+}
+
+test::assert_exists(){
+    assert_exists "ASSERT_PASS" "'ASSERT_PASS' should exist."
+    assert_exists "TestDirectory" "tests" "'TestDirectory' should be 'tests'."
 }
 
 test::assert_success(){
     assert_success "true" "true should always succeed."
+}
+
+test::assert_fail(){
+    local failures
+    failures="${ASSERT_FAIL}"
+    ((failures++))
+
+    # Make a failure.
+    TestFailFatal=false
+    assert_fail "This should always fail." > /dev/null
+    TestFailFatal=true
+
+    # Readjust the tests since this test should fail.
+    if [[ "${failures}" -eq "${ASSERT_FAIL}" ]] ; then
+        ((ASSERT_FAIL--))
+        ((ASSERT_PASS++))
+    else
+        echo "assert_equals should have failed.."
+        exit 1
+    fi
 }
 
 test::will_always_fail(){
@@ -37,14 +62,15 @@ test::will_always_fail(){
     ((failures++))
 
     # Make a failure.
-    assert_equals "bar" "foo" "This test will always fail."
+    TestFailFatal=false
+    assert_equals "bar" "foo" "This test will always fail." > /dev/null
+    TestFailFatal=true
 
     # Readjust the tests since this test should fail.
     if [[ "${failures}" -eq "${ASSERT_FAIL}" ]] ; then
         ((ASSERT_FAIL--))
         ((ASSERT_PASS++))
     else
-        ((ASSERT_FAIL++))
-        ((ASSERT_PASS--))
+        assert_fail "assert_equals should have failed for inequal values."
     fi
 }

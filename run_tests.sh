@@ -20,7 +20,8 @@
 # Output: Loading test file 'tests/base.sh'... (Base Test)
 
 # Configuration:
-TestDirectory="tests"
+declare TestDirectory="tests"
+declare TestFailFatal=false
 
 # Saner shell defaults.
 set -o nounset
@@ -28,13 +29,20 @@ shopt -s nullglob
 shopt -u failglob
 
 # Testing Variables:
-declare -g TEST_COUNT       # The number of tests that have been run.
-declare -g ASSERT_PASS      # The number of assertions that have passed.
-declare -g ASSERT_FAIL      # The number of assertions that have failed.
+declare TEST_COUNT       # The number of tests that have been run.
+declare ASSERT_PASS      # The number of assertions that have passed.
+declare ASSERT_FAIL      # The number of assertions that have failed.
 
 # ----~~~~++++====#### Assertion Functions ####====++++~~~~----
 
-# Test the condition and update the TEST_ variables accordingly.
+_assert_check_fatal(){
+    if ${TestFailFatal} ; then
+        echo "Fatal failure! Aborting..."
+        exit 1
+    fi
+}
+
+# Test the condition and update the ASSERT_ variables accordingly.
 # If the test fails print the message.
 _assert(){
     local condition="${1}"
@@ -57,8 +65,12 @@ _assert(){
 # Optionally compares the variable contents.
 assert_exists(){
     local variable="${1}"
-    local expected="${2:-}"
-    local message="${3:-}"
+    local expected=""
+    if [[ "${#}" -gt "2" ]] ; then
+        expected="${2}" 
+        shift
+    fi
+    local message="${2:-}"
     local actual
     local result=1
 
@@ -66,13 +78,15 @@ assert_exists(){
     [[ -v "${variable}" ]] && result=0 || result=1
     if ! _assert "${result}" "assert_exists" "${message}"; then
         printf "Variable (%s) does not exist.\n" "${variable}"
+        _assert_check_fatal
         return 1
-    elif [[ -v expected ]] ; then
+    elif [[ -n "${expected}" ]] ; then
         # Yes. And there is an expected value. Are they equal?
         actual="${!variable}"
         [ "$expected" = "$actual" ] && result=0 || result=1
         if ! _assert "${result}" "assert_exists" "${message}"; then
             printf "Expected: (%s) Actual: (%s)\n" "${expected@Q}" "${actual@Q}"
+            _assert_check_fatal
             return 1
         fi
     fi
@@ -94,6 +108,14 @@ assert_equals(){
     return 0
 }
 
+# Always fails.
+assert_fail(){
+    local message="${1}"
+    _assert "1" "assert_fail" "${message}"
+    _assert_check_fatal
+    return 1
+}
+
 # Test if a command completes successfully.
 assert_success(){
     local command="${1}"
@@ -103,6 +125,7 @@ assert_success(){
     eval "${command}" >/dev/null 2>&1 && status="$?" || status="$?"
     if ! _assert "${status}" "assert_success" "${message}"; then
         printf "Command failed: (%s)\n" "${command}"
+        _assert_check_fatal
         return 1
     fi
     return 0
@@ -115,7 +138,7 @@ assert_success(){
 run_test_files(){
     local test_file
     echo "Running the tests from 'test/'..."
-    for test_file in ${TestDirectory}/*.sh; do
+    for test_file in "${TestDirectory}"/*.sh; do
         # Load the test file.
         echo ""
         printf "Loading test file '%s'..." "${test_file}"
@@ -125,6 +148,9 @@ run_test_files(){
             unset TEST_TITLE
         fi
         echo ""
+
+        # Clear the fatal flag. Set this in 'test_setup()' per test.
+        TestFailFatal=false
 
         # Do setup if needed.
         if declare -F "test_setup" > /dev/null 2>&1 ; then
@@ -148,7 +174,7 @@ run_tests(){
         ((TEST_COUNT++))
         printf "Running %s...\n" "${name}"
         $name
-        unset -f $name
+        unset -f "$name"
     done
 }
 
