@@ -124,5 +124,5 @@ test::shortcuts(){
     assert_exists "TERM_REVERSE" "${test_attr_rev}" "Check the value of TERM_REVERSE."
     assert_exists "TERM_STANDOUT" "${test_attr_smso}" "Check the value of TERM_STANDOUT."
     assert_exists "TERM_UNDERLINE" "${test_attr_smul}" "Check the value of TERM_UNDERLINE."
-
 }
+

@@ -33,6 +33,9 @@ declare TEST_COUNT       # The number of tests that have been run.
 declare ASSERT_PASS      # The number of assertions that have passed.
 declare ASSERT_FAIL      # The number of assertions that have failed.
 
+# For testing the tests.
+declare _TEST_SENTINAL="SENTINAL"
+
 # ----~~~~++++====#### Assertion Functions ####====++++~~~~----
 
 _assert_check_fatal(){
@@ -114,6 +117,37 @@ assert_fail(){
     _assert "1" "assert_fail" "${message}"
     _assert_check_fatal
     return 1
+}
+
+# Run a command. Check the return status and output.
+assert_run(){
+    local command="${1}"
+    local expected_status="${2}"
+    local expected_output="${3}"
+    local message="${4}"
+    local actual_output
+    local actual_status
+    local result
+
+    # Run the command.
+    actual_output="$(eval "${command}" 2>&1)"
+    actual_status="${?}"
+
+    # Check the return code.
+    if [[ -n "${expected_status}" ]] ; then
+        [ "$expected_status" = "$actual_status" ] && result=0 || result=1
+        if ! _assert "${result}" "assert_run" "${message}"; then
+            printf "Expected return code: (%s) Actual: (%s)\n" "${expected_status}" "${actual_status}"
+            printf "Output: %s\n" "${actual_output@Q}"
+            return 1
+        fi
+    fi
+    [ "$expected_output" = "$actual_output" ] && result=0 || result=1
+    if ! _assert "${result}" "assert_equals" "${message}"; then
+        printf "Expected: (%s) Actual: (%s)\n" "${expected_output@Q}" "${actual_output@Q}"
+        return 1
+    fi
+    return 0
 }
 
 # Test if a command completes successfully.
