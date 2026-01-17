@@ -18,9 +18,11 @@ find_library(){
 done
 }
 #TERM_VERBOSE=0 # Uncomment for verbose library loading.
-for library in "${library_list[@]}"; do
-    source "$(find_library "${library}")" || exit 1
+declare _TERM_LOAD_LIBRARY
+for _TERM_LOAD_LIBRARY in "${library_list[@]}"; do
+    source "$(find_library "${_TERM_LOAD_LIBRARY}")" || exit 1
 done
+unset _TERM_LOAD_LIBRARY
 
 # Thoughts for later:
 # Strip non-printable characters: foo="$(echo -e "This is a \ntest.")"; echo ">>${foo}<<"; echo "${foo//[[:cntrl:]]/}"

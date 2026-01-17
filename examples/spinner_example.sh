@@ -24,9 +24,11 @@ find_library(){
 }
 #TERM_VERBOSE=0 # Uncomment for verbose library loading.
 # shellcheck disable=SC2167 # Go home Shellcheck, you are drunk.
-for library in "${library_list[@]}"; do
-    source "$(find_library "${library}")" || exit 1
+declare _TERM_LOAD_LIBRARY
+for _TERM_LOAD_LIBRARY in "${library_list[@]}"; do
+    source "$(find_library "${_TERM_LOAD_LIBRARY}")" || exit 1
 done
+unset _TERM_LOAD_LIBRARY
 
 declare -a SPINNER_FRAMES   # Frame set to use.
 declare -a SPINNER_MENU     # User menu.

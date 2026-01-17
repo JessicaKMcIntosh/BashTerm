@@ -23,9 +23,11 @@ find_library(){
     exit 1
 }
 #TERM_VERBOSE=0 # Uncomment for verbose library loading.
-for library in "${library_list[@]}"; do
-    source "$(find_library "${library}")" || exit 1
+declare _TERM_LOAD_LIBRARY
+for _TERM_LOAD_LIBRARY in "${library_list[@]}"; do
+    source "$(find_library "${_TERM_LOAD_LIBRARY}")" || exit 1
 done
+unset _TERM_LOAD_LIBRARY
 
 echo "Testing colors:"
 for color in "${_TERM_COLORS[@]}"; do

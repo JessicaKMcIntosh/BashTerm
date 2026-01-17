@@ -26,9 +26,11 @@ find_library(){
     echo "Unable to locate the library '${library}'." >&2
     exit 1
 }
-for library in "${library_list[@]}"; do
-    source "$(find_library "${library}")" > /dev/null 2>&1 || exit 1
+declare _TERM_LOAD_LIBRARY
+for _TERM_LOAD_LIBRARY in "${library_list[@]}"; do
+    source "$(find_library "${_TERM_LOAD_LIBRARY}")" || exit 1
 done
+unset _TERM_LOAD_LIBRARY
 
 # Define some metadata about this test.
 export TEST_TITLE="Test all color variables."
