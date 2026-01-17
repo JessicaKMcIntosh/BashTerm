@@ -65,7 +65,7 @@ declare _TERM_MENU_PROMPT="Select the option [~]: "
 #           If the key is more than one character an error is thrown.
 #           This can happen if you use the positional number.
 #   Return - The optional return code. The default is the positional number.
-#   If either the key or return code are used both colons are required.
+#   If a menu item is completely blank then a blank line is printed.
 # Options:
 #   These change how the menu is built and operates.
 #   Options are separated by the vertical tab ("|") character.
@@ -87,7 +87,7 @@ declare _TERM_MENU_PROMPT="Select the option [~]: "
 #   251 - Invalid key entered and option "one" was given.
 #   252 - Insufficient args passed.
 #   253 - Key is not a single character.
-#   254 - Return code is more than 250.
+#   254 - Return code is not a number or more than 250.
 #   255 - Error while building the menu.
 # Notes:
 #   The character "~" is used because it is uncommon and unlikely to appear in menu text.
@@ -129,6 +129,12 @@ term::menu() {
 
     # Build the menu.
     for item in "${!menu_items[@]}"; do
+        # Empty string is a special case.
+        if [[ -z "${menu_items[$item]}" ]] ; then
+            menu_list+=("")
+            continue
+        fi
+
         # Check for parameters to the menu item.
         IFS="|" read -r key rc text <<< "${menu_items[$item]}"
         if [[ -z "${rc}" && -z "${text}" ]] ; then
@@ -146,15 +152,17 @@ term::menu() {
             fi
         fi
 
-        # Check that the return code is in range.
-        if [[ "${rc}" != "~" && "${rc}" -gt "250" ]] ; then
-            echo "MENU ERROR: Return code (${rc}) invalid! Must be 250 or less." >&2
+        # Check that the return code is a number in range.
+        if [[ "${rc}" != "~" && ( "${rc}" -gt "250" ||  "$((rc + 0))" != "${rc}" ) ]] ; then
+            echo "MENU ERROR: Return code (${rc}) invalid! Must be a number 250 or less." >&2
+            echo "Menu item: ${menu_items[$item]}"
             return 254
         fi
 
-        # Check the key is one character.
+        # Check that the key is one character.
         if [[ "${#key}" -gt "1" ]] ; then
             echo "MENU ERROR: Key (${key}) is not a single character." >&2
+            echo "Menu item: ${menu_items[$item]}"
             return 253
         fi
 
@@ -165,8 +173,8 @@ term::menu() {
                 menu_list+=("${text}")
             fi
         else
-            # Save the key and return code.
             if [[ "${rc}" != "~" ]] ; then
+                # Save the key and return code.
                 key_list[$key]=$rc
             fi
             if [[ "${text}" != "~" ]] ; then
@@ -196,7 +204,7 @@ term::menu() {
     while true; do
         # Print the menu.
         if [[ -v option_list[clear] ]] ; then
-            clear
+            echo -n "${TERM_CLEAR}"
         fi
         echo "${title}"
         for item in "${menu_list[@]}"; do

@@ -40,15 +40,18 @@ EXAMPLE_MENU=(
     "||Set the separator to: ')'" # Still simple, may contain '|'.
     "Set the separator to: ':'"
     "|99|Set the separator to: '=>'" # Different return code.
+    ""
     "c|100|Toggle the option 'clear'."
     "q|101|Toggle the option 'quiet'."
     "b|110|Toggle printing the key in bold."
     "u|111|Toggle printing the key underlined."
     "r|112|Toggle printing the key reversed."
     "o|120|Toggle the option 'one' for only one try."
+    ""
     "P|130|Default prompt."
     "p|131|Simple Prompt."
     "D|200|Toggle debug mode."
+    ""
     "0|0|Exit"
     "~||Press space for a surprise." # Print only the text, no key.
     " |250|~" # No text. Just the side effect of the space key.
@@ -116,6 +119,7 @@ menu_example(){
             131) EXAMPLE_OPTIONS[prompt]="Press a key: ";;
             200) menu_toggle_option "debug";;
             250) printf "\nSURPRISE!!!\n";;
+            251|252|253|254|255) exit;;
         esac
 
         # Rebuild the options
