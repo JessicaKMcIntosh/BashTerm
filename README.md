@@ -109,8 +109,15 @@ AWK is used by the printf library and the script `examples/spinner_example.sh`.
 ## TODO
 
 * Draw boxes. Could do this with AWK. `examples/draw.sh`
-* Unit tests.
+* Unit tests. **In progress.**
+* Document `menu.sh`.
+* Document `log.sh`.
 * Write an actual test for the cursor library.
+* Make the library files actual library files.
+  Move the contents to a separate file in a separate directory.
+  Generate the files in the main directory by adding the header.
+  Kinda like having a template.
+  This would also allow creating completely standalone scripts from the separate files.
 
 ## Terminal Attributes - `attr.sh`
 
