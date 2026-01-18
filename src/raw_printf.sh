@@ -10,10 +10,12 @@ if [[ ! -f "${_TERM_AWK_FILE}" ]] ; then
     exit 1
 fi
 
+# Print to STDOUT.
 term::printf(){
     printf "%s\n" "${@}" | $_TERM_AWK_COMMAND -f "${_TERM_AWK_FILE}"
 }
 
+# Print to a variable.
 term::printf-v(){
     local -n variable="${1}"
     shift
