@@ -8,22 +8,24 @@ You are responsible for making sure dependencies are included.
 
 ## Files
 
-* 'footer_log.sh' - Footer just for `log.sh`.
-* 'footer_printf.sh' - Footer just for `printf.sh`.
-* 'footer.sh' - Generic footer.
-* 'header_function.sh' - Header for `function.sh`.
-* 'header.sh' - Generic header.
-* 'load_libraries.sh' - For loading dependencies.
-* 'make.sh' - Generates the complete files.
-* 'raw_attr.sh' - Attribute library.
-* 'raw_boxes.sh' - Box library.
-* 'raw_color.sh' - Color library.
-* 'raw_cursor.sh' - Cursor library.
-* 'raw_function.sh' - Function library.
-* 'raw_log.sh' - Logging library.
-* 'raw_menu.sh' - Menu library.
-* 'raw_printf.sh' - Printf library.
-* 'raw_spinner.sh' - Spinner library.
+* `footer_log.sh` - Footer just for `log.sh`.
+* `footer_printf.sh` - Footer just for `printf.sh`.
+* `footer.sh` - Generic footer.
+* `header_function.sh` - Header for `function.sh`.
+* `header.sh` - Generic header.
+* `load_libraries.sh` - For loading dependencies.
+* `make.sh` - Generates the complete files.
+* `raw_attr.sh` - Attribute library.
+* `raw_boxes.sh` - Box library.
+* `raw_color.sh` - Color library.
+* `raw_cursor.sh` - Cursor library.
+* `raw_function.sh` - Function library.
+* `raw_log.sh` - Logging library.
+* `raw_menu.sh` - Menu library.
+* `raw_printf.sh` - Printf library.
+* `raw_spinner.sh` - Spinner library.
+* `shebang.sh` - The very top of the file.
+  Includes the shebang line, ShellCheck help and the dedication to the public domain.
 
 ## Using vim to diff the files?
 
