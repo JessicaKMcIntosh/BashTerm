@@ -70,6 +70,8 @@ term::_log_format(){
     if [[ -n "${_TERM_LOG_FILE}" ]] ; then
         printf -v log_file "${_TERM_LOG_FORMAT_FILE}" "${TERM_FG[$_TERM_LOG_FILE_COLOR]}" "${_TERM_LOG_FILE}" "${_TERM_LOG_COLOR_RESET}"
         log_output="${log_output/\%F/$log_file}"
+    else
+        log_output="${log_output/\%F/}"
     fi
 
     # Format the log level.
