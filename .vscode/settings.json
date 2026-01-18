@@ -40,6 +40,7 @@
         "alt_boxes.sh"
     ],
     "files.eol": "\n",
+    "markdownlint.run": "onSave",
     "markdownlint.config": {
         "no-duplicate-heading": {
             "siblings_only": true
@@ -51,5 +52,5 @@
     "markdown.extension.toc.orderedList": false,
     "markdown.extension.toc.unorderedList.marker": "*",
     "shellcheck.customArgs": ["-x"],
-
+    "shellcheck.run": "onType" // also: "onSave" // Be less annoying.
 }
