@@ -164,3 +164,8 @@ term::lines(){
     echo "${lines}"
 }
 
+# If called directly then suggest the example.
+if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
+    echo "For an example try:"
+    echo "./examples/cursor_example.sh"
+fi

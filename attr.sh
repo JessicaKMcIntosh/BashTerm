@@ -108,3 +108,9 @@ done
 # Remove the temporary variables.
 unset _TERM_TEMP_ATTR
 unset _TERM_TEMP_CODE
+
+# If called directly then suggest the example.
+if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
+    echo "For an example try:"
+    echo "./examples/attr_example.sh"
+fi

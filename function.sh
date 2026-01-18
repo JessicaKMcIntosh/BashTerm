@@ -78,7 +78,7 @@ term::UNDERLINE()   { echo -n "${TERM_ATTR["rmul"]}" ; }
 term::bold()        { echo -n "${TERM_ATTR["bold"]}" ; }
 term::clear()       { echo -n "${TERM_ATTR["clear"]}" ; }
 term::dim()         { echo -n "${TERM_ATTR["dim"]}" ; }
-term::invisibl()    { echo -n "${TERM_ATTR["invis"]}" ; }
+term::invisible()   { echo -n "${TERM_ATTR["invis"]}" ; }
 term::italics()     { echo -n "${TERM_ATTR["italics"]}" ; }
 term::orig()        { echo -n "${TERM_ATTR["op"]}" ; }
 term::reset()       { echo -n "${TERM_ATTR["reset"]}" ; }
@@ -169,3 +169,9 @@ term::box_r_mr() { echo -n "${TERM_BOX_RMR}" ; } # ┤ Box Drawings Light Vertic
 term::box_r_bc() { echo -n "${TERM_BOX_RBC}" ; } # ┴ Box Drawings Light Up and Horizontal
 term::box_r_bl() { echo -n "${TERM_BOX_RBL}" ; } # ╰ Box Drawings Light Arc Up and Right
 term::box_r_br() { echo -n "${TERM_BOX_RBR}" ; } # ╯ Box Drawings Light Arc Up and Left
+
+# If called directly then suggest the example.
+if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
+    echo "For an example try:"
+    echo "./examples/function_example.sh"
+fi

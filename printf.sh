@@ -64,10 +64,16 @@ term::printf(){
 term::printf-v(){
     local -n variable="${1}"
     shift
+    # shellcheck disable=SC2034
     variable="$(printf "%s\n" "${@}" | $_TERM_AWK_COMMAND -f "${_TERM_AWK_FILE}")"
 }
 
-# If called as './printf.sh' then run printf.
-if [[ "${#}" -ne "0" ]] ; then
-    term::printf "${@}"
+# If called directly then run printf or reference the example.
+if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
+    if [[ "${#}" -eq "0" ]] ; then
+        echo "For an example try:"
+        echo "./examples/printf_example.sh"
+    else
+        term::printf "${@}"
+    fi
 fi

@@ -239,3 +239,9 @@ term::menu() {
         fi
     done
 }
+
+# If called directly then suggest the example.
+if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
+    echo "For an example try:"
+    echo "./examples/menu_example.sh"
+fi

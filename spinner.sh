@@ -192,9 +192,15 @@ term::spin_spin(){
     term::spin_init "${@}"
     while true; do
         term::spin_step
-        if read -n 1 -s -t "${TERM_SPIN_SLEEP}" ; then
+        if read -r -n 1 -s -t "${TERM_SPIN_SLEEP}" ; then
             break
         fi
     done
     echo -n "${TERM_NORMAL}"
 }
+
+# If called directly then suggest the example.
+if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
+    echo "For an example try:"
+    echo "./examples/spinner_example.sh"
+fi

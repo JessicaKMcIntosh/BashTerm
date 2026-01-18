@@ -83,3 +83,9 @@ done
 
 # Remove the temporary variables.
 unset _TERM_TEMP_COLOR
+
+# If called directly then suggest the example.
+if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
+    echo "For an example try:"
+    echo "./examples/color_example.sh"
+fi

@@ -105,3 +105,9 @@ export TERM_BOX_RMR=$'\u2524'  # ┤ Box Drawings Light Vertical and Left
 export TERM_BOX_RBC=$'\u2534'  # ┴ Box Drawings Light Up and Horizontal
 export TERM_BOX_RBL=$'\u2570'  # ╰ Box Drawings Light Arc Up and Right
 export TERM_BOX_RBR=$'\u256F'  # ╯ Box Drawings Light Arc Up and Left
+
+# If called directly then suggest the example.
+if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
+    echo "For an example try:"
+    echo "./examples/boxes_example.sh"
+fi
