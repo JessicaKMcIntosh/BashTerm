@@ -5,6 +5,7 @@ A library to simplify working with the terminal in bash.
 * [Overview](#overview)
 * [Why?](#why)
 * [Requirements](#requirements)
+* [How](#how)
 * [TODO](#todo)
 * [Terminal Attributes - `attr.sh`](#terminal-attributes---attrsh)
   * [Primary interface](#primary-interface)
@@ -105,6 +106,14 @@ MacOS still ships with Bash 3.
 For MacOS check out [Homebrew](https://brew.sh/) for a modern version of bash.
 
 AWK is used by the printf library and the script `examples/spinner_example.sh`.
+
+## How
+
+You can certainly source the files in the current directory.
+See the files in the directory `examples/` for details.
+It would be better to get the raw files from `src/raw_*.sh`.
+These files contain the useful bits without the nonsense about loading libraries.
+Just copy the contents of the raw file that you need into your script.
 
 ## TODO
 
