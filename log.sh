@@ -50,10 +50,19 @@ unset _TERM_LOAD_LIBRARY
 # Default settings.
 declare _TERM_LOG_FILE="${BASH_SOURCE[0]##*/}"
 declare _TERM_LOG_LEVEL=${TERM_LOG_LEVEL:-1} # This would normally be INFO.
-declare _TERM_LOG_DATE_FORMAT="${TERM_LOG_DATE:-"%Y-%m-%d_%H:%M:%S"}"
 declare -a _TERM_LOG_LEVELS=("Debug" "Info" "Warn" "Error")
-declare _TERM_LOG_MAX_LEVEL="${#_TERM_LOG_LEVELS[@]}"
-((_TERM_LOG_MAX_LEVEL--)) || true
+declare _TERM_LOG_MAX_LEVEL="$((${#_TERM_LOG_LEVELS[@]} - 1))"
+
+# The formatting is broken up to assemble each piece with colors.
+declare _TERM_LOG_FORMAT="%L%F%D: %M\n"
+# %M is replaced with the log message.
+# For these %s is replaced with the color escape codes then the value.
+# Like this: printf "%s[%-5S%s] " $COLOR_CODE $LOG_LEVEL $COLOR_RESET
+declare _TERM_LOG_FORMAT_DATE="(%s%s%s)"        # %D in _TERM_LOG_FORMAT
+declare _TERM_LOG_FORMAT_FILE="<%s%s%s> "       # %F in _TERM_LOG_FORMAT
+declare _TERM_LOG_FORMAT_LEVEL="[%s%-5s%s] "    # %L in _TERM_LOG_FORMAT
+# The format string passed to the date command.
+declare _TERM_LOG_DATE_COMMAND="${TERM_LOG_DATE:-"%Y-%m-%dT%H:%M:%S"}"
 
 # Technicolor!
 declare -a _TERM_LOG_COLORS=("blue" "green" "yellow" "red")
@@ -76,31 +85,50 @@ unset _TERM_LOG_TEMP
 # Logging function.
 term::log(){
     if [[ "${#}" -lt "2" ]] ; then
-        echo "Insufficient arguments."
+        echo "Insufficient arguments. Usage: term::log LOG_LEVEL LOG_MESSAGE"
         return 1
     fi
     local log_level="${1}"
     shift
-    local log_text="${*}"
-    local log_level_color=""
-    local log_level_file=""
+    local log_message="${*}"
 
     # Make sure the log level is valid.
     log_level="$(term::_log_to_number "${log_level}")"
 
     # Print the message if the log level is high enough.
     if [[ "${log_level}" -ge "${_TERM_LOG_LEVEL}" ]] ; then
-        # Set the logging colors.
-        log_level_color="${_TERM_LOG_COLORS[$log_level]}"
-        if [[ -n "${_TERM_LOG_FILE}" ]] ; then
-            printf -v log_level_file "<%s%s%s> " "${TERM_FG[$_TERM_LOG_FILE_COLOR]}" "${_TERM_LOG_FILE}" "${_TERM_LOG_COLOR_RESET}"
-        fi
-        printf "[%s%-5s%s] %s(%s%s%s): %s\n" \
-               "${TERM_FG[$log_level_color]}" "${_TERM_LOG_LEVELS[$log_level]}" "${_TERM_LOG_COLOR_RESET}" \
-               "${log_level_file}" \
-               "${TERM_FG[$_TERM_LOG_DATE_COLOR]}" "$(date +"${_TERM_LOG_DATE_FORMAT}")" "${_TERM_LOG_COLOR_RESET}" \
-               "${log_text}"
+        term::_log_format "${log_level}" "${log_message}"
     fi
+}
+
+# Format the log output.
+# shellcheck disable=SC2059 # I am abusing the format strings on purpose.
+term::_log_format(){
+    local log_level="${1}"
+    local log_date=""
+    local log_file=""
+    local log_message="${2}"
+    local log_level_color=""
+    local log_output="${_TERM_LOG_FORMAT}"
+
+    # Format the log date.
+    printf -v log_date "${_TERM_LOG_FORMAT_DATE}" "${TERM_FG[$_TERM_LOG_DATE_COLOR]}" "$(date +"${_TERM_LOG_DATE_COMMAND}")" "${_TERM_LOG_COLOR_RESET}"
+    log_output="${log_output/\%D/$log_date}"
+
+    # Format the file name, if present.
+    if [[ -n "${_TERM_LOG_FILE}" ]] ; then
+        printf -v log_file "${_TERM_LOG_FORMAT_FILE}" "${TERM_FG[$_TERM_LOG_FILE_COLOR]}" "${_TERM_LOG_FILE}" "${_TERM_LOG_COLOR_RESET}"
+        log_output="${log_output/\%F/$log_file}"
+    fi
+
+    # Format the log level.
+    log_level_color="${_TERM_LOG_COLORS[$log_level]}"
+    printf -v log_level "${_TERM_LOG_FORMAT_LEVEL}" "${TERM_FG[$log_level_color]}" "${_TERM_LOG_LEVELS[$log_level]}" "${_TERM_LOG_COLOR_RESET}"
+    log_output="${log_output/\%L/$log_level}"
+
+    # Print the log_message.
+    log_output="${log_output/\%M/$log_message}"
+    printf "${log_output}"
 }
 
 # Disable color output.
@@ -212,7 +240,7 @@ term::log_usage(){
     echo "Args:"
     echo "    -C        Disable color."
     echo "    -d FORMAT Set the date format string. Try '%c'."
-    echo "              Default: ${_TERM_LOG_DATE_FORMAT}"
+    echo "              Default: ${_TERM_LOG_DATE_COMMAND}"
     echo "    -F FILE   Add an optional file name to the log message."
     echo "    -h        This text."
     echo "    -L LEVEL  Set the current log level."
@@ -246,7 +274,7 @@ term::log_main(){
     while getopts ":Cd:f:hL:l:" option ; do
         case $option in
             C)  term::log_disable_color;;
-            d)  _TERM_LOG_DATE_FORMAT="${OPTARG}";;
+            d)  _TERM_LOG_DATE_COMMAND="${OPTARG}";;
             f)  _TERM_LOG_FILE="${OPTARG}";;
             h)  term::log_usage;;
             L)  term::log_level "${OPTARG}";;
