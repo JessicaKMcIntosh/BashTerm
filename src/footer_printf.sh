@@ -1,6 +1,5 @@
 # Print some help text.
-term::log_usage(){
-    local log_level
+term::printf_usage(){
     # Print any messages passed in.
     if [[ "$#" -gt 0 ]] ; then
         while [[ "$#" -gt 0 ]]; do
@@ -26,11 +25,11 @@ term::printf_main(){
     # Check command line args.
     while getopts ":h" option ; do
         case $option in
-            h)  term::log_usage;;
+            h)  term::printf_usage;;
             *)  if [ "${OPTARG}" = "-" ] ; then
-                    term::log_usage # They probably only want help. Catches --help.
+                    term::printf_usage # They probably only want help. Catches --help.
                 else
-                    term::log_usage "Invalid option '${OPTARG}'." # Illegal option.
+                    term::printf_usage "Invalid option '${OPTARG}'." # Illegal option.
                 fi;;
         esac
     done
