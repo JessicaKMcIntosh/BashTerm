@@ -235,10 +235,11 @@ term::log_usage(){
     echo ""
     echo "Logs MESSAGE with a timestamp, log level and optional file name."
     echo ""
-    echo "Args:"
+    echo "Options:"
     echo "    -C        Disable color."
     echo "    -d FORMAT Set the date format string. Try '%c'."
     echo "              Default: ${_TERM_LOG_DATE_COMMAND}"
+    echo "    -E        Print several examples."
     echo "    -F FILE   Add an optional file name to the log message."
     echo "    -h        This text."
     echo "    -L LEVEL  Set the current log level."
@@ -265,6 +266,49 @@ term::log_usage(){
     exit 1
 }
 
+# Some examples.
+term::log_examples(){
+    echo "Examples:"
+    local command
+
+    echo ""
+    command="${0} "
+    command+='"This is a simple example."'
+    echo "Defaults."
+    echo "# ${command}"
+    eval "${command}"
+
+    echo ""
+    command="${0} "
+    command+='-L "debug" -l "info" -f "foo.sh" -d "%c" "ALL THE OPTIONS!!!"'
+    echo "Use all the options."
+    echo "# ${command}"
+    eval "${command}"
+
+    echo ""
+    command='TERM_LOG_LEVEL=0 TERM_LOG_DATE="%c" TERM_LOG_FILE="bar.sh" '
+    command+="${0} "
+    command+='-l "DEBUG" "This is a complex debug example."'
+    echo "Settings in the environment."
+    echo "# ${command}"
+    eval "${command}"
+
+    echo ""
+    command='TERM_LOG_LEVEL=0 '
+    command+="${0} "
+    command+='-l "WARN" -f "B-9" -d "%Y-%m-%dT%H:%M:%S%z" "Warning! Warning! Danger Will Robinson!"'
+    echo "More realistic."
+    echo "# ${command}"
+    eval "${command}"
+
+    echo ""
+    command="${0} "
+    command+='-l "error" "This is a CRITICAL ERROR!"'
+    echo "And an error."
+    echo "# ${command}"
+    eval "${command}"
+}
+
 # Do the logging thing.
 term::log_main(){
     local log_level="1"
@@ -272,10 +316,11 @@ term::log_main(){
     _TERM_LOG_FILE="${TERM_LOG_FILE:-}" # No file by default since this script would be used.
 
     # Check command line args.
-    while getopts ":Cd:f:hL:l:" option ; do
+    while getopts ":Cd:Ef:hL:l:" option ; do
         case $option in
             C)  term::log_disable_color;;
             d)  _TERM_LOG_DATE_COMMAND="${OPTARG}";;
+            E)  term::log_examples;;
             f)  _TERM_LOG_FILE="${OPTARG}";;
             h)  term::log_usage;;
             L)  term::log_level "${OPTARG}";;
