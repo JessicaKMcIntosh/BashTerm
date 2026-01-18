@@ -162,7 +162,7 @@ term::log_file(){
     fi
 }
 
-# Set or print the _TERM_LOG_LEVEL.
+# Set or print _TERM_LOG_LEVEL.
 # Call with an argument to set the log level.
 # Call without an argument to print the log level.
 term::log_level(){
@@ -192,8 +192,7 @@ term::_log_to_number(){
     # What was passed in?
     if [[ -z "${log_level}" ]] ; then
         # Empty string.
-        echo "${_TERM_LOG_MAX_LEVEL}"
-        return
+        log_level="${_TERM_LOG_MAX_LEVEL}"
     elif [[ "$((log_level + 0))" == "${log_level}" ]] ; then
         # A number.
         if [[ "${log_level}" -gt "${_TERM_LOG_MAX_LEVEL}" ]] ; then
@@ -201,7 +200,7 @@ term::_log_to_number(){
             log_level="${_TERM_LOG_MAX_LEVEL}"
         fi
     else
-        # Not a number search for it by string.
+        # Search for the log level by string.
         for item in "${!_TERM_LOG_LEVELS[@]}" ; do
             if [[ "${log_level^^}" == "${_TERM_LOG_LEVELS[$item]^^}" ]] ; then
                 log_level="${item}"
@@ -232,10 +231,9 @@ term::log_usage(){
         echo ""
     fi
 
-    echo "Usage: $0 [ARGS] MESSAGE"
+    echo "Usage: $0 [OPTIONS] MESSAGE"
     echo ""
-    echo "Logs MESSAGE with a date and time."
-    echo "Default log level: ${_TERM_LOG_LEVEL}"
+    echo "Logs MESSAGE with a timestamp, log level and optional file name."
     echo ""
     echo "Args:"
     echo "    -C        Disable color."
@@ -248,10 +246,12 @@ term::log_usage(){
     echo ""
     echo "Log Levels:"
     for log_level in "${!_TERM_LOG_LEVELS[@]}" ; do
-        printf "    [%d] %s\n" "${log_level}" "${_TERM_LOG_LEVELS[$log_level]}"
+        printf "    [%d] %s" "${log_level}" "${_TERM_LOG_LEVELS[$log_level]}"
+        [[ "${log_level}" == "${_TERM_LOG_LEVEL}" ]] && echo -n " (Default)"
+        echo ""
     done
     echo ""
-    echp "Environment variables:"
+    echo "Environment variables:"
     echo "    TERM_LOG_DATE=FORMAT - Set the date format string. The same as '-d FORMAT'."
     echo "    TERM_LOG_LEVEL=LEVEL - Set the log level. The same as '-L LEVEL'."
     echo "    TERM_LOG_FILE=foo.sh - Set the lof file. The same as '-f foo.sh'."
@@ -259,7 +259,8 @@ term::log_usage(){
     echo "Examples:"
     echo '    # ./log.sh -L "debug" -l "info" -f "foo.sh" -d "%c" "This is a test."'
     echo '    [Info ] <foo.sh> (Sat 1 Jan 2000 01:00:00 PM EST): This is a test.'
-    echo '    # TERM_LOG_LEVEL=1 TERM_LOG_DATE="%c" TERM_LOG_FILE="bar.sh" ./log.sh -l "WARN" "This is a different test."'
+    echo ""
+    echo '    # TERM_LOG_LEVEL=0 TERM_LOG_DATE="%c" TERM_LOG_FILE="bar.sh" ./log.sh -l "DEBUG" "This is a different test."'
     echo '    [Debug] <bar.sh> (Sat 1 Jan 2000 01:00:00 PM EST): This is a different test.'
     exit 1
 }
