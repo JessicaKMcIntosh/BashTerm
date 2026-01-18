@@ -3,14 +3,6 @@
 This is a custom implementation of printf in AWK.
 With the ability to set attributes and call `tput`.
 
-There are some limitations with this library:
-
-* Backslashes are a nightmare, just use single quotes.
-  Be careful and don't put more than one together if using double quotes.
-* The AWK implementation of `sprintf()` is used.
-  This limits what can be done depending on your version of AWK.
-* Every time the function `term::printf` is called the AWK program is parsed and lookup tables are built.
-
 This library is composed of two files:
 
 * `printf.awk` -
@@ -18,7 +10,19 @@ This library is composed of two files:
 * `printf.sh` -
   Bash function to call `printf.awk`.
 
-Printf has six features:
+## Interface
+
+The interface for the printf library are the functions `term::printf` and `term::printf-v`.
+
+* `term::printf` acts like the shell `printf` command.
+  The first parameter is the format string.
+  Remaining parameters are for the format statements.
+
+* `term::printf-v` is the same, but sets a variable, like the shell `printf -v VAR` command.
+  Pass the variable name to set first.
+  For example `term::printf-v "MyVariable" "This is %s.\n" "My Variable"` sets the variable `MyVariable` to the value `This is My Variable.\n`.
+
+## Features
 
 * Backslash characters are properly interpreted.
 
@@ -73,17 +77,16 @@ Printf has six features:
 For the strings in `%()`, `${}`, `$<>` leading and trailing whitespace is ignored.
 For example the format strings `$(bold,underline)` and `$( bold , underline )` are equivalent.
 
-## Interface
+## Limitations
 
-The interface for the printf library are the functions `term::printf` and `term::printf-v`.
+Unfortunately there are limitations with this library:
 
-* `term::printf` acts like the shell `printf` command.
-  The first parameter is the format string.
-  Remaining parameters are for the format statements.
-
-* `term::printf-v` is the same, but sets a variable, like the shell `printf -v VAR` command.
-  Pass the variable name to set first.
-  For example `term::printf-v "MyVariable" "This is %s.\n" "My Variable"` sets the variable `MyVariable` to the value `This is My Variable.\n`.
+* Backslashes are a nightmare, just use single quotes.
+  Be careful and don't put more than one set together.
+  This is a Bash thing. Sorry.
+* The AWK implementation of `sprintf()` is used.
+  This limits what can be done depending on your version of AWK.
+* Every time the function `term::printf` is called the AWK program is parsed and lookup tables are built.
 
 ## Backslashes
 
