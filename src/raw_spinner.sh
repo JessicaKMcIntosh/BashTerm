@@ -1,7 +1,3 @@
-# A simple spinner using Unicode characters.
-
-# See 'man 5 terminfo' for more information.
-
 # These are the main variables for the Library.
 declare -g TERM_SPIN_SLEEP="0.1"
 declare -a TERM_SPIN_FRAMES_SIX

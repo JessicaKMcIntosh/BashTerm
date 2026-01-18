@@ -1,8 +1,3 @@
-# This is a functional interface to the variables.
-# If that is something you want... :shrug:
-
-# I recommend picking and choosing what you want.
-
 # Directly call 'tput'
 term::tput() {
     tput "$@"

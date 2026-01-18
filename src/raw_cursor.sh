@@ -1,7 +1,3 @@
-# A library of useful code for working with terminal cursors.
-
-# See 'man 5 terminfo' for more information.
-
 # These are the main variables for the Library.
 declare -A TERM_CURSOR  # Stores terminal cursor escape sequences.
 

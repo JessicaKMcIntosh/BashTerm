@@ -1,7 +1,3 @@
-# A library of useful code for working with terminal colors.
-
-# See 'man 5 terminfo' for more information.
-
 # These are the main variables for the Library.
 declare -A TERM_FG      # Stores terminal foreground color escape sequences.
 declare -A TERM_BG      # Stores terminal background color escape sequences.

@@ -19,6 +19,38 @@ FILE_LIST=(
     [spinner]="attr.sh,cursor.sh"
 )
 
+# File Descriptions.
+declare -A FILE_DESCR
+FILE_DESCR=(
+[attr]="# A library of useful code for working with terminal attributes.
+
+# See 'man 5 terminfo' for more information."
+[boxes]="# A library of unicode box drawing characters.
+
+# See the following resources:
+# https://www.compart.com/en/unicode/block/U+2500
+# https://en.wikipedia.org/wiki/Box-drawing_characters"
+[color]="# A library of useful code for working with terminal colors.
+
+# See 'man 5 terminfo' for more information."
+[cursor]="# A library of useful code for working with terminal cursors.
+
+# See 'man 5 terminfo' for more information."
+[function]="# This is a functional interface to the variables.
+# If that is something you want... :shrug:
+
+# I recommend picking and choosing what you want."
+[log]="# A library for logging."
+[menu]="# A library for making menus."
+[printf]="# A printf implementation with terminal attributes.
+
+# This is really only an example.
+# Adapt to your needs."
+[spinner]="# A simple spinner using Unicode characters.
+
+# See 'man 5 terminfo' for more information."
+)
+
 build_dependencies(){
     local dependencies="${1}"
     local -a list
@@ -84,6 +116,12 @@ create_files(){
         # Build the file.
         file_new="new/${library}.sh"
         {
+            cat shebang.sh
+            echo ""
+            if [[ -v FILE_DESCR[$library]`` ]] ; then
+                echo "${FILE_DESCR[$library]}"
+                echo ""
+            fi
             cat "${file_header}"
             echo ""
             build_dependencies "${dependencies}"

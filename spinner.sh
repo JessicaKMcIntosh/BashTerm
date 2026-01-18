@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2034 # Some variables may remain unused in this file.
 # shellcheck source=attr.sh
+# shellcheck source=boxes.sh
+# shellcheck source=color.sh
 # shellcheck source=cursor.sh
-# shellcheck disable=SC2034
+# shellcheck source=function.sh
 
 # BashTerm by Jessica K McIntosh is marked CC0 1.0.
 # To view a copy of this mark, visit:
@@ -201,6 +204,8 @@ term::spin_spin(){
 
 # If called directly then suggest the example.
 if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
+    declare example_file="${0##*/}"
+    example_file="${example_file%.*}"
     echo "For an example try:"
-    echo "./examples/spinner_example.sh"
+    printf "./examples/%s_example.sh\n" "${example_file}"
 fi

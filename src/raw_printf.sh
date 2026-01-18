@@ -1,8 +1,3 @@
-# A printf implementation with terminal attributes.
-
-# This is really only an example.
-# Adapt to your needs.
-
 # Configuration.
 _TERM_AWK_COMMAND="awk"
 #_TERM_AWK_COMMAND="gawk --lint" # For development.

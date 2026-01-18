@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2034 # Some variables may remain unused in this file.
 # shellcheck source=attr.sh
+# shellcheck source=boxes.sh
 # shellcheck source=color.sh
+# shellcheck source=cursor.sh
+# shellcheck source=function.sh
 
 # BashTerm by Jessica K McIntosh is marked CC0 1.0.
 # To view a copy of this mark, visit:
@@ -119,6 +123,8 @@ term::_log_format(){
     if [[ -n "${_TERM_LOG_FILE}" ]] ; then
         printf -v log_file "${_TERM_LOG_FORMAT_FILE}" "${TERM_FG[$_TERM_LOG_FILE_COLOR]}" "${_TERM_LOG_FILE}" "${_TERM_LOG_COLOR_RESET}"
         log_output="${log_output/\%F/$log_file}"
+    else
+        log_output="${log_output/\%F/}"
     fi
 
     # Format the log level.
@@ -343,8 +349,10 @@ term::log_main(){
 # If called directly then suggest the example or do some logging.
 if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
     if [[ "${#}" -eq "0" ]] ; then
+        declare example_file="${0##*/}"
+        example_file="${example_file%.*}"
         echo "For an example try:"
-        echo "./examples/log_example.sh"
+        printf "./examples/%s_example.sh\n" "${example_file}"
         echo ""
         echo "For help:"
         echo "${0} -h"

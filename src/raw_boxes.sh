@@ -1,9 +1,3 @@
-# A library of unicode box drawing characters.
-
-# See the following resources:
-# https://www.compart.com/en/unicode/block/U+2500
-# https://en.wikipedia.org/wiki/Box-drawing_characters
-
 # Light boxes.
 export TERM_BOX_LLH=$'\u2500'  # ─ Box Drawings Light Horizontal
 export TERM_BOX_LLV=$'\u2502'  # │ Box Drawings Light Vertical

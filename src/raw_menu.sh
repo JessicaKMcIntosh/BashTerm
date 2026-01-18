@@ -1,5 +1,3 @@
-# A library for making menus.
-
 # Default settings.
 declare _TERM_MENU_SEPARATOR=":"
 declare _TERM_MENU_PROMPT="Select the option [~]: "
