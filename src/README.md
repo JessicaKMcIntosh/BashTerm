@@ -8,14 +8,33 @@ You are responsible for making sure dependencies are included.
 
 ## Files
 
-* 'attr.sh' - More.
-* 'boxes.sh' - More.
-* 'color.sh' - More.
-* 'cursor.sh' - More.
-* 'function.sh' - More.
-* `footer.sh` - Footer for the main files.
-* 'header.sh' - Header for the main files. Checks the bash version, loads dependencies, and ensures libraries are only loaded once.
-* 'log.sh' - More.
-* 'menu.sh' - More.
-* 'printf.sh' - More.
-* 'spinner.sh' - More.
+* 'footer_log.sh' - Footer just for `log.sh`.
+* 'footer_printf.sh' - Footer just for `printf.sh`.
+* 'footer.sh' - Generic footer.
+* 'header_function.sh' - Header for `function.sh`.
+* 'header.sh' - Generic header.
+* 'load_libraries.sh' - For loading dependencies.
+* 'make.sh' - Generates the complete files.
+* 'raw_attr.sh' - Attribute library.
+* 'raw_boxes.sh' - Box library.
+* 'raw_color.sh' - Color library.
+* 'raw_cursor.sh' - Cursor library.
+* 'raw_function.sh' - Function library.
+* 'raw_log.sh' - Logging library.
+* 'raw_menu.sh' - Menu library.
+* 'raw_printf.sh' - Printf library.
+* 'raw_spinner.sh' - Spinner library.
+
+## Using vim to diff the files?
+
+```shell
+vimdiff new/attr.sh ../attr.sh
+vimdiff new/boxes.sh ../boxes.sh
+vimdiff new/color.sh ../color.sh
+vimdiff new/cursor.sh ../cursor.sh
+vimdiff new/function.sh ../function.sh
+vimdiff new/log.sh ../log.sh
+vimdiff new/menu.sh ../menu.sh
+vimdiff new/printf.sh ../printf.sh
+vimdiff new/spinner.sh ../spinner.sh
+```
