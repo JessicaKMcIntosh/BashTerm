@@ -7,44 +7,30 @@ A library to simplify working with the terminal in bash.
 * [Requirements](#requirements)
 * [How](#how)
 * [TODO](#todo)
-* [Terminal Attributes - `attr.sh`](#terminal-attributes---attrsh)
-  * [Primary interface](#primary-interface)
-  * [Shortcuts](#shortcuts)
-  * [Internal variables](#internal-variables)
-* [Terminal Colors - `color.sh`](#terminal-colors---colorsh)
-  * [Primary interface](#primary-interface-1)
-  * [Shortcuts](#shortcuts-1)
-  * [Colors](#colors)
-  * [Internal variables](#internal-variables-1)
-* [Terminal Cursor movement - `cursor.sh`](#terminal-cursor-movement---cursorsh)
-  * [Primary interface](#primary-interface-2)
-  * [Functions](#functions)
-  * [Shortcuts](#shortcuts-2)
-  * [Internal variables](#internal-variables-2)
-* [Spinner - `spinner.sh`](#spinner---spinnersh)
-  * [Available Frames](#available-frames)
-  * [Configuration](#configuration)
-  * [Internal variables](#internal-variables-3)
-* [Functions](#functions-1)
-* [Box drawing Unicode characters - `boxes.sh`](#box-drawing-unicode-characters---boxessh)
-  * [Primary interface](#primary-interface-3)
-  * [Variable meaning](#variable-meaning)
-* [Printf - `printf.sh` and `printf.awk`](#printf---printfsh-and-printfawk)
-  * [Primary interface](#primary-interface-4)
-  * [Backslashes](#backslashes)
-  * [Short Attribute Codes](#short-attribute-codes)
-* [Unit Tests - `run_tests.sh`](#unit-tests---run_testssh)
-* [Functional Interface - `function.sh`](#functional-interface---functionsh)
+* [Libraries](#libraries)
+  * [`attr.sh` - Terminal Attributes](#attrsh---terminal-attributes)
+  * [`color.sh` - Terminal Colors](#colorsh---terminal-colors)
+  * [`cursor.sh` - Terminal Cursor movement](#cursorsh---terminal-cursor-movement)
+  * [`log.sh` - Logging](#logsh---logging)
+  * [`menu.sh` - Interactive Menu](#menush---interactive-menu)
+  * [`printf.sh` and `printf.awk` - Printf](#printfsh-and-printfawk---printf)
+  * [`spinner.sh` - Spinner](#spinnersh---spinner)
+  * [`boxes.sh` - Box drawing Unicode characters](#boxessh---box-drawing-unicode-characters)
+  * [`function.sh` - Functional Interface](#functionsh---functional-interface)
+* [Utilities](#utilities)
+  * [`run_tests.sh` - Unit Tests](#run_testssh---unit-tests)
+  * [`src/make.sh` - Create the main files](#srcmakesh---create-the-main-files)
 * [Examples](#examples)
-  * [Attributes - `examples/attr_example.sh`](#attributes---examplesattr_examplesh)
-  * [Colors - `examples/color_example.sh`](#colors---examplescolor_examplesh)
-  * [Color and Attribute Table - `examples/table.sh`](#color-and-attribute-table---examplestablesh)
-  * [Boxes - `examples/boxes_example.sh`](#boxes---examplesboxes_examplesh)
-  * [Cursor - `examples/cursor_example.sh`](#cursor---examplescursor_examplesh)
-  * [Function - `examples/function_example.sh`](#function---examplesfunction_examplesh)
-  * [Spinner - `examples/spinner_example.sh`](#spinner---examplesspinner_examplesh)
-* [Printf - `./examples/printf_example.sh`](#printf---examplesprintf_examplesh)
-* [Export - `examples/export.sh`](#export---examplesexportsh)
+  * [`examples/attr_example.sh` - Attributes](#examplesattr_examplesh---attributes)
+  * [`examples/boxes_example.sh` - Boxes](#examplesboxes_examplesh---boxes)
+  * [`examples/color_example.sh` - Colors](#examplescolor_examplesh---colors)
+  * [`examples/cursor_example.sh` - Cursor](#examplescursor_examplesh---cursor)
+  * [`examples/export.sh` - Export](#examplesexportsh---export)
+  * [`examples/function_example.sh` - Function](#examplesfunction_examplesh---function)
+  * [`./examples/menu_example.sh` - Menu](#examplesmenu_examplesh---menu)
+  * [`./examples/printf_example.sh` - Printf](#examplesprintf_examplesh---printf)
+  * [`examples/spinner_example.sh` - Spinner](#examplesspinner_examplesh---spinner)
+  * [`examples/table.sh` - Color and Attribute Table](#examplestablesh---color-and-attribute-table)
   * [Usage](#usage)
 * [Reference](#reference)
 * [Other Projects](#other-projects)
@@ -117,6 +103,7 @@ Just copy the contents of the raw file that you need into your script.
 
 ## TODO
 
+* Missing screenshots.
 * Draw boxes. Could do this with AWK. `examples/draw.sh`
 * Unit tests. **In progress.**
 * Document `menu.sh`.
@@ -127,497 +114,83 @@ Just copy the contents of the raw file that you need into your script.
   Generate the files in the main directory by adding the header.
   Kinda like having a template.
   This would also allow creating completely standalone scripts from the separate files.
+* More spinner frames.
 
-## Terminal Attributes - `attr.sh`
+## Libraries
+
+### `attr.sh` - Terminal Attributes
 
 Escape codes for setting various terminal attributes.
 For example setting text **BOLD**.
 
-### Primary interface
+Details in the file [attr.md](doc/attr.md).
 
-The primary interface for the attributes library is the associative array `$TERM_ATTR`.
-
-```shell
-declare -A TERM_ATTR    # Stores terminal attribute escape sequences.
-```
-
-### Shortcuts
-
-Shortcut variables to make code a bit more friendly.
-
-| Variable | Attribute | Name | Meaning |
-| --- | --- | --- | --- |
-| $TERM_BOLD | bold | enter_bold_mode | turn on bold (extra bright) mode |
-| $TERM_CLEAR | clear | clear_screen | clear screen and home cursor |
-| $TERM_DIM | dim | enter_dim_mode | turn on half-bright mode |
-| $TERM_INSERT | smir | enter_insert_mode | enter insert mode |
-| $TERM_INVISIBLE | invis | enter_secure_mode | turn on blank mode (characters invisible) |
-| $TERM_EXIT_INSERT | rmir | exit_insert_mode | exit insert mode |
-| $TERM_EXIT_ITALICS | ritm | exit_italics_mode | End italic mode |
-| $TERM_EXIT_STANDOUT | rmso | exit_standout_mode | exit standout mode |
-| $TERM_EXIT_UNDERLINE | rmul | exit_underline_mode | exit underline mode |
-| $TERM_ITALICS | sitm | enter_italics_mode | Enter italic mode |
-| $TERM_ORIG | op | orig_pair | Set default pair to its original value |
-| $TERM_RESET | sgr0 | exit_attribute_mode | turn off all attributes |
-| $TERM_REVERSE | rev | enter_reverse_mode | turn on reverse video mode |
-| $TERM_STANDOUT | smso | enter_standout_mode | begin standout mode |
-| $TERM_UNDERLINE | smul | enter_underline_mode | begin underline mode |
-
-The `Variable` column is the variable name from the terminfo manpage.
-
-**NOTE:**
-The attribute `invis` doesn't always work.
-For example, it is not working on my Putty install.
-
-### Internal variables
-
-Variables used to build the associative array.
-Change these to customize the escape codes retrieved using `tput`.
-
-* `$_TERM_ATTRIBUTES` -
-  The attributes to fetch escape codes for.
-  This associative array contains the capability name and attribute from the terminfo manpage.
-  When this array is processed both the capability name and attribute are set in `$TERM_ATTR`
-
-* `$_TERM_ATTRIBUTE_ALIASES` -
-  Aliases to add to the TERM_ATTR array.
-  These are more friendly names for the various capabilities.
-  For example use `UNDERLINE` to exit underline mode instead of the more cryptic `rmul`.
-
-* `$_TERM_ATTRIBUTE_SHORTCUTS` -
-  Shortcut variables to create.
-  Creating environment variables this way makes it easier for you to customize.
-
-## Terminal Colors - `color.sh`
+### `color.sh` - Terminal Colors
 
 Escape codes for setting foreground and background.
 
 This only uses the old 16 color interface.
 
-**NOTE:**
-The bright foreground colors are usually the same as the foreground color and the bold attribute.
+Details in the file [color.md](doc/color.md).
 
-**IMPORTANT:**
-The default foreground and background colors are **NOT** always the same as `white` and `black`.
-To get the default foreground and background colors use `$TERM_ORIG` from `attr.sh` or `tput op`.
+### `cursor.sh` - Terminal Cursor movement
 
-### Primary interface
+Escape codes and functions for working with the cursor.
 
-The primary interface for the color library are the associative arrays `$TERM_FG` and `$TERM_BG`.
+Details in the file [cursor.md](doc/cursor.md)
 
-```shell
-declare -A TERM_FG      # Stores terminal foreground color escape sequences.
-declare -A TERM_BG      # Stores terminal background color escape sequences.
-```
+### `log.sh` - Logging
 
-### Shortcuts
+Fancy logging, with color!
 
-Shortcut variables to make code a bit more friendly.
+Details in the file [log.md](doc/log.md)
 
-| Variable | Color |
-| --- | --- |
-| $TERM_BG_BLACK | black background |
-| $TERM_BG_BLUE | blue background |
-| $TERM_BG_BRIGHTBLACK | brightblack background |
-| $TERM_BG_BRIGHTBLUE | brightblue background |
-| $TERM_BG_BRIGHTCYAN | brightcyan background |
-| $TERM_BG_BRIGHTGREEN | brightgreen background |
-| $TERM_BG_BRIGHTMAGENTA | brightmagenta background |
-| $TERM_BG_BRIGHTRED | brightred background |
-| $TERM_BG_BRIGHTWHITE | brightwhite background |
-| $TERM_BG_BRIGHTYELLOW | brightyellow background |
-| $TERM_BG_CYAN | cyan background |
-| $TERM_BG_GREEN | green background |
-| $TERM_BG_MAGENTA | magenta background |
-| $TERM_BG_RED | red background |
-| $TERM_BG_WHITE | white background |
-| $TERM_BG_YELLOW | yellow background |
-| $TERM_FG_BLACK | black  foreground |
-| $TERM_FG_BLUE | blue foreground |
-| $TERM_FG_BRIGHTBLACK | brightblack foreground |
-| $TERM_FG_BRIGHTBLUE | brightblue foreground |
-| $TERM_FG_BRIGHTCYAN | brightcyan foreground |
-| $TERM_FG_BRIGHTGREEN | brightgreen foreground |
-| $TERM_FG_BRIGHTMAGENTA | brightmagenta foreground |
-| $TERM_FG_BRIGHTRED | brightred foreground |
-| $TERM_FG_BRIGHTWHITE | brightwhite foreground |
-| $TERM_FG_BRIGHTYELLOW | brightyellow foreground |
-| $TERM_FG_CYAN | cyan  foreground |
-| $TERM_FG_GREEN | green  foreground |
-| $TERM_FG_MAGENTA | magenta  foreground |
-| $TERM_FG_RED | red  foreground |
-| $TERM_FG_WHITE | white foreground |
-| $TERM_FG_YELLOW | yellow  foreground |
+### `menu.sh` - Interactive Menu
 
-### Colors
+Creates interactive menus.
 
-Supported colors.
+Details in the file [menu.md](doc/menu.md)
 
-| Color | Number |
-| --- | --- |
-| black | 0 |
-| red | 1 |
-| green | 2 |
-| yellow | 3 |
-| blue | 4 |
-| magenta | 5 |
-| cyan | 6 |
-| white | 7 |
-| brightblack/grey | 8 |
-| brightred | 9 |
-| brightgreen | 10 |
-| brightyellow | 11 |
-| brightblue | 12 |
-| brightmagenta | 13 |
-| brightcyan | 14 |
-| brightwhite | 15 |
-
-**NOTE:**
-On some terminals red and blue may be swapped.
-
-### Internal variables
-
-Variables used to build the associative arrays.
-
-* `$_TERM_COLORS` -
-  All available colors index by the color number.
-  When this array is processed both the color name and color number are set in the arrays `$TERM_FG` and `$TERM_BG`.
-
-* `$_TERM_COLOR_ALIASES` -
-  Color aliases.
-  Currently only mapping `grey` and `gray` to `brightblack`.
-
-## Terminal Cursor movement - `cursor.sh`
-
-### Primary interface
-
-The primary interface for the cursor library is the associative array `$TERM_CURSOR`.
-
-```shell
-declare -A TERM_CURSOR  # Stores terminal cursor escape sequences.
-```
-
-### Functions
-
-The following are functions because they call `tput` dynamically or return values.
-
-Fetching the cursor position is a bit of a hack.
-This is a known issue with multiple solutions.
-I used one that should be portable with modern Bash.
-
-* `term::move()` -
-  Move the cursor to an row and column position.
-
-* `term::pos()` -
-  Report the cursor position. row;col
-
-* `term::row()` -
-  Report the cursor row.
-
-* `term::col()` -
-  Report the cursor column.
-
-* `term::cols()` -
-  Report the number of columns the terminal has.
-
-* `term::lines()` -
-  Report the number of lines the terminal has.
-
-### Shortcuts
-
-Shortcut variables to make code a bit more friendly.
-
-| Variable | Attribute | Name | Meaning |
-| --- | --- | --- | --- |
-| $TERM_CLR_BOL | el1 | clr_bol | Clear to beginning of line |
-| $TERM_CLR_EOL | el | clr_eol | clear to end of line |
-| $TERM_CLR_EOS | ed | clr_eos | clear to end of screen |
-| $TERM_DELETE_CHAR | dch1 | delete_character | delete character |
-| $TERM_DELETE_LINE | dl1 | delete_line | delete line |
-| $TERM_DOWN | cud1 | down | down one line |
-| $TERM_HIDE | civis | hide | make cursor invisible |
-| $TERM_HOME | home | home | home cursor (if no cup) |
-| $TERM_INSERT_CHAR | ich1 | insert_character | insert character (DISABLED, rarely present) |
-| $TERM_INSERT_LINE | il1 | insert_line | insert line |
-| $TERM_LEFT | cub1 | left | move left one space |
-| $TERM_NORMAL | cnorm | normal | make cursor appear normal (undo civis/cvvis) |
-| $TERM_RESTORE | rc | restore | restore cursor to position of last |
-| $TERM_RIGHT | cuf1 | right | non-destructive space (move right one space) |
-| $TERM_SAVE | sc | save | save current cursor |
-| $TERM_SHOW | cvvis | show | make cursor very visible |
-| $TERM_TO_LL | ll | to_ll | last line, first column (if no cup) (DISABLED, rarely present) |
-| $TERM_UP | cuu1 | up | up one line |
-| $TERM_VISIBLE | cvvis | visible | make cursor very visible |
-
-### Internal variables
-
-Variables used to build the associative array.
-Change these to customize the escape codes retrieved using `tput`.
-
-* `$_TERM_CURSOR_ATTRIBUTES` -
-  The attributes to fetch escape codes for.
-  These are taken directly from the `terminfo` man page.
-  When this array is processed both the capability name and attribute are set in `$TERM_CURSOR`.
-
-* `$_TERM_CURSOR_SHORTCUTS` -
-  Shortcut variables to create.
-  Creating environment variables this way makes it easier for you to customize.s
-
-## Spinner - `spinner.sh`
-
-A simple spinner to tell the user something is going on.
-This is more of an example than a complete solution.
-
-### Available Frames
-
-These are the defined frames.
-They are just arrays, so adding your own is easy.
-
-**NOTE:**
-The code assumes the characters are single width.
-
-| Variable | Description | Characters |
-| --- | --- | --- |
-| $TERM_SPIN_FRAMES_SIX | Six brail dots. Blank dot chasing counter clockwise. | `⠷⠯⠟⠻⠽⠾` |
-| $TERM_SPIN_FRAMES_SIX_IN_OUT | Six brail dots. Disappearing then appearing. | `⠿⠷⠧⠇⠃⠁⠀⠈⠘⠸⠼⠾` |
-| $TERM_SPIN_FRAMES_EIGHT | Eight brail dots. Blank dot chasing counter clockwise. | `⣷⣯⣟⡿⢿⣻⣽⣾` |
-| $TERM_SPIN_FRAMES_EIGHT_IN_OUT | Eight brail dots. Disappearing then appearing. | `⣿⣷⣧⣇⡇⠇⠃⠁⠀⠈⠘⠸⢸⣸⣼⣾` |
-| $TERM_SPIN_FRAMES_ARROWS | An arrow spinning clockwise. | `↑↗→↘↓↙←↖` |
-| $TERM_SPIN_FRAMES_LINES | A silly example. | `╵└├┼╀╄╊╋╈╅┽┼┬┐╴` |
-| $TERM_SPIN_FRAMES_ASCII | Simple ASCII characters. | `\|/-\` |
-
-### Configuration
-
-The variable `$TERM_SPIN_SLEEP` sets the sleep time between frames.
-The default is `0.1`.
-The value is passed to the Bash `read` command using the option `-t`.
-
-Full command:
-
-```shell
-read -n 1 -s -t "${TERM_SPIN_SLEEP}"
-```
-
-### Internal variables
-
-These are used to track the state of the spinner.
-
-* `$_TERM_SPIN_FRAMES` -
-  Keeps track of the current frames.
-
-* `$_TERM_SPIN_NEXT_FRAME` -
-  Keeps track of the next frame number to print.
-
-* `$_TERM_SPIN_TOTAL_FRAMES` -
-  The total number of frames in `$_TERM_SPIN_FRAMES`.
-
-## Functions
-
-Again, this is just an example.
-Adapt this code to your needs.
-
-* `term::spin_init()` -
-  Sets the internal state variables.
-  Pass in the frame array.
-
-  Example: `term::spin_init "${_TERM_SPIN_FRAMES_SIX[@]}"`
-
-* `term::spin_step()` -
-  Prints the next frame.
-
-* `term::spin_spin` -
-  Runs the spinner until a key is pressed.
-  Calls `term::spin_init()` then loops forever calling `term::spin_step()`.
-  Pass in the frame array to use.
-
-  Example: `term::spin_spin "${_TERM_SPIN_FRAMES_SIX[@]}"`
-
-## Box drawing Unicode characters - `boxes.sh`
-
-Unicode box drawing characters.
-
-I created a custom naming scheme to make drawing boxes a little easier.
-This is a bit odd, but it kinda makes sense if you squint.
-
-There are two additional files:
-
-* `all_boxes.sh` - All Unicode box drawing characters with long names from the Unicode standard.
-* `alt_boxes.sh` - The same thing, but shorter names.
-
-### Primary interface
-
-The primary interface for the boxes library are the variables starting with `$TERM_BOX_`.
-See the file `boxes.sh` for the variables.
-There are too many to fit here.
-
-### Variable meaning
-
-Each of the box characters has a name that indicates the type of line then the position in the box.
-
-For example the name `LMC` means Light line, Middle and Center position, `┼`.
-
-This is what I came up with to make drawing boxes a little easier.
-
-The first character indicates the type.
-Rounded is the same as Light, but the corners are rounded.
-
-| Character | Line type   | Examples |
-| --------- | ----------- | -------- |
-| L         | Light       | `│┐┘┌└`  |
-| H         | Heavy       | `┃┓┛┏┗`  |
-| D         | Double line | `║╗╝╔╚`  |
-| R         | Rounded     | `│╮╯╭╰`  |
-
-These two are just lines in the given orientation.
-
-* `LLH` - Light Line Horizontal `─`
-* `HLV` - Heavy Line Vertical   `┃`
-
-For the box parts the second two characters indicate the position.
-
-* The first characters is the vertical orientation. \
-  T = Top,  M = Middle, B = Bottom
-* The second character is the horizontal orientation. \
-  L = Left, C = Center, R = Right
-
-Examples of box parts.
-
-| Line Type  | VAR | Meaning         | Var | Meaning           | Var | Meaning          |
-| ---------- | --- | --------------- | --- | ----------------- | --- | ---------------- |
-| Light      | LTL |    Top Left `┌` | LTC |    Top Center `┬` | LTR |    Top Right `┐` |
-| Heavy      | HML | Middle Left `┣` | HMC | Middle Center `╋` | HMR | Middle Right `┫` |
-| Double     | DBL | Bottom Left `╚` | DBC | Bottom Center `╩` | DBR | Bottom Right `╝` |
-| Rounded    | RBL | Bottom Left `╰` | RBC | Bottom Center `┴` | RBR | Bottom Right `╯` |
-
-## Printf - `printf.sh` and `printf.awk`
+### `printf.sh` and `printf.awk` - Printf
 
 This is a custom implementation of printf in AWK.
 With the ability to set attributes and call `tput`.
 
-There are some limitations with this library:
+Details in the file [printf.md](doc/printf.md)
 
-* Backslashes are a nightmare, just use single quotes.
-  Be careful and don't put more than one together if using double quotes.
-* The AWK implementation of `sprintf()` is used.
-  This limits what can be done depending on your version of AWK.
-* Every time the function `term::printf` is called the AWK program is parsed and lookup tables are built.
+### `spinner.sh` - Spinner
 
-This library is composed of two files:
+A simple spinner to tell the user something is going on.
+This is more of an example than a complete solution.
 
-* `printf.awk` -
-  The implementation of printf.
-* `printf.sh` -
-  Bash function to call `printf.awk`.
+Details in the file [spinner.md](doc/spinner.md)
 
-Printf has six features:
+### `boxes.sh` - Box drawing Unicode characters
 
-* Backslash characters are properly interpreted.
-  Provided the backslash characters make it to AWK intact.
-  See the table [Backslashes](#backslashes) below for details.
+Unicode box drawing characters.
 
-* Normal `%` based format statements.
-  These are passed to the AWK `sprintf()` function.
+Details in the file [boxes.md](doc/boxes.md)
 
-* Call `tput` directly.
-  Using `%{STRING}` will call `tput` with the contents of `STRING`.
-  The string can contain multiple attributes separated by a comma.
+### `function.sh` - Functional Interface
 
-  For example: `"%{sgr0,clear}"` will reset all attributes then clear the screen using tput.
+Think of this as a little bonus.
+It is just functions to print the various escape codes.
+This is more a suggestion instead of something to use directly.
 
-* Lookup the environment variable for an attribute.
-  Using `%(STRING)` will attempt to fetch the attribute from the `$TERM_` shortcut environment variables.
-  The string can contain multiple attributes separated by a comma.
+## Utilities
 
-  Some special allowances are made:
-
-  * If the attribute is a color name such as `red` or `BRIGHTBLUE` they will be translated to the correct color variable.
-    In this example they translate to `$TERM_FG_RED` and `$TERM_BG_BRIGHTBLUE`.
-  * Upper and lower case attribute names have different meanings.
-    Lowercase means to set the attribute, uppercase means to unset it (use the variable `$TERM_EXIT_ATTRIBUTE`)
-    Lowercase color means foreground, uppercase color means background.
-
-    For example the string `"Color %(green, bold)Green%(orig)"` renders `Green` in green.
-
-* Lookup the environment variable for an attribute using single letter short codes.
-  Using `%[CHARS]` to specify attributes using single characters.
-  See the table [Short Attribute Codes](#short-attribute-codes) below for details.
-
-  For example the string `"Short %[m]color %[r]codes%[o]"` renders `colors` in magenta and `codes` in red.
-
-* Draw with the Unicode box drawing characters from `boxes.sh`.
-  Using `%<STRING>` will attempt to fetch the attribute from the `$TERM_BOX_` shortcut environment variables.
-  The string can contain multiple attributes separated by a comma.
-  Use the part of the box variable name after `$TERM_BOX_`.
-  For example `%<D_BC>` will draw the character `╩`.
-  Use underscore, `_`, for a single space.
-
-  For example the string `"%<LML,LLH,LMC,LLH,LMR,_,_,LLV>"` translates into `├─┼─┤  │`.
-
-### Primary interface
-
-The primary interface for the printf library is the function `term::printf`.
-This acts like the shell `printf` command.
-The first parameter is the format string.
-Remaining parameters are for the format statements.
-
-### Backslashes
-
-All of the supported backslash escape codes.
-
-| Code | Meaning |
-| --- | --- |
-| \\\\ | A single backslash character. |
-| \\a | Alert, bell. |
-| \\b | Backspace. |
-| \\e | Escape. |
-| \\E | Escape. |
-| \\f | Form feed. |
-| \\n | Newline. |
-| \\r | Carriage return. |
-| \\t | Tab. |
-| \\v | Vertical tab. |
-| \\0dd or \\1dd | Convert three octal digits `0dd` or `1dd` into an ASCII character. |
-| \\xhh | Converts the two hexadecimal digits `hh` into an ASCII character. |
-
-### Short Attribute Codes
-
-These are single characters that translate to an attribute.
-Put as many characters inside `$[]` as desired.
-
-| Code | Attribute | Code | Attribute |
-| --- | --- | --- | --- |
-| - | Reset attributes. (sgr0) | o | Original colors. (orig) |
-| d | Dim mode. (dim) | k | Black Foreground |
-| h | Hide the cursor. (hide) | r | Red Foreground |
-| H | Moe the cursor home. (home) | g | Green Foreground |
-| i | Insert mode. (smir) | y | Yellow Foreground |
-| I | Exit insert. (rmir) | b | Blue Foreground |
-| l | Bold mode. (bold) | m | Magenta Foreground |
-| L | Clear the screen. (clear) | c | Cyan Foreground |
-| s | Standout mode (smso) | w | White Foreground |
-| S | Exit standout mode. (rmso) | K | Black Background |
-| t | Italics Mode. (sitm) | R | Red Background |
-| T | Exit Italics mode. (ritm) | G | Green Background |
-| u | Underline mode. (smul) | Y | Yellow Background |
-| U | Exit underline mode. (rmul) | B | Blue Background |
-| v | Reverse mode. (rev) | M | Magenta Background |
-| V | Invisible mode. (invis) | C | Cyan Background |
-| z | Show the cursor. (cnorm) | W | White Background |
-
-## Unit Tests - `run_tests.sh`
+### `run_tests.sh` - Unit Tests
 
 This script will run the tests in the subdirectory `tests`.
 Each file can contain multiple tests.
 Each test can contain multiple assertions.
 
-**TODO:**
-Better documentation.
+Details in the file [run_tests.md](doc/run_tests.md)
 
-## Functional Interface - `function.sh`
+### `src/make.sh` - Create the main files
 
-Think of this as a little bonus.
-It is just functions to print the various escape codes.
-This is more a suggestion instead of something to use directly.
+This script uses the files in the directory `src/` to create the main files.
+The only reason to do this is if you are doing development work on the library.
 
 ## Examples
 
@@ -625,56 +198,78 @@ Here is some example output of the various test scripts.
 These were captured using Putty on Windows using the [Consolas font](https://en.wikipedia.org/wiki/Consolas).
 The only change in Putty was to make Blue readable.
 
-### Attributes - `examples/attr_example.sh`
+### `examples/attr_example.sh` - Attributes
 
-Exercises the attributes for Bold, Dim, Invisible (doesn't work in putty), Italics (probably will not work), Reversed, Standout, and Underline .
+Exercises the attributes for Bold, Dim, Invisible (doesn't work in putty), Italics (probably will not work), Reversed, Standout, and Underline.
+
+Uses the library `attr.sh`.
 
 ![Attribute Test](images/attributes.png)
 
-### Colors - `examples/color_example.sh`
-
-Demonstrates the colors, including with the attributes Dim, Bold and Underline.
-
-![Color Test](images/colors.png)
-
-### Color and Attribute Table - `examples/table.sh`
-
-Draws a table showing off colors and attributes.
-
-![Color and Attribute Table](images/table.png)
-
-### Boxes - `examples/boxes_example.sh`
+### `examples/boxes_example.sh` - Boxes
 
 Draws a few boxes.
 
+Uses the library `boxes.sh`.
+
 ![Boxes Test](images/boxes.png)
 
-### Cursor - `examples/cursor_example.sh`
+### `examples/color_example.sh` - Colors
+
+Demonstrates the colors, including with the attributes Dim, Bold and Underline.
+
+Uses the library `color.sh`.
+
+![Color Test](images/colors.png)
+
+### `examples/cursor_example.sh` - Cursor
 
 **TODO!**
 A bad demo of cursor functionality.
 This needs to be fixed.
 
-### Function - `examples/function_example.sh`
+Uses the library `cursor.sh`.
 
-Demonstrates the function interface by duplicating `examples/attr_example.sh`, `examples/boxes_example.sh`, and `examples/color_example.sh`.
-
-### Spinner - `examples/spinner_example.sh`
-
-A simple demo of the spinner.
-Presents a menu to pick from the available animations.
-This is meant as an example, not a complete solution.
-
-## Printf - `./examples/printf_example.sh`
-
-A rather complex demonstration of what the printf library can do.
-
-## Export - `examples/export.sh`
+### `examples/export.sh` - Export
 
 This script will print variable and function declarations that Bash can read back.
 All of the environment variables and functions for the libraries `attr.sh`, `boxes.sh`, `color.sh`, and `cursor.sh` are output.
 
 This is really only useful for adding the escape codes for a specific terminal directly to your script.
+
+### `examples/function_example.sh` - Function
+
+Demonstrates the function interface by duplicating `examples/attr_example.sh`, `examples/boxes_example.sh`, and `examples/color_example.sh`.
+
+Uses the library `function.sh`.
+
+### `./examples/menu_example.sh` - Menu
+
+A demonstration of the menu library that uses the menu to change configuration.
+
+Uses the library `menu.sh`.
+
+### `./examples/printf_example.sh` - Printf
+
+A rather complex demonstration of what the printf library can do.
+
+Uses the library `printf.sh`.
+
+### `examples/spinner_example.sh` - Spinner
+
+A simple demo of the spinner.
+Presents a menu to pick from the available animations.
+This is meant as an example, not a complete solution.
+
+Uses the libraries `spinner.sh` and `menu.sh`.
+
+### `examples/table.sh` - Color and Attribute Table
+
+Draws a table showing off colors and attributes.
+
+Uses the libraries `attr.sh` and `color.sh`.
+
+![Color and Attribute Table](images/table.png)
 
 ### Usage
 
