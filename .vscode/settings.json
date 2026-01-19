@@ -52,5 +52,9 @@
     "markdown.extension.toc.orderedList": false,
     "markdown.extension.toc.unorderedList.marker": "*",
     "shellcheck.customArgs": ["-x"],
-    "shellcheck.run": "onSave" // also: "onType" // Be less annoying.
+    "shellcheck.run": "onSave", // also: "onType" // Be less annoying.
+    "[makefile]": {
+        "editor.insertSpaces": false,
+        "editor.tabSize": 8
+    }
 }
