@@ -18,6 +18,7 @@ A library to simplify working with the terminal in bash.
   * [`boxes.sh` - Box drawing Unicode characters](#boxessh---box-drawing-unicode-characters)
   * [`function.sh` - Functional Interface](#functionsh---functional-interface)
 * [Utilities](#utilities)
+  * [`demo.sh` - Demonstrate the Library](#demosh---demonstrate-the-library)
   * [`run_tests.sh` - Unit Tests](#run_testssh---unit-tests)
   * [`src/make.sh` - Create the main files](#srcmakesh---create-the-main-files)
 * [Examples](#examples)
@@ -100,6 +101,7 @@ See the files in the directory `examples/` for details.
 It would be better to get the raw files from `src/raw_*.sh`.
 These files contain the useful bits without the nonsense about loading libraries.
 Just copy the contents of the raw file that you need into your script.
+The script `demo.sh` presents a menu to run various examples.
 
 ## TODO
 
@@ -178,6 +180,11 @@ It is just functions to print the various escape codes.
 This is more a suggestion instead of something to use directly.
 
 ## Utilities
+
+### `demo.sh` - Demonstrate the Library
+
+A simple menu to run example scripts.
+Start here if you are unsure what to look at.
 
 ### `run_tests.sh` - Unit Tests
 
