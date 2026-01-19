@@ -18,9 +18,9 @@ declare _TERM_LOG_DATE_FORMAT="${TERM_LOG_DATE:-"%Y-%m-%dT%H:%M:%S"}"
 
 # Technicolor!
 declare -a _TERM_LOG_COLORS=("blue" "green" "yellow" "red")
+declare _TERM_LOG_COLOR_DATE="magenta"
+declare _TERM_LOG_COLOR_FILE="cyan"
 declare _TERM_LOG_COLOR_RESET="${TERM_RESET}"
-declare _TERM_LOG_DATE_COLOR="magenta"
-declare _TERM_LOG_FILE_COLOR="cyan"
 
 # Create the shortcut log functions.
 # Eg. term::log_info
@@ -32,6 +32,7 @@ for _TERM_LOG_LOG_LEVEL in "${!_TERM_LOG_LEVELS[@]}" ; do
     _TERM_LOG_COMMAND+=' "${@}"; }'
     eval "${_TERM_LOG_COMMAND}"
 done
+unset _TERM_LOG_COMMAND
 unset _TERM_LOG_TEMP
 
 # Logging function.
@@ -60,23 +61,22 @@ term::_log_format(){
     local log_date=""
     local log_file=""
     local log_message="${2}"
-    local log_level_color=""
+    local log_level_color="${_TERM_LOG_COLORS[$log_level]}"
     local log_output="${_TERM_LOG_FORMAT}"
 
     # Format the log date.
-    printf -v log_date "${_TERM_LOG_FORMAT_DATE}" "${TERM_FG[$_TERM_LOG_DATE_COLOR]}" "$(date +"${_TERM_LOG_DATE_FORMAT}")" "${_TERM_LOG_COLOR_RESET}"
+    printf -v log_date "${_TERM_LOG_FORMAT_DATE}" "${TERM_FG[$_TERM_LOG_COLOR_DATE]}" "$(date +"${_TERM_LOG_DATE_FORMAT}")" "${_TERM_LOG_COLOR_RESET}"
     log_output="${log_output/\%D/$log_date}"
 
     # Format the file name, if present.
     if [[ -n "${_TERM_LOG_FILE}" ]] ; then
-        printf -v log_file "${_TERM_LOG_FORMAT_FILE}" "${TERM_FG[$_TERM_LOG_FILE_COLOR]}" "${_TERM_LOG_FILE}" "${_TERM_LOG_COLOR_RESET}"
+        printf -v log_file "${_TERM_LOG_FORMAT_FILE}" "${TERM_FG[$_TERM_LOG_COLOR_FILE]}" "${_TERM_LOG_FILE}" "${_TERM_LOG_COLOR_RESET}"
         log_output="${log_output/\%F/$log_file}"
     else
         log_output="${log_output/\%F/}"
     fi
 
     # Format the log level.
-    log_level_color="${_TERM_LOG_COLORS[$log_level]}"
     printf -v log_level "${_TERM_LOG_FORMAT_LEVEL}" "${TERM_FG[$log_level_color]}" "${_TERM_LOG_LEVELS[$log_level]}" "${_TERM_LOG_COLOR_RESET}"
     log_output="${log_output/\%L/$log_level}"
 
@@ -92,9 +92,9 @@ term::log_disable_color(){
         # shellcheck disable=SC2004 # This isn't arithmetic.
         _TERM_LOG_COLORS[$color]=""
     done
+    _TERM_LOG_COLOR_DATE=""
+    _TERM_LOG_COLOR_FILE=""
     _TERM_LOG_COLOR_RESET=""
-    _TERM_LOG_DATE_COLOR=""
-    _TERM_LOG_FILE_COLOR=""
 }
 
 # Set or print _TERM_LOG_FILE.
