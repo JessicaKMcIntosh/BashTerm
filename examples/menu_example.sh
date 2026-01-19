@@ -5,7 +5,7 @@
 # To view a copy of this mark, visit:
 # https://creativecommons.org/publicdomain/zero/1.0/
 
-# A library for making menus.
+# Example of using the menu library.
 
 # This requires bash version 4.
 if [[ "${BASH_VERSINFO[0]}" -lt "4" ]] ; then
