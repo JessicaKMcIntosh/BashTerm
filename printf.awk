@@ -137,7 +137,7 @@ function handle_short(    attribute, attr_position, new_character, lookup) {
     for (attr_position = 1; attr_position <= length(attribute); attr_position++) {
         lookup = substr(attribute, attr_position, 1)
         if (!(lookup in short_attributes))
-            error("handle_short", sprintf("Unknown short code '%s'.", lookup))
+            error("handle_short", sprintf("Unknown short code (%s).", lookup))
         new_character = new_character get_attribute(short_attributes[lookup], "handle_short")
     }
     character = new_character
@@ -231,7 +231,7 @@ function get_attribute(attribute, caller,    lookup) {
 
     lookup = "TERM_" toupper(attribute)
     if (!(lookup in ENVIRON))
-        error(caller " => get_attribute", sprintf("Unknown attribute '%s'.", attribute))
+        error(caller " => get_attribute", sprintf("Unknown attribute (%s).", attribute))
 
     return ENVIRON[lookup]
 }
@@ -241,7 +241,7 @@ function get_box(box,    lookup) {
     lookup = "TERM_BOX_" toupper(box)
 
     if (!(lookup in ENVIRON))
-        error("get_box", sprintf("Unknown box '%s'.", box))
+        error("get_box", sprintf("Unknown box (%s).", box))
 
     return ENVIRON[lookup]
 }
