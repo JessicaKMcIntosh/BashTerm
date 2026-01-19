@@ -17,7 +17,7 @@ term::log_usage(){
     echo "Options:"
     echo "    -C        Disable color."
     echo "    -d FORMAT Set the date format string. Try '%c'."
-    echo "              Default: ${_TERM_LOG_DATE_COMMAND}"
+    echo "              Default: ${_TERM_LOG_DATE_FORMAT}"
     echo "    -E        Print several examples."
     echo "    -F FILE   Add an optional file name to the log message."
     echo "    -h        This text."
@@ -98,7 +98,7 @@ term::log_main(){
     while getopts ":Cd:Ef:hL:l:" option ; do
         case $option in
             C)  term::log_disable_color;;
-            d)  _TERM_LOG_DATE_COMMAND="${OPTARG}";;
+            d)  _TERM_LOG_DATE_FORMAT="${OPTARG}";;
             E)  term::log_examples;;
             f)  _TERM_LOG_FILE="${OPTARG}";;
             h)  term::log_usage;;

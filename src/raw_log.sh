@@ -7,13 +7,14 @@ declare _TERM_LOG_MAX_LEVEL="$((${#_TERM_LOG_LEVELS[@]} - 1))"
 # The formatting is broken up to assemble each piece with colors.
 declare _TERM_LOG_FORMAT="%L%F%D: %M\n"
 # %M is replaced with the log message.
-# For these %s is replaced with the color escape codes then the value.
-# Like this: printf "%s[%-5S%s] " $COLOR_CODE $LOG_LEVEL $COLOR_RESET
+# For these %s is replaced with the color escape code, the value,
+# then the attribute and color reset code.
+# Like this: printf "[%s%-5S%s] " $COLOR_CODE $LOG_LEVEL $COLOR_RESET
 declare _TERM_LOG_FORMAT_DATE="(%s%s%s)"        # %D in _TERM_LOG_FORMAT
 declare _TERM_LOG_FORMAT_FILE="<%s%s%s> "       # %F in _TERM_LOG_FORMAT
 declare _TERM_LOG_FORMAT_LEVEL="[%s%-5s%s] "    # %L in _TERM_LOG_FORMAT
 # The format string passed to the date command.
-declare _TERM_LOG_DATE_COMMAND="${TERM_LOG_DATE:-"%Y-%m-%dT%H:%M:%S"}"
+declare _TERM_LOG_DATE_FORMAT="${TERM_LOG_DATE:-"%Y-%m-%dT%H:%M:%S"}"
 
 # Technicolor!
 declare -a _TERM_LOG_COLORS=("blue" "green" "yellow" "red")
@@ -63,7 +64,7 @@ term::_log_format(){
     local log_output="${_TERM_LOG_FORMAT}"
 
     # Format the log date.
-    printf -v log_date "${_TERM_LOG_FORMAT_DATE}" "${TERM_FG[$_TERM_LOG_DATE_COLOR]}" "$(date +"${_TERM_LOG_DATE_COMMAND}")" "${_TERM_LOG_COLOR_RESET}"
+    printf -v log_date "${_TERM_LOG_FORMAT_DATE}" "${TERM_FG[$_TERM_LOG_DATE_COLOR]}" "$(date +"${_TERM_LOG_DATE_FORMAT}")" "${_TERM_LOG_COLOR_RESET}"
     log_output="${log_output/\%D/$log_date}"
 
     # Format the file name, if present.
