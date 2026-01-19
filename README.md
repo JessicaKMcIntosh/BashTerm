@@ -117,7 +117,9 @@ The script `demo.sh` presents a menu to run various examples.
   Generate the files in the main directory by adding the header.
   Kinda like having a template.
   This would also allow creating completely standalone scripts from the separate files.
+  **In progress.**
 * More spinner frames.
+* World Clock demo application.
 
 ## Libraries
 
