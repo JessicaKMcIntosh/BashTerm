@@ -115,15 +115,31 @@ function handle_attribute(    attribute, attr_list, new_character) {
 
 # Process box characters.
 # Retrieve the escape code from the environment variables.
-function handle_box(    attribute, attr_list, new_character) {
+function handle_box(    attribute, box_character, attr_list, new_character, repeat) {
     attribute = get_string("\076", "handle_box") # <>
     split(attribute, attr_list, / *, */)
     new_character = "" # Preserve the global character for error messages.
     for (attribute in attr_list) {
-        if (attr_list[attribute] == "_")
-            new_character = new_character " "
+        box_character=attr_list[attribute]
+
+        # Set the repeat if requested.
+        repeat=0
+        if (box_character ~ /@/) {
+            repeat=substr(box_character, (index(box_character, "@") + 1))
+            sub(/@.*$/, "", box_character)
+        }
+
+        # Get the box character.
+        if (box_character == "_")
+            box_character=" "
         else
-            new_character = new_character get_box(attr_list[attribute])
+            box_character=get_box(box_character)
+
+        # Add the box character at least once if no repeat is requested.
+        do {
+            new_character = new_character box_character
+            repeat--
+        } while (repeat > 0)
     }
     character = new_character
 }

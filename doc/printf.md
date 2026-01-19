@@ -71,8 +71,9 @@ The interface for the printf library are the functions `term::printf` and `term:
   Use the part of the box variable name after `$TERM_BOX_`.
   For example `%<DBC>` will draw the character `╩`.
   Use underscore, `_`, for a single space.
+  Append a `@` and a count to repeat the preceding character.
 
-  For example the string `"%<LML,LLH,LMC,LLH,LMR,_,_,LLV>"` translates into `├─┼─┤  │`.
+  For example the string `"%<LML,LLH,LMC,LLH@3,LMR,_,_,LLV>"` translates into `├─┼───┤  │`.
 
 For the strings in `%()`, `${}`, `$<>` leading and trailing whitespace is ignored.
 For example the format strings `$(bold,underline)` and `$( bold , underline )` are equivalent.

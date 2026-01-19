@@ -54,8 +54,10 @@ term::printf "%<LML>%<LLH>%<LMC>%<LMR>\n"
 term::printf "%<LBL>%<LLH>%<LBC>%<LBR>\n"
 
 # Multiple box characters separated by a comma.
+# Spaces are ignored so you can line things up.
 # Use "_" to print a space.
-term::printf "%<LTL,LLH,LTC,LLH,LTC,LLH,LLH,LTR>\n"
-term::printf "%<LML,LLH,LMC,LLH,LMR,_  ,_  ,LLV>\n"
-term::printf "%<LLV,_  ,LML,LLH,LMR,_  ,_  ,LLV>\n"
-term::printf "%<LBL,LLH,LBC,LLH,LBC,LLH,LLH,LBR>\n"
+# Append @COUNT to repeat the character COUNT times.
+term::printf "%<LTL,LLH,LTC,LLH,LTC,LLH@2,LTR>\n"
+term::printf "%<LML,LLH,LMC,LLH,LMR,  _@2,LLV>\n"
+term::printf "%<LLV,_  ,LML,LLH,LMR,  _@2,LLV>\n"
+term::printf "%<LBL,LLH,LBC,LLH,LBC,LLH@2,LBR>\n"
