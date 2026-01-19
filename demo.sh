@@ -43,11 +43,13 @@ DEMO_SCRIPTS=(
 "examples/color_example.sh"
 "examples/cursor_example.sh"
 "examples/function_example.sh"
+"examples/log_example.sh"
 "examples/menu_example.sh"
 "examples/printf_example.sh"
 "examples/spinner_example.sh"
 "examples/table.sh"
 "./run_tests.sh"
+"./log.sh -E"
 )
 
 # Demo menu.
@@ -58,11 +60,13 @@ DEMO_MENU=(
     "c||Terminal colors. (color_example.sh)"
     "u||Cursor movement. (cursor_example.sh)"
     "f||Function interface. (function_example.sh)"
+    "l||Logging. (log_example.sh)"
     "m||Menu demonstrating options. (menu_example.sh)"
     "p||Custom printf function. (printf_example.sh)"
     "s||Spin spin. (spinner_example.sh)"
     "t||Color and attribute table. (table.sh)"
     "r||Run the library tests. (run_tests.sh)"
+    "L||Logging examples. (log.sh -E)"
     "q|250|Exit"
     "x|250|~"
     "0|250|~"

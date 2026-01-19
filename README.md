@@ -28,6 +28,7 @@ A library to simplify working with the terminal in bash.
   * [`examples/cursor_example.sh` - Cursor](#examplescursor_examplesh---cursor)
   * [`examples/export.sh` - Export](#examplesexportsh---export)
   * [`examples/function_example.sh` - Function](#examplesfunction_examplesh---function)
+  * [`./examples/log_example.sh` - Logging](#exampleslog_examplesh---logging)
   * [`./examples/menu_example.sh` - Menu](#examplesmenu_examplesh---menu)
   * [`./examples/printf_example.sh` - Printf](#examplesprintf_examplesh---printf)
   * [`examples/spinner_example.sh` - Spinner](#examplesspinner_examplesh---spinner)
@@ -249,6 +250,12 @@ This is really only useful for adding the escape codes for a specific terminal d
 Demonstrates the function interface by duplicating `examples/attr_example.sh`, `examples/boxes_example.sh`, and `examples/color_example.sh`.
 
 Uses the library `function.sh`.
+
+### `./examples/log_example.sh` - Logging
+
+A demonstration of the logging library.
+
+Uses the libraries `log.sh` and  `menu.sh`.
 
 ### `./examples/menu_example.sh` - Menu
 
