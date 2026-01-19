@@ -22,8 +22,8 @@ find_library(){
     exit 1
 }
 #TERM_VERBOSE=0 # Uncomment for verbose library loading.
-# shellcheck disable=SC2167 # Go home Shellcheck, you are drunk.
 declare _TERM_LOAD_LIBRARY
+# shellcheck disable=SC2167 # Go home Shellcheck, you are drunk.
 for _TERM_LOAD_LIBRARY in "${library_list[@]}"; do
     source "$(find_library "${_TERM_LOAD_LIBRARY}")" || exit 1
 done
