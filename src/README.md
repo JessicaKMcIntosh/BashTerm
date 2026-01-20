@@ -27,6 +27,17 @@ You are responsible for making sure dependencies are included.
 * `shebang.sh` - The very top of the file.
   Includes the shebang line, ShellCheck help and the dedication to the public domain.
 
+These are for creating standalone versions of the utilities.
+Include these in your scripts to get just the shortcut environment variables.
+The shortcuts are created in a function that is automatically called.
+For boxes just use `raw_boxes.sh`.
+For a demonstration of using these see the file `make.sh`.
+
+* `shortcuts_attr.sh` - The function `_TERM_CREATE_SHORTCUTS_ATTR()` creates the attribute shortcut environment variables.
+* `shortcuts_color.sh` - The function `_TERM_CREATE_SHORTCUTS_COLOR()` creates the color shortcut environment variables.
+* `shortcuts_cursor.sh*` - The function `_TERM_CREATE_SHORTCUTS_CURSOR()` creates the cursor shortcut environment variables.
+* `standalone_printf.sh` - A version of `raw_printf.sh` with the AWK script included.
+
 ## Using vim to diff the files?
 
 ```shell

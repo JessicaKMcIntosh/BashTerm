@@ -77,7 +77,9 @@ build_file(){
     local file_new
     local dependencies
 
-    printf "Creating Library %s...\n" "${library}"
+    printf "Creating Library '%s': %s\n" \
+        "${library}" \
+        "$(echo "${FILE_DESCR[$library]}" | sed -n -e 's/^# */ /p;q')"
 
     # Figure out the source files.
     printf -v file_raw "raw_%s.sh" "${library}"
@@ -148,6 +150,7 @@ create_files(){
 # Print some help text.
 usage(){
     local library
+    local printf_file
     # Print any messages passed in.
     if [[ "$#" -gt 0 ]] ; then
         while [[ "$#" -gt 0 ]]; do
@@ -155,6 +158,24 @@ usage(){
             shift
         done
         echo ""
+    fi
+
+    # Some extra box characters. See '../alt_boxes.sh'.
+    export TERM_BOX_BDVDLS=$'\u2562'   # ╢ Box Drawings Vertical Double and Left Single
+    export TERM_BOX_BDVDRS=$'\u255F'   # ╟ Box Drawings Vertical Double and Right Single
+    export TERM_BOX_BDVDHS=$'\u256B'   # ╫ Box Drawings Vertical Double and Horizontal Single
+
+    # Load the attribute, box and printf libraries.
+    if [[ -f "standalone_printf.sh" ]] ; then
+        source "shortcuts_attr.sh"
+        source "raw_boxes.sh"
+        #source "shortcuts_color.sh" # Color is not currently used.
+        source "standalone_printf.sh"
+    else
+        source "src/shortcuts_attr.sh"
+        source "src/raw_boxes.sh"
+        #source "src/shortcuts_color.sh" # Color is not currently used.
+        source "src/standalone_printf.sh"
     fi
 
     echo "Usage: $0 [OPTIONS]"
@@ -166,15 +187,16 @@ usage(){
     echo "    -h        This text."
     echo ""
     echo "Files:"
-    printf "    %-10s | Dependencies\n" "File"
-    echo "   ------------+---------------------------------------"
-    for library in "${!FILE_LIST[@]}" ; do
-        printf "    %-10s |" "${library}"
-        if [[ -n "${FILE_LIST[$library]}" ]] ; then
-            printf " %s" ${FILE_LIST[$library]}
-        fi
-        echo ""
+
+    term::printf "%<DTL,DLH@12,DTC,DLH@67,DTR>\n"
+    term::printf "%<DLV> %(bold)%-10s%(reset) %<DLV> %(bold)%-65s%(reset) %<DLV>\n" "File" "Description"
+    term::printf "%<BDVDRS,LLH@12,BDVDHS,LLH@67,BDVDLS>\n"
+    for library in "${!FILE_DESCR[@]}" ; do
+        term::printf "%<DLV> %-10s %<DLV> %-65s %<DLV>\n" \
+           "${library}" \
+            "$(echo "${FILE_DESCR[$library]}" | sed -n -e 's/^# */ /p;q')"
     done
+    term::printf "%<DBL,DLH@12,DBC,DLH@67,DBR>\n"
     exit 1
 }
 
