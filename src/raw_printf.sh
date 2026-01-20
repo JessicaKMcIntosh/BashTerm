@@ -20,5 +20,5 @@ term::printf-v(){
     local -n variable="${1}"
     shift
     # shellcheck disable=SC2034
-    variable="$(printf "%s\n" "${@}" | $_TERM_AWK_COMMAND -f "${_TERM_AWK_FILE}")"
+    variable="$(term::printf "${@}")"
 }
