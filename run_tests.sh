@@ -168,36 +168,65 @@ assert_success(){
 # ----~~~~++++====#### Testing Functions ####====++++~~~~----
 
 # Loop over the files in `test/`.
-# Load the file then run the tests from the file.
 run_test_files(){
     local test_file
     echo "Running the tests from 'test/'..."
     for test_file in "${TestDirectory}"/*.sh; do
-        # Load the test file.
-        echo ""
-        printf "Loading test file '%s'..." "${test_file}"
-        source "${test_file}"
-        if [[ -v TEST_TITLE ]] ; then
-            printf " (%s)" "${TEST_TITLE}"
-            unset TEST_TITLE
-        fi
-        echo ""
-
-        # Clear the fatal flag. Set this in 'test_setup()' per test.
-        TestFailFatal=false
-
-        # Do setup if needed.
-        if declare -F "test_setup" > /dev/null 2>&1 ; then
-            test_setup
-        fi
-
-        run_tests
-
-        # Do cleanup if needed.
-        if declare -F "test_cleanup" > /dev/null 2>&1 ; then
-            test_cleanup
-        fi
+        # Run the tests from the file.
+        run_test_file "${test_file}"
     done
+}
+
+# Run tests passed in on the command line.
+run_test_args(){
+    local test_file
+    echo "Running the tests given on the command line..."
+    if [[ "$#" -gt 0 ]] ; then
+        while [[ "$#" -gt 0 ]]; do
+            test_file="${TestDirectory}/${1}"
+            if [[ ! -f "${test_file}" ]] ; then
+                test_file="${TestDirectory}/${1}.sh"
+                if [[ ! -f "${test_file}" ]] ; then
+                    echo "Unable to locate the test file ${1} in ${TestDirectory}."
+                    continue
+                fi
+            fi
+            # Run the tests from the file.
+            run_test_file "${test_file}"
+            shift
+        done
+        echo ""
+    fi
+}
+
+# Load the file then run the tests from the file.
+run_test_file(){
+    local test_file="${1}"
+
+    # Load the test file.
+    echo ""
+    printf "Loading test file '%s'..." "${test_file}"
+    source "${test_file}"
+    if [[ -v TEST_TITLE ]] ; then
+        printf " (%s)" "${TEST_TITLE}"
+        unset TEST_TITLE
+    fi
+    echo ""
+
+    # Clear the fatal flag. Set this in 'test_setup()' per test.
+    TestFailFatal=false
+
+    # Do setup if needed.
+    if declare -F "test_setup" > /dev/null 2>&1 ; then
+        test_setup
+    fi
+
+    run_tests
+
+    # Do cleanup if needed.
+    if declare -F "test_cleanup" > /dev/null 2>&1 ; then
+        test_cleanup
+    fi
 }
 
 # Run the tests loaded from the file.
@@ -236,7 +265,11 @@ print_usage(){
     fi
 
     echo "Run Unit tests for BashTerm."
-    echo "Usage: $0 [OPTIONS]"
+    echo "Usage: $0 [OPTIONS] [TEST(S)]"
+    echo ""
+    echo "Run tests in the directory '${TestDirectory}'."
+    echo "By default all tests in the directory are run."
+    echo "Give the name of the list to run specific tests."
     echo ""
     echo "Options:"
     echo "  -h  Print this text."
@@ -245,16 +278,34 @@ print_usage(){
 
 # Main processing.
 main(){
-    # Process command line options.
-    # TODO
+    local option
+
+    # Check command line args.
+    while getopts ":h" option ; do
+        case $option in
+            h)  usage;;
+            *)  if [ "${OPTARG}" = "-" ] ; then
+                    usage # They probably only want help. Catches --help.
+                else
+                    usage "Invalid option '${OPTARG}'." # Illegal option.
+                fi;;
+        esac
+    done
+    shift $((OPTIND - 1))
 
     # Setup the variables.
     TEST_COUNT=0
     ASSERT_PASS=0
     ASSERT_FAIL=0
 
-    # Run the tests.
-    run_test_files
+    # Were tests to run given on the command line?
+    if [[ "$#" -gt 0 ]] ; then
+        # Run the given tets.
+        run_test_args "${@}"
+    else
+        # Run all the tests.
+        run_test_files
+    fi
 
     # Print the report.
     print_report
