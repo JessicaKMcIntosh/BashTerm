@@ -132,7 +132,7 @@ function handle_backslash(    character) {
         format_position += 2
         if (format_position > format_length)
             error("handle_backslash-01", "Unexpected end of format string!")
-        printf("%c", string_to_decimal(substr(format_string, format_position - 2, 3), 8))
+        printf "%c", string_to_decimal(substr(format_string, format_position - 2, 3), 8)
     } else
     if (character == "x") {
         format_position += 2
@@ -257,6 +257,8 @@ function error(caller, error_text) {
     printf "Caller: %s\n", caller | "cat 1>&2"
     printf "Format String: \042%s\042\n", format_string | "cat 1>&2"
     printf "Position: %s\n", format_position | "cat 1>&2"
+    printf "Format Left: \042%s\042\n", substr(format_string, format_position) | "cat 1>&2"
+    printf "END Report\n\n" | "cat 1>&2"
     printf "Format Left: \042%s\042\n", substr(format_string, format_position) | "cat 1>&2"
     printf "END Report\n\n" | "cat 1>&2"
     close("cat 1>&2")
