@@ -38,6 +38,13 @@ For a demonstration of using these see the file `make.sh`.
 * `shortcuts_cursor.sh*` - The function `_TERM_CREATE_SHORTCUTS_CURSOR()` creates the cursor shortcut environment variables.
 * `standalone_printf.sh` - A version of `raw_printf.sh` with the AWK script included.
 
+## Utilities
+
+There are some utilities located in the subdirectory `utilities/`.
+
+* `m1.awk` - Macroprocessor in AWK as found in the O'Reilly boo awk & sed..
+* `make_help.awk` - Print help text for `Makefile`.
+
 ## Using vim to diff the files?
 
 ```shell
