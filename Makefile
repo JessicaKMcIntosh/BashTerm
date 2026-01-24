@@ -10,10 +10,11 @@
 SHELL=/bin/bash
 
 .PHONY: all demo help
+
+help: # Print all available options.
+	@awk -f src/utilities/make_help.awk Makefile
 all: help
 
 demo: # Run the BashTerm Demo.
 	@bash demo.sh
 
-help: # Print all available options.
-	@awk -f src/utilities/make_help.awk Makefile
