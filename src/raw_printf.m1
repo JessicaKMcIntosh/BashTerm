@@ -1,0 +1,21 @@
+@output raw_printf.sh
+# Configuration.
+@include find_awk.sh
+term::find_awk
+#_TERM_AWK_COMMAND="gawk --lint" # For development.
+
+# Print to STDOUT.
+term::printf(){
+    printf "%s\n" "${@}" | $_TERM_AWK_COMMAND '
+@include printf.awk
+    '
+}
+
+# Print to a variable.
+term::printf-v(){
+    local -n variable="${1}"
+    shift
+    # shellcheck disable=SC2034
+    variable="$(term::printf "${@}")"
+}
+@output -
