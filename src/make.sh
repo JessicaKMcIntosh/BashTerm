@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# shellcheck source=shortcuts_attr.sh
+# shellcheck source=raw_boxes.sh
+# shellcheck source=shortcuts_color.sh
+# shellcheck source=raw_printf.sh
 
 # Make the files in the main directory.
 
@@ -24,12 +28,13 @@ term::find_awk(){
 
 build_file(){
     local library="${1}"
+    local file_new="new/${library}.sh"
     ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- -DNEW_FILE=1 "${library}.m1"
-    chmod +x "new/${library}.sh"
+    chmod +x "${file_new}"
 
     # Compare the old and new files.
     if ! diff "${file_new}" "../${library}.sh" > /dev/null 2>&1; then
-        echo "The new and main files differ: "${file_new} ../${library}.sh""
+        echo "The new and main files differ: ${file_new} ../${library}.sh"
     fi
 }
 
@@ -52,7 +57,6 @@ get_file_descr(){
 # Print some help text.
 usage(){
     local library
-    local printf_file
     # Print any messages passed in.
     if [[ "$#" -gt 0 ]] ; then
         while [[ "$#" -gt 0 ]]; do
