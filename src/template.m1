@@ -1,18 +1,19 @@
 @@ Build the output file.
 @@
-@@
 @@ Default settings.
 @default NEW_FILE 0
 @default PRINT_DESCR 0
 @default STANDLONE 0
+@@
 @@ Defaults file names.
 @default HEADER_FILE header.sh
 @default RAW_FILE raw_@LIBRARY_NAME@.sh
 @default OUTPUT_FILE new/@LIBRARY_NAME@.sh
 @default FOOTER_FILE footer.sh
 @@
-@@ Print only the description.
+@@ Print the description.
 @if PRINT_DESCR
+@output -
 @echo @DESCRIPTION@
 @fi
 @@
@@ -37,6 +38,7 @@
 @include @RAW_FILE@
 
 @include @FOOTER_FILE@
+@output -
 @fi
 @@
 @@ Build the standalone file.
