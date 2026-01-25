@@ -30,6 +30,7 @@
 #   @stderr stuff           Send diagnostics to standard error.
 #   @undefine varname       Removes the variable.
 #   @output filename        Send all further output to filename.
+#                           Use - to reset to STDOUT.
 #   @exit                   Stop processing and exit immediately.
 #   @echo value             Explicitly echo the value.
 #
