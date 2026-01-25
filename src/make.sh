@@ -110,7 +110,7 @@ main(){
     fi
 
     # Locate the AWK command.
-    awk_command
+    term::find_awk
 
     # Check command line args.
     while getopts ":h" option ; do
