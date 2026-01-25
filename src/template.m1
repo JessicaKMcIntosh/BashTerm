@@ -1,0 +1,46 @@
+@@ Build the output file.
+@@
+@@
+@@ Default settings.
+@default NEW_FILE 0
+@default PRINT_DESCR 0
+@default STANDLONE 0
+@@ Defaults file names.
+@default HEADER_FILE header.sh
+@default RAW_FILE raw_@LIBRARY_NAME@.sh
+@default OUTPUT_FILE new/@LIBRARY_NAME@.sh
+@default FOOTER_FILE footer.sh
+@@
+@@ Print only the description.
+@if PRINT_DESCR
+@echo @DESCRIPTION@
+@fi
+@@
+@@ Build the library file.
+@if NEW_FILE
+@echo Building the file '@OUTPUT_FILE@'
+@output @OUTPUT_FILE@
+@include shebang.sh
+
+# @DESCRIPTION@
+
+@if LONG_DESCRIPTION
+@echo @LONG_DESCRIPTION@
+
+@fi
+@include @HEADER_FILE@
+
+@if LIBRARIES
+@include load_libraries.sh
+
+@fi
+@include @RAW_FILE@
+
+@include @FOOTER_FILE@
+@fi
+@@
+@@ Build the standalone file.
+@@ TODO!!
+@if STANDLONE
+@echo Building the standalone file TODO
+@fi

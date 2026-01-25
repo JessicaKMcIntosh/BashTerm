@@ -171,10 +171,10 @@ function handle_attribute(    attribute, attr_list) {
 }
 
 # Process box characters.
-function handle_box(    attribute, box_character, attr_list, repeat, lookup) {
+function handle_box(    attribute, box_character, attr_list, count, repeat, lookup) {
     attribute = get_string("\076") # <>
-    split(attribute, attr_list, / *, */)
-    for (attribute in attr_list) {
+    count = split(attribute, attr_list, / *, */)
+    for (attribute = 1; attribute <= count; attribute++) {
         box_character = attr_list[attribute]
 
         # Set the repeat if requested.

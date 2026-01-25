@@ -1,0 +1,12 @@
+@@ Settings for menu.sh
+@define LIBRARY_NAME menu
+@define DESCRIPTION A library for making menus.
+@@define LONG_DESCRIPTION 
+@@append LONG_DESCRIPTION 
+@define LIBRARIES "attr.sh"
+@@define HEADER_FILE header_@LIBRARY_NAME@.sh
+@@define RAW_FILE raw_@LIBRARY_NAME@.sh
+@@define OUTPUT_FILE new/@LIBRARY_NAME@.sh
+@define FOOTER_FILE footer_@LIBRARY_NAME@.sh
+@@ Build the files.
+@include template.m1

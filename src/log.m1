@@ -1,0 +1,12 @@
+@@ Settings for log.sh
+@define LIBRARY_NAME log
+@define DESCRIPTION A library for logging.
+@@define LONG_DESCRIPTION 
+@@append LONG_DESCRIPTION 
+@define LIBRARIES "attr.sh" "color.sh"
+@@define HEADER_FILE header_@LIBRARY_NAME@.sh
+@@define RAW_FILE raw_@LIBRARY_NAME@.sh
+@@define OUTPUT_FILE new/@LIBRARY_NAME@.sh
+@define FOOTER_FILE footer_@LIBRARY_NAME@.sh
+@@ Build the files.
+@include template.m1

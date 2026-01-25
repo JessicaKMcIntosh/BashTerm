@@ -1,3 +1,5 @@
+# Load the libraries.
+declare -a library_list=(@LIBRARIES@)
 find_library(){
     local library="${1}"
     local file_name

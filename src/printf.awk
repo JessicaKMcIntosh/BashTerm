@@ -1,6 +1,3 @@
-# Print to STDOUT.
-term::printf(){
-    printf "%s\n" "${@}" | awk '
 #!/usr/bin/env -S awk -f
 
 # BashTerm by Jessica K McIntosh is marked CC0 1.0.
@@ -174,10 +171,10 @@ function handle_attribute(    attribute, attr_list) {
 }
 
 # Process box characters.
-function handle_box(    attribute, box_character, attr_list, repeat, lookup) {
+function handle_box(    attribute, box_character, attr_list, count, repeat, lookup) {
     attribute = get_string("\076") # <>
-    split(attribute, attr_list, / *, */)
-    for (attribute in attr_list) {
+    count = split(attribute, attr_list, / *, */)
+    for (attribute = 1; attribute <= count; attribute++) {
         box_character = attr_list[attribute]
 
         # Set the repeat if requested.
@@ -306,14 +303,4 @@ function string_to_decimal(string, base,    position, number) {
     for (position = 1; position <= length(string); position++)
         number = (number * base) + (index("0123456789ABCDEF", toupper(substr(string, position, 1))) - 1)
     return number
-}
-    '
-}
-
-# Print to a variable.
-term::printf-v(){
-    local -n variable="${1}"
-    shift
-    # shellcheck disable=SC2034
-    variable="$(term::printf "${@}")"
 }

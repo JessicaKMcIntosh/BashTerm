@@ -6,118 +6,26 @@
 
 # Files to create.
 # Values are the dependencies.
-declare -A FILE_LIST
-FILE_LIST=(
-    [attr]=""
-    [boxes]=""
-    [color]=""
-    [cursor]=""
-    [function]="attr.sh,boxes.sh,color.sh,cursor.sh"
-    [log]="attr.sh,color.sh"
-    [menu]="attr.sh"
-    [printf]="attr.sh,boxes.sh,color.sh,cursor.sh"
-    [spinner]="attr.sh,cursor.sh"
-)
+declare -a FILE_LIST
+FILE_LIST=("attr" "boxes" "color" "cursor" "function" "log" "menu" "printf" "spinner")
 
-# File Descriptions.
-declare -A FILE_DESCR
-FILE_DESCR=(
-[attr]="# A library of useful code for working with terminal attributes.
-
-# See 'man 5 terminfo' for more information."
-[boxes]="# A library of unicode box drawing characters.
-
-# See the following resources:
-# https://www.compart.com/en/unicode/block/U+2500
-# https://en.wikipedia.org/wiki/Box-drawing_characters"
-[color]="# A library of useful code for working with terminal colors.
-
-# See 'man 5 terminfo' for more information."
-[cursor]="# A library of useful code for working with terminal cursors.
-
-# See 'man 5 terminfo' for more information."
-[function]="# This is a functional interface to the variables.
-# If that is something you want... :shrug:
-
-# I recommend picking and choosing what you want."
-[log]="# A library for logging."
-[menu]="# A library for making menus."
-[printf]="# A printf implementation with terminal attributes.
-
-# This is really only an example.
-# Adapt to your needs."
-[spinner]="# A simple spinner using Unicode characters.
-
-# See 'man 5 terminfo' for more information."
-)
-
-build_dependencies(){
-    local dependencies="${1}"
-    local -a list
-
-    # Return of there are no dependencies.
-    if [[ -z "${dependencies}" ]] ; then
-        return
-    fi
-
-    IFS="," read -r -a list <<< "${dependencies}"
-    echo "# Load the libraries."
-    echo "declare -a library_list=("
-    printf '    "%s"\n' "${list[@]}"
-    echo ")"
-    cat "load_libraries.sh"
-    echo ""
+# Figure out the AWK command.
+declare -g _TERM_AWK_COMMAND="awk"
+term::find_awk(){
+    local awk_command
+    # mawk is generally faster than gawk.
+    for awk_command in {m,}awk gawk ; do
+        if command -v "${awk_command}" > /dev/null ; then
+            declare -g _TERM_AWK_COMMAND="${awk_command}"
+            break
+        fi
+    done
 }
 
 build_file(){
     local library="${1}"
-    local file_raw
-    local file_header
-    local file_footer
-    local file_new
-    local dependencies
-
-    printf "Creating Library '%s': %s\n" \
-        "${library}" \
-        "$(echo "${FILE_DESCR[$library]}" | sed -n -e 's/^# */ /p;q')"
-
-    # Figure out the source files.
-    printf -v file_raw "raw_%s.sh" "${library}"
-    printf -v file_header "header_%s.sh" "${library}"
-    [[ -f "${file_header}" ]] || file_header="header.sh"
-    printf -v file_footer "footer_%s.sh" "${library}"
-    [[ -f "${file_footer}" ]] || file_footer="footer.sh"
-    dependencies="${FILE_LIST[$library]}"
-
-    # Make sure the raw file exists.
-    if [[ ! -f "${file_raw}" ]] ; then
-        echo "WARNING! Missing raw file: ${file_raw}"
-        exit 1
-    fi
-
-    # Feedback.
-    printf "      Raw File: %s\n" "${file_raw}"
-    printf "   Header File: %s\n" "${file_header}"
-    printf "   Footer File: %s\n" "${file_footer}"
-    printf "  Dependencies: %s\n" "${dependencies}"
-
-    # Build the file.
-    file_new="new/${library}.sh"
-    {
-        cat shebang.sh
-        echo ""
-        if [[ -v FILE_DESCR[$library]`` ]] ; then
-            echo "${FILE_DESCR[$library]}"
-            echo ""
-        fi
-        cat "${file_header}"
-        echo ""
-        build_dependencies "${dependencies}"
-        cat "${file_raw}"
-        echo ""
-        cat "${file_footer}"
-    } > "${file_new}"
-    chmod +x "${file_new}"
+    ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- -DNEW_FILE=1 "${library}.m1"
+    chmod +x "new/${library}.sh"
 
     # Compare the old and new files.
     if ! diff "${file_new}" "../${library}.sh" > /dev/null 2>&1; then
@@ -129,22 +37,16 @@ create_files(){
     echo "Creating the main files..."
     local library
 
-    # Make sure we are in the src/ directory.
-    if [[ -d "src" ]] ; then
-        cd src || exit 1
-    fi
-    if [[ ! -f "make.sh" ]] ; then
-        echo "Run this from the 'BashTerm' or 'BashTerm/src' directories."
-        echo "Aborting!!!"
-        exit 1
-    fi
-
     # Loop over the files creating the new files.
     mkdir -p new
-    for library in "${!FILE_LIST[@]}" ; do
-        echo ""
+    for library in "${FILE_LIST[@]}" ; do
         build_file "${library}"
     done
+}
+
+get_file_descr(){
+    local library="${1}"
+    ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- -DPRINT_DESCR=1 "${library}.m1"
 }
 
 # Print some help text.
@@ -166,17 +68,10 @@ usage(){
     export TERM_BOX_BDVDHS=$'\u256B'   # ╫ Box Drawings Vertical Double and Horizontal Single
 
     # Load the attribute, box and printf libraries.
-    if [[ -f "standalone_printf.sh" ]] ; then
-        source "shortcuts_attr.sh"
-        source "raw_boxes.sh"
-        #source "shortcuts_color.sh" # Color is not currently used.
-        source "standalone_printf.sh"
-    else
-        source "src/shortcuts_attr.sh"
-        source "src/raw_boxes.sh"
-        #source "src/shortcuts_color.sh" # Color is not currently used.
-        source "src/standalone_printf.sh"
-    fi
+    source "shortcuts_attr.sh"
+    source "raw_boxes.sh"
+    #source "shortcuts_color.sh" # Color is not currently used.
+    source "raw_printf.sh"
 
     echo "Usage: $0 [OPTIONS]"
     echo ""
@@ -191,10 +86,10 @@ usage(){
     term::printf "%<DTL,DLH@12,DTC,DLH@67,DTR>\n"
     term::printf "%<DLV> %(bold)%-10s%(reset) %<DLV> %(bold)%-65s%(reset) %<DLV>\n" "File" "Description"
     term::printf "%<BDVDRS,LLH@12,BDVDHS,LLH@67,BDVDLS>\n"
-    for library in "${!FILE_DESCR[@]}" ; do
+    for library in "${FILE_LIST[@]}" ; do
         term::printf "%<DLV> %-10s %<DLV> %-65s %<DLV>\n" \
            "${library}" \
-            "$(echo "${FILE_DESCR[$library]}" | sed -n -e 's/^# */ /p;q')"
+            "$(get_file_descr "${library}")"
     done
     term::printf "%<DBL,DLH@12,DBC,DLH@67,DBR>\n"
     exit 1
@@ -203,6 +98,19 @@ usage(){
 # Main routine.
 main(){
     local option
+
+    # Make sure we are in the src/ directory.
+    if [[ -d "src" ]] ; then
+        cd src || exit 1
+    fi
+    if [[ ! -f "make.sh" ]] ; then
+        echo "Run this from the 'BashTerm' or 'BashTerm/src' directories."
+        echo "Aborting!!!"
+        exit 1
+    fi
+
+    # Locate the AWK command.
+    awk_command
 
     # Check command line args.
     while getopts ":h" option ; do

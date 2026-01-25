@@ -1,0 +1,13 @@
+@@ Settings for boxes.sh
+@define LIBRARY_NAME boxes
+@define DESCRIPTION A library of unicode box drawing characters.
+@define LONG_DESCRIPTION # See the following resources:
+@append LONG_DESCRIPTION # https://www.compart.com/en/unicode/block/U+2500
+@append LONG_DESCRIPTION # https://en.wikipedia.org/wiki/Box-drawing_characters
+@@define LIBRARIES "attr.sh"
+@@define HEADER_FILE header_@LIBRARY_NAME@.sh
+@@define RAW_FILE raw_@LIBRARY_NAME@.sh
+@@define OUTPUT_FILE new/@LIBRARY_NAME@.sh
+@@define FOOTER_FILE footer_@LIBRARY_NAME@.sh
+@@ Build the files.
+@include template.m1
