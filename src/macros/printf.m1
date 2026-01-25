@@ -4,10 +4,10 @@
 @define LONG_DESCRIPTION # This is really only an example.
 @append LONG_DESCRIPTION # Adapt to your needs.
 @define LIBRARIES "attr.sh" "boxes.sh" "color.sh" "cursor.sh"
-@@define HEADER_FILE header_@LIBRARY_NAME@.sh
+@@define HEADER_FILE @LIBRARY_NAME@.sh
 @@define RAW_FILE raw_@LIBRARY_NAME@.sh
 @@define OUTPUT_FILE new/@LIBRARY_NAME@.sh
-@define FOOTER_FILE footer_@LIBRARY_NAME@.sh
+@define FOOTER_FILE @LIBRARY_NAME@.sh
 @@
 @@ Special variables for the stadalone file.
 @define HAS_STANDLONE 1
@@ -17,7 +17,7 @@
 @append STANDALONE_LIBRARIES @include shortcuts_cursor.sh
 @@
 @@ Build the raw file.
-@include raw_printf.m1
+@include macros/raw_printf.m1
 @@
 @@ Build the files.
-@include template.m1
+@include macros/template.m1

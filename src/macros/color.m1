@@ -3,9 +3,9 @@
 @define DESCRIPTION A library of useful code for working with terminal colors.
 @define LONG_DESCRIPTION # See 'man 5 terminfo' for more information.
 @@define LIBRARIES "attr.sh"
-@@define HEADER_FILE header_@LIBRARY_NAME@.sh
+@@define HEADER_FILE @LIBRARY_NAME@.sh
 @@define RAW_FILE raw_@LIBRARY_NAME@.sh
 @@define OUTPUT_FILE new/@LIBRARY_NAME@.sh
-@@define FOOTER_FILE footer_@LIBRARY_NAME@.sh
+@@define FOOTER_FILE @LIBRARY_NAME@.sh
 @@ Build the files.
-@include template.m1
+@include macros/template.m1

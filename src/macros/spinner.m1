@@ -2,11 +2,11 @@
 @define LIBRARY_NAME spinner
 @define DESCRIPTION A simple spinner using Unicode characters.
 @define LONG_DESCRIPTION # See 'man 5 terminfo' for more information.
-@@append LONG_DESCRIPTION 
+@@append LONG_DESCRIPTION
 @define LIBRARIES "attr.sh" "cursor.sh"
-@@define HEADER_FILE header_@LIBRARY_NAME@.sh
+@@define HEADER_FILE @LIBRARY_NAME@.sh
 @@define RAW_FILE raw_@LIBRARY_NAME@.sh
 @@define OUTPUT_FILE new/@LIBRARY_NAME@.sh
-@@define FOOTER_FILE footer_@LIBRARY_NAME@.sh
+@@define FOOTER_FILE @LIBRARY_NAME@.sh
 @@ Build the files.
-@include template.m1
+@include macros/template.m1

@@ -29,8 +29,8 @@ term::find_awk(){
 build_file(){
     local library="${1}"
     local file_new="new/${library}.sh"
-    ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- -DNEW_FILE=1 "${library}.m1"
-    ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- -DSTANDLONE=1 "${library}.m1"
+    ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- -DNEW_FILE=1 "macros/${library}.m1"
+    ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- -DSTANDLONE=1 "macros/${library}.m1"
     chmod +x "${file_new}"
 
     # Compare the old and new files.
@@ -53,7 +53,7 @@ create_files(){
 
 get_file_descr(){
     local library="${1}"
-    ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- -DPRINT_DESCR=1 "${library}.m1"
+    ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- -DPRINT_DESCR=1 "macros/${library}.m1"
 }
 
 # Print some help text.
