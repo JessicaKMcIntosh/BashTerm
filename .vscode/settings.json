@@ -56,5 +56,8 @@
     "[makefile]": {
         "editor.insertSpaces": false,
         "editor.tabSize": 8
+    },
+    "material-icon-theme.files.associations": {
+        "*.m1": "Command"
     }
 }
