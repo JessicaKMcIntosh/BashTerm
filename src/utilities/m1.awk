@@ -30,6 +30,7 @@
 #   @stderr stuff           Send diagnostics to standard error.
 #   @undefine varname       Removes the variable.
 #   @output filename        Send all further output to filename.
+#   @system COMMAND         Execute a system command.
 #                           Use - to reset to STDOUT.
 #   @exit                   Stop processing and exit immediately.
 #   @echo value             Explicitly echo the value.
@@ -100,6 +101,8 @@ function dofile(fname,  savefile, savebuffer, newstring) {
             doprint(dosubs(substr($0, 7)))
         } else if (/^@exit/) {
             exit(0)
+        } else if (/^@system[ \t]/) {
+            system(dosubs(substr($0, 9)))
         } else {
             newstring = dosubs($0)
             if ($0 == newstring || index(newstring, "@") == 0)
