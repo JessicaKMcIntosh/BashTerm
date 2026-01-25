@@ -182,6 +182,11 @@ Think of this as a little bonus.
 It is just functions to print the various escape codes.
 This is more a suggestion instead of something to use directly.
 
+## Stadalone Files
+
+The files in the directory `standalone` have their libraries baked in.
+These files can be used completely independently of the rest of the library.
+
 ## Utilities
 
 ### `demo.sh` - Demonstrate the Library

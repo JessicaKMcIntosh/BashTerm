@@ -9,6 +9,13 @@
 @@define OUTPUT_FILE new/@LIBRARY_NAME@.sh
 @define FOOTER_FILE footer_@LIBRARY_NAME@.sh
 @@
+@@ Special variables for the stadalone file.
+@define HAS_STANDLONE 1
+@define STANDALONE_LIBRARIES @include shortcuts_attr.sh
+@append STANDALONE_LIBRARIES @include raw_boxes.sh
+@append STANDALONE_LIBRARIES @include shortcuts_color.sh
+@append STANDALONE_LIBRARIES @include shortcuts_cursor.sh
+@@
 @@ Build the raw file.
 @include raw_printf.m1
 @@
