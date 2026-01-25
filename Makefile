@@ -12,8 +12,6 @@ SHELL=/bin/bash
 .PHONY: all clean demo help test
 
 help: # Print all available options.
-	@echo "Please specify the target:"
-	@echo ""
 	@awk -f src/utilities/make_help.awk Makefile
 
 all: # Build all files.
@@ -27,3 +25,4 @@ demo: # Run the BashTerm Demo.
 
 test: # Run the tests.
 	@./run_tests.sh
+tests: test

@@ -7,9 +7,12 @@
 # Print help information for the Makefile.
 
 BEGIN {
+    printf "Please specify the target:\n"
+    printf "\n"
     printf " %-10s | %s\n", "Target", "Description"
     print "------------+------------------------------"
 }
+
 /: #/ {
     command=substr($0, 1, (index($0, ":") - 1))
     description=$0
