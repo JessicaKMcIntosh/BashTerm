@@ -369,6 +369,10 @@ I browsed through them to get some ideas.
 * <https://github.com/Silejonu/bash_loading_animations> \
   **Ready-to-use loading animations in ASCII and UTF-8 for easy integration into your Bash scripts.**
 
+* <https://github.com/bpkg/term> \
+  **Terminal fun written in bash inspired by clibs/term** \
+  Similar idea to this project with an interesting iterface.
+
 ## LICENSE
 
 [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/)
