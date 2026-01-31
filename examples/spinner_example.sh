@@ -8,9 +8,13 @@
 
 # Example of using the spinner library.
 
-# This requires bash version 4.
-if ((BASH_VERSINFO[0] < 4)); then
-    echo "This script requires Bash 4 or later."
+# This requires bash version 4.4 or later.
+if [ -z "$BASH_VERSION" ]; then
+    echo "Error: Bash version 4.4 or higher is required."
+    exit 1
+fi
+if ((BASH_VERSINFO[0] < 4)) || ((BASH_VERSINFO[0] == 4 && BASH_VERSINFO[1] < 4)); then
+    echo "Error: Bash version 4.4 or higher is required."
     echo "Current version: ${BASH_VERSION}"
     exit 1
 fi
@@ -48,13 +52,15 @@ SPINNER_MENU=(
     "||Lines (${TERM_SPIN_FRAMES_LINES[*]})"
     "||ASCII (${TERM_SPIN_FRAMES_ASCII[*]})"
     "0|0|Exit"
-    "+|100|Faster frame rate (+0.1s)"
-    "-|101|Slower frame rate (-0.1s)"
+    "+|100|Slower frame rate (+0.1s delay)"
+    "=|100|~"
+    "-|101|Faster frame rate (-0.1s delay)"
     "q|0|~" # Secret key to quit.
     "x|0|~" # Another secret key to quit.
     "~||"   # Replaced later with the current frame rate.
 )
 declare SPINNER_OPTIONS="clear|promptSelect the frame set [~]: "
+declare SPINNER_SPEED=1 # The fractional part of $TERM_SPIN_SLEEP.
 
 # Make sure the cursor returns.
 # Otherwise if Ctrl-C is pressed while spinning
@@ -64,11 +70,6 @@ reset_cursor() {
     exit
 }
 trap reset_cursor EXIT
-
-# Simple floating point math.
-float_math() {
-    echo "${@}" | awk '$1=="+" {print $2 + $3;} $1=="-" {print $2 - $3;}'
-}
 
 # Run the example.
 while true; do
@@ -86,12 +87,15 @@ while true; do
         5) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_ARROWS[@]}") ;;
         6) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_LINES[@]}") ;;
         7) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_ASCII[@]}") ;;
-        100 | =)
-            TERM_SPIN_SLEEP="$(float_math "+" "${TERM_SPIN_SLEEP}" "0.1")"
+        100)
+            ((SPINNER_SPEED++))
+            TERM_SPIN_SLEEP="0.${SPINNER_SPEED}"
             continue
             ;;
         101)
-            TERM_SPIN_SLEEP="$(float_math "-" "${TERM_SPIN_SLEEP}" "0.1")"
+            ((SPINNER_SPEED--))
+            ((SPINNER_SPEED < 0)) && SPINNER_SPEED=0
+            TERM_SPIN_SLEEP="0.${SPINNER_SPEED}"
             continue
             ;;
         0 | "" | " ") exit ;;
