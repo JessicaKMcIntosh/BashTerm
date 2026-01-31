@@ -7,6 +7,8 @@
 
 # Example of using the boxes library.
 
+@include check_version.sh
+
 @define LIBRARY_LIST @EXAMPLE_LIBRARIES@
 @include load_libraries.sh
 

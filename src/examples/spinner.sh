@@ -8,6 +8,8 @@
 
 # Example of using the spinner library.
 
+@include check_version.sh
+
 @define LIBRARY_LIST @EXAMPLE_LIBRARIES@
 @include load_libraries.sh
 

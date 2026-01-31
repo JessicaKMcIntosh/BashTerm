@@ -10,12 +10,7 @@
 
 # The logging internals are abused in a few places.
 
-# This requires bash version 4.
-if [[ ${BASH_VERSINFO[0]} -lt "4" ]]; then
-    echo "This script requires Bash 4 or later."
-    echo "Current version: ${BASH_VERSION}"
-    exit 1
-fi
+@include check_version.sh
 
 @define LIBRARY_LIST @EXAMPLE_LIBRARIES@
 @include load_libraries.sh

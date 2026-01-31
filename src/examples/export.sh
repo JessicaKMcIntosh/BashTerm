@@ -14,6 +14,8 @@
 # Usage:
 # TERM=xterm ./export.sh > env_xterm.sh
 
+@include check_version.sh
+
 @define LIBRARY_LIST @EXAMPLE_LIBRARIES@
 @include load_libraries.sh
 
