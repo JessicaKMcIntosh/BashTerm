@@ -9,11 +9,11 @@
 
 # Load the libraries.
 declare -a library_list=("function.sh")
-find_library(){
+find_library() {
     local library="${1}"
     local file_name
-    for file_name in {../,./}${library} ; do
-        if [[ -f  "${file_name}" ]] ; then
+    for file_name in {../,./}${library}; do
+        if [[ -f ${file_name} ]]; then
             echo "${file_name}"
             exit
         fi
@@ -46,7 +46,7 @@ for color in "${_TERM_COLORS[@]}"; do
     echo -n "$(term::fg "${color}")$(term::bold)Bold$(term::reset) "
     echo -n "$(term::fg "${color}")$(term::underline)Underline$(term::reset) "
     echo -n "$(term::bg "${color}")Background$(term::orig) "
-    echo    "Normal text"
+    echo "Normal text"
 done
 echo ""
 
@@ -88,4 +88,3 @@ echo -n "    "
 echo -n "$(term::box_d_bl)$(term::box_d_bc)$(term::box_d_lh)$(term::box_d_br)"
 echo -n "    "
 echo "$(term::box_r_bl)$(term::box_r_bc)$(term::box_r_lh)$(term::box_r_br)"
-

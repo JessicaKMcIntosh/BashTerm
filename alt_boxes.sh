@@ -14,7 +14,7 @@
 # This file has the name abbreviated to just the first letter of the name.
 
 # This requires bash version 4.
-if __ "${BASH_VERSINFO_0}" -lt "4"  ; then
+if ((BASH_VERSINFO[0] < 4)); then
     echo "This script requires Bash 4 or later."
     echo "Current version: ${BASH_VERSION}"
     exit 1
@@ -23,7 +23,7 @@ fi
 # Only load the library once.
 declare -A _TERM_LOADED # Track loaded files.
 declare _TERM_FILE_NAME="${BASH_SOURCE[0]##*/}"
-if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]] ; then
+if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]]; then
     [[ -v TERM_VERBOSE ]] && echo "Already loaded '${_TERM_FILE_NAME}'."
     return 0
 fi

@@ -18,7 +18,7 @@
 # Edit the files in src/ then run the make.sh script.
 
 # This requires bash version 4.
-if [[ "${BASH_VERSINFO[0]}" -lt "4" ]] ; then
+if ((BASH_VERSINFO[0] < 4)); then
     echo "This script requires Bash 4 or later."
     echo "Current version: ${BASH_VERSION}"
     exit 1
@@ -27,7 +27,7 @@ fi
 # Only load the library once.
 declare -A _TERM_LOADED # Track loaded files.
 declare _TERM_FILE_NAME="${BASH_SOURCE[0]##*/}"
-if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]] ; then
+if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]]; then
     [[ -v TERM_VERBOSE ]] && echo "Already loaded '${_TERM_FILE_NAME}'."
     return 0
 fi
@@ -37,11 +37,11 @@ unset _TERM_FILE_NAME
 
 # Load the libraries.
 declare -a library_list=("attr.sh" "cursor.sh")
-find_library(){
+find_library() {
     local library="${1}"
     local file_name
-    for file_name in {../,./}${library} ; do
-        if [[ -f  "${file_name}" ]] ; then
+    for file_name in {../,./}${library}; do
+        if [[ -f ${file_name} ]]; then
             echo "${file_name}"
             exit
         fi
@@ -156,7 +156,7 @@ TERM_SPIN_FRAMES_ASCII=(
     "|"
     "/"
     "-"
-    "\\"
+    $'\\'
 )
 
 # State variables used internally.
@@ -171,8 +171,8 @@ declare -g _TERM_SPIN_PID
 
 # Initialize the spinner state variables.
 # If an array of frames is not passed then default to TERM_SPIN_FRAMES_SIX.
-term::spin_init(){
-    if [[ "$#" -gt 0 ]] ; then
+term::spin_init() {
+    if (($# > 0)); then
         _TERM_SPIN_FRAMES=("${@}")
     else
         _TERM_SPIN_FRAMES=("${TERM_SPIN_FRAMES_SIX[@]}")
@@ -184,7 +184,7 @@ term::spin_init(){
 # Print the next spinner character.
 # Moves the cursor left after printing the character.
 # You would call this for each step to make the spinner advance.
-term::spin_step(){
+term::spin_step() {
     echo -n "${_TERM_SPIN_FRAMES[${_TERM_SPIN_NEXT_FRAME}]}${TERM_LEFT}"
     # Doing the math this way eliminates pauses in the spinner.
     # Make sure the exact same work is done for each loop for consistent timing.
@@ -193,12 +193,12 @@ term::spin_step(){
 
 # Spin until a key is pressed.
 # Modify this to suit your needs.
-term::spin_spin(){
+term::spin_spin() {
     echo -n "${TERM_HIDE}"
     term::spin_init "${@}"
     while true; do
         term::spin_step
-        if read -r -n 1 -s -t "${TERM_SPIN_SLEEP}" ; then
+        if read -r -n 1 -s -t "${TERM_SPIN_SLEEP}"; then
             break
         fi
     done
@@ -206,8 +206,8 @@ term::spin_spin(){
 }
 
 # If called directly then suggest the example.
-if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
-    declare example_file="${0##*/}"
+if [[ ${0} == "${BASH_SOURCE[0]}" ]]; then
+    declare example_file=${0##*/}
     example_file="${example_file%.*}"
     echo "For an example try:"
     printf "./examples/%s_example.sh\n" "${example_file}"

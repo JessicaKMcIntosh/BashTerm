@@ -1,20 +1,20 @@
 # Configuration.
 declare -g _TERM_AWK_COMMAND="awk"
-term::find_awk(){
+term::find_awk() {
     local awk_command
     # mawk is generally faster than gawk.
-    for awk_command in {m,}awk gawk ; do
-        if command -v "${awk_command}" > /dev/null ; then
+    for awk_command in {m,}awk gawk; do
+        if command -v "${awk_command}" > /dev/null; then
             declare -g _TERM_AWK_COMMAND="${awk_command}"
             break
         fi
     done
 }
-term::find_awk
 #_TERM_AWK_COMMAND="gawk --lint" # For development.
+term::find_awk
 
 # Print to STDOUT.
-term::printf(){
+term::printf() {
     printf "%s\n" "${@}" | $_TERM_AWK_COMMAND '
 #!/usr/bin/env -S awk -f
 
@@ -326,7 +326,7 @@ function string_to_decimal(string, base,    position, number) {
 }
 
 # Print to a variable.
-term::printf-v(){
+term::printf-v() {
     local -n variable="${1}"
     shift
     # shellcheck disable=SC2034

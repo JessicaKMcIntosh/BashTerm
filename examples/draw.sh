@@ -9,13 +9,13 @@
 
 # Load the library.
 declare -a library_list=("boxes.sh")
-find_library(){
+find_library() {
     local library="${1}"
-    for file_name in {../,./}${library} ; do
-        if [[ -f  "${file_name}" ]] ; then
+    for file_name in {../,./}${library}; do
+        if [[ -f ${file_name} ]]; then
             echo "${file_name}"
         fi
-done
+    done
 }
 #TERM_VERBOSE=0 # Uncomment for verbose library loading.
 declare _TERM_LOAD_LIBRARY

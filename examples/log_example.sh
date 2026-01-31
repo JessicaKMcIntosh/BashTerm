@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck source=attr.sh
+# shellcheck source=../attr.sh
 
 # BashTerm by Jessica K McIntosh is marked CC0 1.0.
 # To view a copy of this mark, visit:
@@ -10,7 +10,7 @@
 # The logging internals are abused in a few places.
 
 # This requires bash version 4.
-if [[ "${BASH_VERSINFO[0]}" -lt "4" ]] ; then
+if [[ ${BASH_VERSINFO[0]} -lt "4" ]]; then
     echo "This script requires Bash 4 or later."
     echo "Current version: ${BASH_VERSION}"
     exit 1
@@ -18,11 +18,11 @@ fi
 
 # Load the libraries.
 declare -a library_list=("log.sh" "menu.sh")
-find_library(){
+find_library() {
     local library="${1}"
     local file_name
-    for file_name in {../,./}${library} ; do
-        if [[ -f  "${file_name}" ]] ; then
+    for file_name in {../,./}${library}; do
+        if [[ -f ${file_name} ]]; then
             echo "${file_name}"
             exit
         fi
@@ -53,7 +53,7 @@ LOG_MENU=(
     # Common keys to exit the menu.
     "0|0|~"
     "x|0|~"
-    # Replaced with the loging settings later.
+    # Replaced with the logging settings later.
     ""
     ""
     ""
@@ -93,15 +93,15 @@ MESSAGE_LIST=(
 )
 
 # Select the next date format.
-next_date_format(){
-    DATE_FORMAT_CURRENT=$(( (DATE_FORMAT_CURRENT + 1) % ${#DATE_FORMAT_LIST[@]}))
+next_date_format() {
+    DATE_FORMAT_CURRENT=$(((DATE_FORMAT_CURRENT + 1) % ${#DATE_FORMAT_LIST[@]}))
     _TERM_LOG_DATE_FORMAT="${DATE_FORMAT_LIST[DATE_FORMAT_CURRENT]}"
 }
 
 # Select the next file.
-next_file(){
-    FILE_CURRENT=$(( (FILE_CURRENT + 1) % ${#FILE_LIST[@]}))
-    if [[ -z "${FILE_LIST[FILE_CURRENT]}" ]] ; then
+next_file() {
+    FILE_CURRENT=$(((FILE_CURRENT + 1) % ${#FILE_LIST[@]}))
+    if [[ -z ${FILE_LIST[FILE_CURRENT]} ]]; then
         term::log_file "-"
     else
         term::log_file "${FILE_LIST[FILE_CURRENT]}"
@@ -109,25 +109,25 @@ next_file(){
 }
 
 # Select the next log level.
-next_log_level(){
+next_log_level() {
     local log_level
 
     log_level="$(term::log_level)"
-    log_level=$(( (log_level + 1) % ${#_TERM_LOG_LEVELS[@]}))
+    log_level=$(((log_level + 1) % ${#_TERM_LOG_LEVELS[@]}))
     term::log_level "${log_level}"
 }
 
 # Select the next message.
-next_message(){
-    MESSAGE_CURRENT=$(( (MESSAGE_CURRENT + 1) % ${#MESSAGE_LIST[@]}))
+next_message() {
+    MESSAGE_CURRENT=$(((MESSAGE_CURRENT + 1) % ${#MESSAGE_LIST[@]}))
 }
 
 # Wait for a key press.
-wait_key(){
+wait_key() {
     read -rsn1 -p "Press any key to continue..."
 }
 # A rather contrived example. :shrug:
-log_menu(){
+log_menu() {
     local rc
     local options="clear"
 
@@ -141,14 +141,30 @@ log_menu(){
 
         # Process the result.
         case "${rc}" in
-            100) next_message; term::log "Debug" "${MESSAGE_LIST[MESSAGE_CURRENT]}";wait_key;;
-            101) next_message; term::log "Info"  "${MESSAGE_LIST[MESSAGE_CURRENT]}";wait_key;;
-            102) next_message; term::log "Warn"  "${MESSAGE_LIST[MESSAGE_CURRENT]}";wait_key;;
-            103) next_message; term::log "Error" "${MESSAGE_LIST[MESSAGE_CURRENT]}";wait_key;;
-            110) next_log_level;;
-            111) next_file;;
-            112) next_date_format;;
-            0) exit;;
+            100)
+                next_message
+                term::log "Debug" "${MESSAGE_LIST[MESSAGE_CURRENT]}"
+                wait_key
+                ;;
+            101)
+                next_message
+                term::log "Info" "${MESSAGE_LIST[MESSAGE_CURRENT]}"
+                wait_key
+                ;;
+            102)
+                next_message
+                term::log "Warn" "${MESSAGE_LIST[MESSAGE_CURRENT]}"
+                wait_key
+                ;;
+            103)
+                next_message
+                term::log "Error" "${MESSAGE_LIST[MESSAGE_CURRENT]}"
+                wait_key
+                ;;
+            110) next_log_level ;;
+            111) next_file ;;
+            112) next_date_format ;;
+            0) exit ;;
         esac
     done
 }

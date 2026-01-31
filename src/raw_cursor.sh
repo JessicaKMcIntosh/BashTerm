@@ -1,5 +1,5 @@
 # These are the main variables for the Library.
-declare -A TERM_CURSOR  # Stores terminal cursor escape sequences.
+declare -A TERM_CURSOR # Stores terminal cursor escape sequences.
 
 # Temporary variables that are unset at the end of the script.
 declare _TERM_TEMP_ATTR
@@ -7,30 +7,30 @@ declare _TERM_TEMP_CODE
 
 # Typical terminal cursor attributes.
 # Descriptions and names are from 'man 5 terminfo'.
+# [insert_character]="ich1"   # insert character (Rarely present.)
+# [to_ll]="ll"                # last line, first column (if no cup) (Rarely present.)
 declare -A _TERM_CURSOR_ATTRIBUTES
 _TERM_CURSOR_ATTRIBUTES=(
-    [clr_bol]="el1"             # Clear to beginning of line
-    [clr_eol]="el"              # clear to end of line
-    [clr_eos]="ed"              # clear to end of screen
-    [delete_character]="dch1"   # delete character
-    [delete_line]="dl1"         # delete line
-    [down]="cud1"               # down one line
-    [hide]="civis"              # make cursor invisible
-    [home]="home"               # home cursor (if no cup)
-    # [insert_character]="ich1"   # insert character (Rarely present.)
-    [insert_line]="il1"         # insert line
-    [left]="cub1"               # move left one space
-    [normal]="cnorm"            # make cursor appear normal (undo civis/cvvis)
-    [restore]="rc"              # restore cursor to position of last
-    [right]="cuf1"              # non-destructive space (move right one space)
-    [save]="sc"                 # save current cursor
-    [show]="cvvis"              # make cursor very visible
-    # [to_ll]="ll"                # last line, first column (if no cup) (Rarely present.)
-    [up]="cuu1"                 # up one line
-    [visible]="cvvis"           # make cursor very visible
+    [clr_bol]="el1"           # Clear to beginning of line
+    [clr_eol]="el"            # clear to end of line
+    [clr_eos]="ed"            # clear to end of screen
+    [delete_character]="dch1" # delete character
+    [delete_line]="dl1"       # delete line
+    [down]="cud1"             # down one line
+    [hide]="civis"            # make cursor invisible
+    [home]="home"             # home cursor (if no cup)
+    [insert_line]="il1"       # insert line
+    [left]="cub1"             # move left one space
+    [normal]="cnorm"          # make cursor appear normal (undo civis/cvvis)
+    [restore]="rc"            # restore cursor to position of last
+    [right]="cuf1"            # non-destructive space (move right one space)
+    [save]="sc"               # save current cursor
+    [show]="cvvis"            # make cursor very visible
+    [up]="cuu1"               # up one line
+    [visible]="cvvis"         # make cursor very visible
 )
 for _TERM_TEMP_ATTR in "${!_TERM_CURSOR_ATTRIBUTES[@]}"; do
-    if _TERM_TEMP_CODE="$(tput "${_TERM_CURSOR_ATTRIBUTES[$_TERM_TEMP_ATTR]}")" ; then
+    if _TERM_TEMP_CODE="$(tput "${_TERM_CURSOR_ATTRIBUTES[$_TERM_TEMP_ATTR]}")"; then
         TERM_CURSOR[$_TERM_TEMP_ATTR]="${_TERM_TEMP_CODE}"
         TERM_CURSOR[${_TERM_CURSOR_ATTRIBUTES[$_TERM_TEMP_ATTR]}]="${_TERM_TEMP_CODE}"
     else
@@ -75,12 +75,12 @@ unset _TERM_TEMP_CODE
 # Move the cursor to an row and column position.
 # Can accept row and column as separate values or as
 # as a single "ROW;COLUMN" value as returned by term::pos().
-term::move(){
+term::move() {
     local row="${1-0}"
     local col="${2-0}"
 
     # If the row contains a ; and the column is 0 just use the row value.
-    if [[ "${row}" =~ ";" && "${col}" -eq 0 ]] ; then
+    if [[ ${row} =~ ";" && ${col} -eq 0 ]]; then
         tput cup "${row}"
     else
         tput cup "${row}" "${col}"
@@ -88,7 +88,7 @@ term::move(){
 }
 
 # Report the cursor position. row;col
-term::pos(){
+term::pos() {
     local position
     # shellcheck disable=SC2162 # There are no backslashes to mangle.
     read -sdR -p "$(tput u7)" position
@@ -97,7 +97,7 @@ term::pos(){
 }
 
 # Report the cursor row.
-term::row(){
+term::row() {
     local column
     local row
     # shellcheck disable=SC2162 # There are no backslashes to mangle.
@@ -107,7 +107,7 @@ term::row(){
 }
 
 # Report the cursor column.
-term::col(){
+term::col() {
     local column
     local row
     # shellcheck disable=SC2162 # There are no backslashes to mangle.
@@ -116,14 +116,14 @@ term::col(){
 }
 
 # Report the number of columns the terminal has.
-term::cols(){
+term::cols() {
     local cols
     cols="$(tput cols)"
     echo "${cols}"
 }
 
 # Report the number of lines the terminal has.
-term::lines(){
+term::lines() {
     local lines
     lines="$(tput lines)"
     echo "${lines}"

@@ -10,11 +10,11 @@
 
 # Load the libraries.
 declare -a library_list=("attr.sh" "color.sh")
-find_library(){
+find_library() {
     local library="${1}"
     local file_name
-    for file_name in {../,./}${library} ; do
-        if [[ -f  "${file_name}" ]] ; then
+    for file_name in {../,./}${library}; do
+        if [[ -f ${file_name} ]]; then
             echo "${file_name}"
             exit
         fi
@@ -36,11 +36,11 @@ unset _TERM_LOAD_LIBRARY
 # I only looked at the output, I didn't bother reading the code.
 # This table has an added column for the default foreground color.
 
-color_table(){
-    local bright_color      # Bright version of the color.
-    local color_name        # Name of the line color.
-    local color             # Iterator.
-    declare -a TEST_COLORS  # Colors to test.
+color_table() {
+    local bright_color     # Bright version of the color.
+    local color_name       # Name of the line color.
+    local color            # Iterator.
+    declare -a TEST_COLORS # Colors to test.
     TEST_COLORS=(
         "black"
         "red"
@@ -61,7 +61,7 @@ color_table(){
     echo ""
 
     # Draw a line for each color, normal then bright.
-    color_table_line  "DEFAULT" ""
+    color_table_line "DEFAULT" ""
     for color in "${!TEST_COLORS[@]}"; do
         # Normal background color.
         color_name="${TEST_COLORS["${color}"]}"
@@ -88,12 +88,12 @@ color_table(){
 
 # Draw a line for each background color in the color table.
 # The background color escape code is passed in to allow the default background.
-color_table_line(){
+color_table_line() {
     local color_name="${1}" # The name of the color.
     local bg_color="${2}"   # The background color escape code.
     local color             # Iterator.
     local bright_color      # Bright version of the color.
-    printf "%-9s"  "${color_name}"
+    printf "%-9s" "${color_name}"
     color_table_attribute "${bg_color}" "" "NOT_PRESENT" " "
     color_table_cell "${bg_color}" "" ""
     for color in "${!TEST_COLORS[@]}"; do
@@ -106,7 +106,7 @@ color_table_line(){
 # Draw an individual cell in the color table.
 # The background and foreground color escape codes is passed in to allow the
 # default background and foreground.
-color_table_cell(){
+color_table_cell() {
     local bg_color="${1}"
     local fg_color="${2}"
     local fg_color_bright="${3}"
@@ -118,7 +118,7 @@ color_table_cell(){
     color_table_attribute "${bg_color}" "${fg_color}" "underline" "u"
 
     # Bright foreground color.
-    if [[ -n "${fg_color_bright}" ]] ; then
+    if [[ -n ${fg_color_bright} ]]; then
         echo -n "${bg_color}${fg_color_bright}N"
         color_table_attribute "${bg_color}" "${fg_color_bright}" "bold" "B"
         color_table_attribute "${bg_color}" "${fg_color_bright}" "dim" "D"
@@ -130,7 +130,7 @@ color_table_cell(){
 }
 
 # Prints out text with the provided attribute and colors.
-color_table_attribute(){
+color_table_attribute() {
     local bg_color="${1}"
     local fg_color="${2}"
     local attr="${3}"

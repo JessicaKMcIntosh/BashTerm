@@ -1,4 +1,4 @@
-_TERM_CREATE_SHORTCUTS_COLOR(){
+_TERM_CREATE_SHORTCUTS_COLOR() {
     local color
 
     # Terminal colors.
@@ -29,4 +29,3 @@ _TERM_CREATE_SHORTCUTS_COLOR(){
     done
 }
 _TERM_CREATE_SHORTCUTS_COLOR
-

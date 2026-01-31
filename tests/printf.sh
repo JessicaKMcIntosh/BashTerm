@@ -14,11 +14,11 @@ export TERM="xterm"
 
 # Load the libraries.
 declare -a library_list=("printf.sh")
-find_library(){
+find_library() {
     local library="${1}"
     local file_name
-    for file_name in {../,./}${library} ; do
-        if [[ -f  "${file_name}" ]] ; then
+    for file_name in {../,./}${library}; do
+        if [[ -f ${file_name} ]]; then
             echo "${file_name}"
             exit
         fi
@@ -27,6 +27,7 @@ find_library(){
     exit 1
 }
 declare _TERM_LOAD_LIBRARY
+# shellcheck disable=SC2167 # Go home Shellcheck, you are drunk.
 for _TERM_LOAD_LIBRARY in "${library_list[@]}"; do
     source "$(find_library "${_TERM_LOAD_LIBRARY}")" || exit 1
 done
@@ -36,7 +37,7 @@ unset _TERM_LOAD_LIBRARY
 export TEST_TITLE="Test 'printf.sh'."
 
 # Any setup that may need to be performed.
-test_setup(){
+test_setup() {
     test_attr_bold=$'\E[1m'
     test_attr_clear=$'\E[H\E[2J\E[3J'
     test_attr_cnorm=$'\E[?12l\E[?25h'
@@ -92,7 +93,7 @@ test_setup(){
 }
 
 # Any cleanup that may need to be performed.
-test_cleanup(){
+test_cleanup() {
     unset test_attr_bold
     unset test_attr_clear
     unset test_attr_dim
@@ -145,15 +146,15 @@ test_cleanup(){
 }
 
 # Test basic functionality.
-test::basic(){
-    assert_run "term::printf success" "0" "success" "Basic functionality teset."
+test::basic() {
+    assert_run "term::printf success" "0" "success" "Basic functionality test."
     term::printf-v "_TEST_TEMP" "success"
     assert_exists "_TEST_TEMP" "success" "term::printf-v did not set the variable '_TEST_TEMP' correctly."
     unset _TEST_TEMP
 }
 
 # Test direct calls to tput.
-test::tput(){
+test::tput() {
     assert_run 'term::printf "%{clear}"' "0" "${test_attr_clear}" "Check printf tput for 'clear'."
     assert_run 'term::printf "%{bold}"' "0" "${test_attr_bold}" "Check printf tput for 'bold'."
     assert_run 'term::printf "%{dim}"' "0" "${test_attr_dim}" "Check printf tput for 'dim'."
@@ -172,7 +173,7 @@ test::tput(){
 }
 
 # Test looking up attributes in the environment.
-test::environment(){
+test::environment() {
     assert_run 'term::printf "%(bold)"' "0" "${test_attr_bold}" "Check printf environment lookup for bold."
     assert_run 'term::printf "%(clear)"' "0" "${test_attr_clear}" "Check printf environment lookup for clear."
     assert_run 'term::printf "%(dim)"' "0" "${test_attr_dim}" "Check printf environment lookup for dim."
@@ -209,7 +210,7 @@ test::backslash(){
 }
 
 # Test colors.
-test::color(){
+test::color() {
     assert_run 'term::printf "%(black)"' "0" "${test_color_fg_black}" "Check the foreground color black."
     assert_run 'term::printf "%(red)"' "0" "${test_color_fg_red}" "Check the foreground color red."
     assert_run 'term::printf "%(green)"' "0" "${test_color_fg_green}" "Check the foreground color green."
@@ -246,7 +247,7 @@ test::color(){
 }
 
 # Test short codes..
-test::short_codes(){
+test::short_codes() {
     assert_run 'term::printf "%[-]"' "0" "${test_attr_sgr0}" "Check the short code (-) Reset attributes."
     assert_run 'term::printf "%[d]"' "0" "${test_attr_dim}" "Check the short code (d) Dim mode."
     assert_run 'term::printf "%[h]"' "0" "${test_attr_hide}" "Check the short code (h) Hide the cursor."
@@ -284,4 +285,3 @@ test::short_codes(){
     assert_run 'term::printf "%[C]"' "0" "${test_color_bg_cyan}" "Check the background color cyan."
     assert_run 'term::printf "%[W]"' "0" "${test_color_bg_white}" "Check the background color white."
 }
-

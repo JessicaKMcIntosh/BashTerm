@@ -12,6 +12,7 @@
         "cnorm",
         "Consolas",
         "cvvis",
+        "ERRNO",
         "failglob",
         "getline",
         "hexdump",
@@ -23,6 +24,7 @@
         "rmir",
         "rmso",
         "rmul",
+        "RSTART",
         "setab",
         "setaf",
         "shellcheck",
@@ -53,6 +55,9 @@
     "markdown.extension.toc.unorderedList.marker": "*",
     "shellcheck.customArgs": ["-x"],
     "shellcheck.run": "onSave", // also: "onType" // Be less annoying.
+    "shellcheck.ignorePatterns": {
+    "src/**": true
+    },
     "[makefile]": {
         "editor.insertSpaces": false,
         "editor.tabSize": 8

@@ -10,9 +10,9 @@ declare _TERM_LOG_FORMAT="%L%F%D: %M\n"
 # For these %s is replaced with the color escape code, the value,
 # then the attribute and color reset code.
 # Like this: printf "[%s%-5S%s] " $COLOR_CODE $LOG_LEVEL $COLOR_RESET
-declare _TERM_LOG_FORMAT_DATE="(%s%s%s)"        # %D in _TERM_LOG_FORMAT
-declare _TERM_LOG_FORMAT_FILE="<%s%s%s> "       # %F in _TERM_LOG_FORMAT
-declare _TERM_LOG_FORMAT_LEVEL="[%s%-5s%s] "    # %L in _TERM_LOG_FORMAT
+declare _TERM_LOG_FORMAT_DATE="(%s%s%s)"     # %D in _TERM_LOG_FORMAT
+declare _TERM_LOG_FORMAT_FILE="<%s%s%s> "    # %F in _TERM_LOG_FORMAT
+declare _TERM_LOG_FORMAT_LEVEL="[%s%-5s%s] " # %L in _TERM_LOG_FORMAT
 # The format string passed to the date command.
 declare _TERM_LOG_DATE_FORMAT="${TERM_LOG_DATE:-"%Y-%m-%dT%H:%M:%S"}"
 
@@ -26,7 +26,7 @@ declare _TERM_LOG_COLOR_RESET="${TERM_RESET}"
 # Eg. term::log_info
 declare _TERM_LOG_COMMAND
 declare _TERM_LOG_LOG_LEVEL
-for _TERM_LOG_LOG_LEVEL in "${!_TERM_LOG_LEVELS[@]}" ; do
+for _TERM_LOG_LOG_LEVEL in "${!_TERM_LOG_LEVELS[@]}"; do
     printf -v _TERM_LOG_COMMAND "term::log_%s() { term::log %d" "${_TERM_LOG_LEVELS[$_TERM_LOG_LOG_LEVEL],,}" "${_TERM_LOG_LOG_LEVEL}"
     # shellcheck disable=SC2016 # Duh...
     _TERM_LOG_COMMAND+=' "${@}"; }'
@@ -36,8 +36,8 @@ unset _TERM_LOG_COMMAND
 unset _TERM_LOG_TEMP
 
 # Logging function.
-term::log(){
-    if [[ "${#}" -lt "2" ]] ; then
+term::log() {
+    if (($# < 2)); then
         echo "Insufficient arguments. Usage: term::log LOG_LEVEL LOG_MESSAGE"
         return 1
     fi
@@ -49,14 +49,14 @@ term::log(){
     log_level="$(term::_log_to_number "${log_level}")"
 
     # Print the message if the log level is high enough.
-    if [[ "${log_level}" -ge "${_TERM_LOG_LEVEL}" ]] ; then
+    if ((log_level >= _TERM_LOG_LEVEL)); then
         term::_log_format "${log_level}" "${log_message}"
     fi
 }
 
 # Format the log output.
 # shellcheck disable=SC2059 # I am abusing the format strings on purpose.
-term::_log_format(){
+term::_log_format() {
     local log_level="${1}"
     local log_date=""
     local log_file=""
@@ -69,7 +69,7 @@ term::_log_format(){
     log_output="${log_output/\%D/$log_date}"
 
     # Format the file name, if present.
-    if [[ -n "${_TERM_LOG_FILE}" ]] ; then
+    if [[ -n ${_TERM_LOG_FILE} ]]; then
         printf -v log_file "${_TERM_LOG_FORMAT_FILE}" "${TERM_FG[$_TERM_LOG_COLOR_FILE]}" "${_TERM_LOG_FILE}" "${_TERM_LOG_COLOR_RESET}"
         log_output="${log_output/\%F/$log_file}"
     else
@@ -86,9 +86,9 @@ term::_log_format(){
 }
 
 # Disable color output.
-term::log_disable_color(){
+term::log_disable_color() {
     local color
-    for color in "${!_TERM_LOG_COLORS[@]}" ; do
+    for color in "${!_TERM_LOG_COLORS[@]}"; do
         # shellcheck disable=SC2004 # This isn't arithmetic.
         _TERM_LOG_COLORS[$color]=""
     done
@@ -101,11 +101,11 @@ term::log_disable_color(){
 # Set to '-' to clear the log file.
 # Call with an argument to set the log file.
 # Call without an argument to print the log file.
-term::log_file(){
-    if [[ "${#}" -ne "0" ]] ; then
+term::log_file() {
+    if (($# != 0)); then
         local log_file="${1}"
-        if [[ -n "${log_file}" ]] ; then
-            if [[ "${log_file}" == "-" ]] ; then
+        if [[ -n ${log_file} ]]; then
+            if [[ ${log_file} == "-" ]]; then
                 _TERM_LOG_FILE=""
             else
                 _TERM_LOG_FILE="${log_file}"
@@ -119,8 +119,8 @@ term::log_file(){
 # Set or print _TERM_LOG_LEVEL.
 # Call with an argument to set the log level.
 # Call without an argument to print the log level.
-term::log_level(){
-    if [[ "${#}" -ne "0" ]] ; then
+term::log_level() {
+    if (($# != 0)); then
         # Set the log level.
         local log_level="${1}"
         log_level="$(term::_log_to_number "${log_level}")"
@@ -139,24 +139,24 @@ term::log_level(){
 #   Number <= $_TERM_LOG_MAX_LEVEL  | Input
 #   String in _TERM_LOG_LEVELS      | Corresponding number
 #   String NOT in _TERM_LOG_LEVELS  | $_TERM_LOG_MAX_LEVEL
-term::_log_to_number(){
+term::_log_to_number() {
     local log_level="${1:-}"
     local item
 
     # What was passed in?
-    if [[ -z "${log_level}" ]] ; then
+    if [[ -z ${log_level} ]]; then
         # Empty string.
         log_level="${_TERM_LOG_MAX_LEVEL}"
-    elif [[ "$((log_level + 0))" == "${log_level}" ]] ; then
+    elif [[ $((log_level + 0)) == "${log_level}" ]]; then
         # A number.
-        if [[ "${log_level}" -gt "${_TERM_LOG_MAX_LEVEL}" ]] ; then
+        if [[ ${log_level} -gt ${_TERM_LOG_MAX_LEVEL} ]]; then
             # The given log level is too large.
             log_level="${_TERM_LOG_MAX_LEVEL}"
         fi
     else
         # Search for the log level by string.
-        for item in "${!_TERM_LOG_LEVELS[@]}" ; do
-            if [[ "${log_level^^}" == "${_TERM_LOG_LEVELS[$item]^^}" ]] ; then
+        for item in "${!_TERM_LOG_LEVELS[@]}"; do
+            if [[ ${log_level^^} == "${_TERM_LOG_LEVELS[$item]^^}" ]]; then
                 log_level="${item}"
                 item=""
                 break
@@ -164,7 +164,7 @@ term::_log_to_number(){
         done
 
         # Was the log level found?
-        if [[ -n "${item}" ]] ; then
+        if [[ -n ${item} ]]; then
             log_level="${_TERM_LOG_MAX_LEVEL}"
         fi
     fi

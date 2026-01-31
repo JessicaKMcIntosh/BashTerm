@@ -98,7 +98,7 @@ TERM_SPIN_FRAMES_ASCII=(
     "|"
     "/"
     "-"
-    "\\"
+    $'\\'
 )
 
 # State variables used internally.
@@ -113,8 +113,8 @@ declare -g _TERM_SPIN_PID
 
 # Initialize the spinner state variables.
 # If an array of frames is not passed then default to TERM_SPIN_FRAMES_SIX.
-term::spin_init(){
-    if [[ "$#" -gt 0 ]] ; then
+term::spin_init() {
+    if (($# > 0)); then
         _TERM_SPIN_FRAMES=("${@}")
     else
         _TERM_SPIN_FRAMES=("${TERM_SPIN_FRAMES_SIX[@]}")
@@ -126,7 +126,7 @@ term::spin_init(){
 # Print the next spinner character.
 # Moves the cursor left after printing the character.
 # You would call this for each step to make the spinner advance.
-term::spin_step(){
+term::spin_step() {
     echo -n "${_TERM_SPIN_FRAMES[${_TERM_SPIN_NEXT_FRAME}]}${TERM_LEFT}"
     # Doing the math this way eliminates pauses in the spinner.
     # Make sure the exact same work is done for each loop for consistent timing.
@@ -135,12 +135,12 @@ term::spin_step(){
 
 # Spin until a key is pressed.
 # Modify this to suit your needs.
-term::spin_spin(){
+term::spin_spin() {
     echo -n "${TERM_HIDE}"
     term::spin_init "${@}"
     while true; do
         term::spin_step
-        if read -r -n 1 -s -t "${TERM_SPIN_SLEEP}" ; then
+        if read -r -n 1 -s -t "${TERM_SPIN_SLEEP}"; then
             break
         fi
     done

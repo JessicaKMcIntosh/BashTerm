@@ -19,7 +19,7 @@
 # Edit the files in src/ then run the make.sh script.
 
 # This requires bash version 4.
-if [[ "${BASH_VERSINFO[0]}" -lt "4" ]] ; then
+if ((BASH_VERSINFO[0] < 4)); then
     echo "This script requires Bash 4 or later."
     echo "Current version: ${BASH_VERSION}"
     exit 1
@@ -28,7 +28,7 @@ fi
 # Only load the library once.
 declare -A _TERM_LOADED # Track loaded files.
 declare _TERM_FILE_NAME="${BASH_SOURCE[0]##*/}"
-if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]] ; then
+if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]]; then
     [[ -v TERM_VERBOSE ]] && echo "Already loaded '${_TERM_FILE_NAME}'."
     return 0
 fi
@@ -38,11 +38,11 @@ unset _TERM_FILE_NAME
 
 # Load the libraries.
 declare -a library_list=("attr.sh" "boxes.sh" "color.sh" "cursor.sh")
-find_library(){
+find_library() {
     local library="${1}"
     local file_name
-    for file_name in {../,./}${library} ; do
-        if [[ -f  "${file_name}" ]] ; then
+    for file_name in {../,./}${library}; do
+        if [[ -f ${file_name} ]]; then
             echo "${file_name}"
             exit
         fi
@@ -59,21 +59,21 @@ unset _TERM_LOAD_LIBRARY
 
 # Configuration.
 declare -g _TERM_AWK_COMMAND="awk"
-term::find_awk(){
+term::find_awk() {
     local awk_command
     # mawk is generally faster than gawk.
-    for awk_command in {m,}awk gawk ; do
-        if command -v "${awk_command}" > /dev/null ; then
+    for awk_command in {m,}awk gawk; do
+        if command -v "${awk_command}" > /dev/null; then
             declare -g _TERM_AWK_COMMAND="${awk_command}"
             break
         fi
     done
 }
-term::find_awk
 #_TERM_AWK_COMMAND="gawk --lint" # For development.
+term::find_awk
 
 # Print to STDOUT.
-term::printf(){
+term::printf() {
     printf "%s\n" "${@}" | $_TERM_AWK_COMMAND '
 #!/usr/bin/env -S awk -f
 
@@ -385,7 +385,7 @@ function string_to_decimal(string, base,    position, number) {
 }
 
 # Print to a variable.
-term::printf-v(){
+term::printf-v() {
     local -n variable="${1}"
     shift
     # shellcheck disable=SC2034
@@ -393,10 +393,10 @@ term::printf-v(){
 }
 
 # Print some help text.
-term::printf_usage(){
+term::printf_usage() {
     # Print any messages passed in.
-    if [[ "$#" -gt 0 ]] ; then
-        while [[ "$#" -gt 0 ]]; do
+    if (($# > 0)); then
+        while (($# > 0)); do
             echo "$1"
             shift
         done
@@ -413,31 +413,31 @@ term::printf_usage(){
 }
 
 # Act like a useful script.
-term::printf_main(){
+term::printf_main() {
     local option
 
     # Check command line args.
-    while getopts ":h" option ; do
+    while getopts ":h" option; do
         case $option in
-            h)  term::printf_usage;;
-            *)  if [ "${OPTARG}" = "-" ] ; then
-                    term::printf_usage # They probably only want help. Catches --help.
-                else
-                    term::printf_usage "Invalid option '${OPTARG}'." # Illegal option.
-                fi;;
+            h) term::printf_usage ;;
+            *) if [ "${OPTARG}" = "-" ]; then
+                term::printf_usage # They probably only want help. Catches --help.
+            else
+                term::printf_usage "Invalid option '${OPTARG}'." # Illegal option.
+            fi ;;
         esac
     done
     shift $((OPTIND - 1))
 
     # Print the message.
-    if [[ "${#}" -gt "0" ]] ; then
+    if (($# > 0)); then
         term::printf "${@}"
     fi
 }
 
 # If called directly then run printf or reference the example.
-if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
-    if [[ "${#}" -eq "0" ]] ; then
+if [[ ${0} == "${BASH_SOURCE[0]}" ]]; then
+    if (($# == 0)); then
         declare example_file="${0##*/}"
         example_file="${example_file%.*}"
         echo "For an example try:"

@@ -1,4 +1,4 @@
-_TERM_CREATE_SHORTCUTS_CURSOR(){
+_TERM_CREATE_SHORTCUTS_CURSOR() {
     # Temporary variables that are unset at the end of the script.
     local attribute
 
@@ -26,8 +26,7 @@ _TERM_CREATE_SHORTCUTS_CURSOR(){
         [VISIBLE]="cvvis"
     )
     for attribute in "${!_TERM_CURSOR_SHORTCUTS[@]}"; do
-        declare -x "TERM_${attribute}=$(tput "${_TERM_CURSOR_SHORTCUTS[$attribute]}")" 
+        declare -x "TERM_${attribute}=$(tput "${_TERM_CURSOR_SHORTCUTS[$attribute]}")"
     done
 }
 _TERM_CREATE_SHORTCUTS_CURSOR
-

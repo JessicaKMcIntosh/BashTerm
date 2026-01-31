@@ -10,11 +10,11 @@
 
 # Load the libraries.
 declare -a library_list=("spinner.sh" "menu.sh")
-find_library(){
+find_library() {
     local library="${1}"
     local file_name
-    for file_name in {../,./}${library} ; do
-        if [[ -f  "${file_name}" ]] ; then
+    for file_name in {../,./}${library}; do
+        if [[ -f ${file_name} ]]; then
             echo "${file_name}"
             exit
         fi
@@ -30,8 +30,8 @@ for _TERM_LOAD_LIBRARY in "${library_list[@]}"; do
 done
 unset _TERM_LOAD_LIBRARY
 
-declare -a SPINNER_FRAMES   # Frame set to use.
-declare -a SPINNER_MENU     # User menu.
+declare -a SPINNER_FRAMES # Frame set to use.
+declare -a SPINNER_MENU   # User menu.
 SPINNER_MENU=(
     "||Six dots (${TERM_SPIN_FRAMES_SIX[*]})"
     "||Six dots in and out (${TERM_SPIN_FRAMES_SIX_IN_OUT[*]})"
@@ -45,21 +45,21 @@ SPINNER_MENU=(
     "-|101|Slower frame rate (-0.1s)"
     "q|0|~" # Secret key to quit.
     "x|0|~" # Another secret key to quit.
-    "~||" # Replaced later with the current frame rate.
+    "~||"   # Replaced later with the current frame rate.
 )
 declare SPINNER_OPTIONS="clear|promptSelect the frame set [~]: "
 
 # Make sure the cursor returns.
 # Otherwise if Ctrl-C is pressed while spinning
 # the cursor would stay hiding.
-reset_cursor(){
+reset_cursor() {
     echo "${TERM_NORMAL}"
     exit
 }
 trap reset_cursor EXIT
 
 # Simple floating point math.
-float_math(){
+float_math() {
     echo "${@}" | awk '$1=="+" {print $2 + $3;} $1=="-" {print $2 - $3;}'
 }
 
@@ -72,16 +72,22 @@ while true; do
 
     # Process the result.
     case "${RC}" in
-        1) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_SIX[@]}");;
-        2) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_SIX_IN_OUT[@]}");;
-        3) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_EIGHT[@]}");;
-        4) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_EIGHT_IN_OUT[@]}");;
-        5) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_ARROWS[@]}");;
-        6) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_LINES[@]}");;
-        7) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_ASCII[@]}");;
-        100|=) TERM_SPIN_SLEEP="$(float_math "+" "${TERM_SPIN_SLEEP}" "0.1")"; continue;;
-        101) TERM_SPIN_SLEEP="$(float_math "-" "${TERM_SPIN_SLEEP}" "0.1")"; continue;;
-        0|""|" ") exit;;
+        1) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_SIX[@]}") ;;
+        2) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_SIX_IN_OUT[@]}") ;;
+        3) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_EIGHT[@]}") ;;
+        4) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_EIGHT_IN_OUT[@]}") ;;
+        5) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_ARROWS[@]}") ;;
+        6) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_LINES[@]}") ;;
+        7) SPINNER_FRAMES=("${TERM_SPIN_FRAMES_ASCII[@]}") ;;
+        100 | =)
+            TERM_SPIN_SLEEP="$(float_math "+" "${TERM_SPIN_SLEEP}" "0.1")"
+            continue
+            ;;
+        101)
+            TERM_SPIN_SLEEP="$(float_math "-" "${TERM_SPIN_SLEEP}" "0.1")"
+            continue
+            ;;
+        0 | "" | " ") exit ;;
     esac
     echo ""
     echo "Press any key to stop the demo."

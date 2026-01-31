@@ -14,11 +14,11 @@ export TERM="xterm"
 
 # Load the libraries.
 declare -a library_list=("color.sh")
-find_library(){
+find_library() {
     local library="${1}"
     local file_name
-    for file_name in {../,./}${library} ; do
-        if [[ -f  "${file_name}" ]] ; then
+    for file_name in {../,./}${library}; do
+        if [[ -f ${file_name} ]]; then
             echo "${file_name}"
             exit
         fi
@@ -36,7 +36,7 @@ unset _TERM_LOAD_LIBRARY
 export TEST_TITLE="Test all color variables."
 
 # Any setup that may need to be performed.
-test_setup(){
+test_setup() {
     # The xterm color escape codes to test against.
     test_color_bg_black=$'\E[40m'
     test_color_bg_red=$'\E[41m'
@@ -73,7 +73,7 @@ test_setup(){
 }
 
 # Any cleanup that may need to be performed.
-test_cleanup(){
+test_cleanup() {
     # Cleanup the testing variables.
     unset test_color_fg_black
     unset test_color_fg_red
@@ -109,7 +109,7 @@ test_cleanup(){
     unset test_color_bg_brightwhite
 }
 
-test::colors(){
+test::colors() {
     assert_exists "TERM_FG[0]" "${test_color_fg_black}" "Check the value of TERM_FG[0]."
     assert_exists "TERM_FG[1]" "${test_color_fg_red}" "Check the value of TERM_FG[1]."
     assert_exists "TERM_FG[2]" "${test_color_fg_green}" "Check the value of TERM_FG[2]."
@@ -176,14 +176,14 @@ test::colors(){
     assert_exists "TERM_BG[brightwhite]" "${test_color_bg_brightwhite}" "Check the value of TERM_BG[15]."
 }
 
-test::aliases(){
+test::aliases() {
     assert_exists "TERM_FG[gray]" "${test_color_fg_brightblack}" "Check the value of TERM_FG[gray]."
     assert_exists "TERM_FG[grey]" "${test_color_fg_brightblack}" "Check the value of TERM_FG[grey]."
     assert_exists "TERM_BG[gray]" "${test_color_bg_brightblack}" "Check the value of TERM_BG[gray]."
     assert_exists "TERM_BG[grey]" "${test_color_bg_brightblack}" "Check the value of TERM_BG[grey]."
 }
 
-test::shortcuts(){
+test::shortcuts() {
     assert_exists "TERM_BG_BLACK" "${test_color_bg_black}" "Check the value of TERM_BG_BLACK."
     assert_exists "TERM_BG_BLUE" "${test_color_bg_blue}" "Check the value of TERM_BG_BLUE."
     assert_exists "TERM_BG_BRIGHTBLACK" "${test_color_bg_brightblack}" "Check the value of TERM_BG_BRIGHTBLACK."

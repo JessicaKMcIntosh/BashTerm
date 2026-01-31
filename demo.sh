@@ -8,7 +8,7 @@
 # Demonstrate the library by calling out to various examples.
 
 # This requires bash version 4.
-if [[ "${BASH_VERSINFO[0]}" -lt "4" ]] ; then
+if ((BASH_VERSINFO[0] < 4)); then
     echo "This script requires Bash 4 or later."
     echo "Current version: ${BASH_VERSION}"
     exit 1
@@ -16,11 +16,11 @@ fi
 
 # Load the libraries.
 declare -a library_list=("menu.sh")
-find_library(){
+find_library() {
     local library="${1}"
     local file_name
-    for file_name in {../,./}${library} ; do
-        if [[ -f  "${file_name}" ]] ; then
+    for file_name in {../,./}${library}; do
+        if [[ -f ${file_name} ]]; then
             echo "${file_name}"
             exit
         fi
@@ -38,18 +38,18 @@ unset _TERM_LOAD_LIBRARY
 # Scripts to run for the demo.
 declare -a DEMO_SCRIPTS
 DEMO_SCRIPTS=(
-"examples/attr_example.sh"
-"examples/boxes_example.sh"
-"examples/color_example.sh"
-"examples/cursor_example.sh"
-"examples/function_example.sh"
-"examples/log_example.sh"
-"examples/menu_example.sh"
-"examples/printf_example.sh"
-"examples/spinner_example.sh"
-"examples/table.sh"
-"./run_tests.sh"
-"./log.sh -E"
+    "examples/attr_example.sh"
+    "examples/boxes_example.sh"
+    "examples/color_example.sh"
+    "examples/cursor_example.sh"
+    "examples/function_example.sh"
+    "examples/log_example.sh"
+    "examples/menu_example.sh"
+    "examples/printf_example.sh"
+    "examples/spinner_example.sh"
+    "examples/table.sh"
+    "./run_tests.sh"
+    "./log.sh -E"
 )
 
 # Demo menu.
@@ -72,7 +72,7 @@ DEMO_MENU=(
     "0|250|~"
 )
 
-menu_demo(){
+menu_demo() {
     local options="clear"
     local rc
 
@@ -82,7 +82,7 @@ menu_demo(){
         rc="${?}"
 
         # Process the result.
-        if [[ "${rc}" == "250" ]]; then
+        if ((rc == 250)); then
             exit 0
         fi
         ((rc--))

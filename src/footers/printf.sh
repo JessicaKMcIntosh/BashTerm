@@ -1,8 +1,8 @@
 # Print some help text.
-term::printf_usage(){
+term::printf_usage() {
     # Print any messages passed in.
-    if [[ "$#" -gt 0 ]] ; then
-        while [[ "$#" -gt 0 ]]; do
+    if (($# > 0)); then
+        while (($# > 0)); do
             echo "$1"
             shift
         done
@@ -19,31 +19,31 @@ term::printf_usage(){
 }
 
 # Act like a useful script.
-term::printf_main(){
+term::printf_main() {
     local option
 
     # Check command line args.
-    while getopts ":h" option ; do
+    while getopts ":h" option; do
         case $option in
-            h)  term::printf_usage;;
-            *)  if [ "${OPTARG}" = "-" ] ; then
-                    term::printf_usage # They probably only want help. Catches --help.
-                else
-                    term::printf_usage "Invalid option '${OPTARG}'." # Illegal option.
-                fi;;
+            h) term::printf_usage ;;
+            *) if [ "${OPTARG}" = "-" ]; then
+                term::printf_usage # They probably only want help. Catches --help.
+            else
+                term::printf_usage "Invalid option '${OPTARG}'." # Illegal option.
+            fi ;;
         esac
     done
     shift $((OPTIND - 1))
 
     # Print the message.
-    if [[ "${#}" -gt "0" ]] ; then
+    if (($# > 0)); then
         term::printf "${@}"
     fi
 }
 
 # If called directly then run printf or reference the example.
-if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
-    if [[ "${#}" -eq "0" ]] ; then
+if [[ ${0} == "${BASH_SOURCE[0]}" ]]; then
+    if (($# == 0)); then
         declare example_file="${0##*/}"
         example_file="${example_file%.*}"
         echo "For an example try:"

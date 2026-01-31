@@ -16,7 +16,7 @@
 # Edit the files in src/ then run the make.sh script.
 
 # This requires bash version 4.
-if [[ "${BASH_VERSINFO[0]}" -lt "4" ]] ; then
+if ((BASH_VERSINFO[0] < 4)); then
     echo "This script requires Bash 4 or later."
     echo "Current version: ${BASH_VERSION}"
     exit 1
@@ -25,7 +25,7 @@ fi
 # Only load the library once.
 declare -A _TERM_LOADED # Track loaded files.
 declare _TERM_FILE_NAME="${BASH_SOURCE[0]##*/}"
-if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]] ; then
+if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]]; then
     [[ -v TERM_VERBOSE ]] && echo "Already loaded '${_TERM_FILE_NAME}'."
     return 0
 fi
@@ -35,11 +35,11 @@ unset _TERM_FILE_NAME
 
 # Load the libraries.
 declare -a library_list=("attr.sh" "color.sh")
-find_library(){
+find_library() {
     local library="${1}"
     local file_name
-    for file_name in {../,./}${library} ; do
-        if [[ -f  "${file_name}" ]] ; then
+    for file_name in {../,./}${library}; do
+        if [[ -f ${file_name} ]]; then
             echo "${file_name}"
             exit
         fi
@@ -66,9 +66,9 @@ declare _TERM_LOG_FORMAT="%L%F%D: %M\n"
 # For these %s is replaced with the color escape code, the value,
 # then the attribute and color reset code.
 # Like this: printf "[%s%-5S%s] " $COLOR_CODE $LOG_LEVEL $COLOR_RESET
-declare _TERM_LOG_FORMAT_DATE="(%s%s%s)"        # %D in _TERM_LOG_FORMAT
-declare _TERM_LOG_FORMAT_FILE="<%s%s%s> "       # %F in _TERM_LOG_FORMAT
-declare _TERM_LOG_FORMAT_LEVEL="[%s%-5s%s] "    # %L in _TERM_LOG_FORMAT
+declare _TERM_LOG_FORMAT_DATE="(%s%s%s)"     # %D in _TERM_LOG_FORMAT
+declare _TERM_LOG_FORMAT_FILE="<%s%s%s> "    # %F in _TERM_LOG_FORMAT
+declare _TERM_LOG_FORMAT_LEVEL="[%s%-5s%s] " # %L in _TERM_LOG_FORMAT
 # The format string passed to the date command.
 declare _TERM_LOG_DATE_FORMAT="${TERM_LOG_DATE:-"%Y-%m-%dT%H:%M:%S"}"
 
@@ -82,7 +82,7 @@ declare _TERM_LOG_COLOR_RESET="${TERM_RESET}"
 # Eg. term::log_info
 declare _TERM_LOG_COMMAND
 declare _TERM_LOG_LOG_LEVEL
-for _TERM_LOG_LOG_LEVEL in "${!_TERM_LOG_LEVELS[@]}" ; do
+for _TERM_LOG_LOG_LEVEL in "${!_TERM_LOG_LEVELS[@]}"; do
     printf -v _TERM_LOG_COMMAND "term::log_%s() { term::log %d" "${_TERM_LOG_LEVELS[$_TERM_LOG_LOG_LEVEL],,}" "${_TERM_LOG_LOG_LEVEL}"
     # shellcheck disable=SC2016 # Duh...
     _TERM_LOG_COMMAND+=' "${@}"; }'
@@ -92,8 +92,8 @@ unset _TERM_LOG_COMMAND
 unset _TERM_LOG_TEMP
 
 # Logging function.
-term::log(){
-    if [[ "${#}" -lt "2" ]] ; then
+term::log() {
+    if (($# < 2)); then
         echo "Insufficient arguments. Usage: term::log LOG_LEVEL LOG_MESSAGE"
         return 1
     fi
@@ -105,14 +105,14 @@ term::log(){
     log_level="$(term::_log_to_number "${log_level}")"
 
     # Print the message if the log level is high enough.
-    if [[ "${log_level}" -ge "${_TERM_LOG_LEVEL}" ]] ; then
+    if ((log_level >= _TERM_LOG_LEVEL)); then
         term::_log_format "${log_level}" "${log_message}"
     fi
 }
 
 # Format the log output.
 # shellcheck disable=SC2059 # I am abusing the format strings on purpose.
-term::_log_format(){
+term::_log_format() {
     local log_level="${1}"
     local log_date=""
     local log_file=""
@@ -125,7 +125,7 @@ term::_log_format(){
     log_output="${log_output/\%D/$log_date}"
 
     # Format the file name, if present.
-    if [[ -n "${_TERM_LOG_FILE}" ]] ; then
+    if [[ -n ${_TERM_LOG_FILE} ]]; then
         printf -v log_file "${_TERM_LOG_FORMAT_FILE}" "${TERM_FG[$_TERM_LOG_COLOR_FILE]}" "${_TERM_LOG_FILE}" "${_TERM_LOG_COLOR_RESET}"
         log_output="${log_output/\%F/$log_file}"
     else
@@ -142,9 +142,9 @@ term::_log_format(){
 }
 
 # Disable color output.
-term::log_disable_color(){
+term::log_disable_color() {
     local color
-    for color in "${!_TERM_LOG_COLORS[@]}" ; do
+    for color in "${!_TERM_LOG_COLORS[@]}"; do
         # shellcheck disable=SC2004 # This isn't arithmetic.
         _TERM_LOG_COLORS[$color]=""
     done
@@ -157,11 +157,11 @@ term::log_disable_color(){
 # Set to '-' to clear the log file.
 # Call with an argument to set the log file.
 # Call without an argument to print the log file.
-term::log_file(){
-    if [[ "${#}" -ne "0" ]] ; then
+term::log_file() {
+    if (($# != 0)); then
         local log_file="${1}"
-        if [[ -n "${log_file}" ]] ; then
-            if [[ "${log_file}" == "-" ]] ; then
+        if [[ -n ${log_file} ]]; then
+            if [[ ${log_file} == "-" ]]; then
                 _TERM_LOG_FILE=""
             else
                 _TERM_LOG_FILE="${log_file}"
@@ -175,8 +175,8 @@ term::log_file(){
 # Set or print _TERM_LOG_LEVEL.
 # Call with an argument to set the log level.
 # Call without an argument to print the log level.
-term::log_level(){
-    if [[ "${#}" -ne "0" ]] ; then
+term::log_level() {
+    if (($# != 0)); then
         # Set the log level.
         local log_level="${1}"
         log_level="$(term::_log_to_number "${log_level}")"
@@ -195,24 +195,24 @@ term::log_level(){
 #   Number <= $_TERM_LOG_MAX_LEVEL  | Input
 #   String in _TERM_LOG_LEVELS      | Corresponding number
 #   String NOT in _TERM_LOG_LEVELS  | $_TERM_LOG_MAX_LEVEL
-term::_log_to_number(){
+term::_log_to_number() {
     local log_level="${1:-}"
     local item
 
     # What was passed in?
-    if [[ -z "${log_level}" ]] ; then
+    if [[ -z ${log_level} ]]; then
         # Empty string.
         log_level="${_TERM_LOG_MAX_LEVEL}"
-    elif [[ "$((log_level + 0))" == "${log_level}" ]] ; then
+    elif [[ $((log_level + 0)) == "${log_level}" ]]; then
         # A number.
-        if [[ "${log_level}" -gt "${_TERM_LOG_MAX_LEVEL}" ]] ; then
+        if [[ ${log_level} -gt ${_TERM_LOG_MAX_LEVEL} ]]; then
             # The given log level is too large.
             log_level="${_TERM_LOG_MAX_LEVEL}"
         fi
     else
         # Search for the log level by string.
-        for item in "${!_TERM_LOG_LEVELS[@]}" ; do
-            if [[ "${log_level^^}" == "${_TERM_LOG_LEVELS[$item]^^}" ]] ; then
+        for item in "${!_TERM_LOG_LEVELS[@]}"; do
+            if [[ ${log_level^^} == "${_TERM_LOG_LEVELS[$item]^^}" ]]; then
                 log_level="${item}"
                 item=""
                 break
@@ -220,7 +220,7 @@ term::_log_to_number(){
         done
 
         # Was the log level found?
-        if [[ -n "${item}" ]] ; then
+        if [[ -n ${item} ]]; then
             log_level="${_TERM_LOG_MAX_LEVEL}"
         fi
     fi
@@ -230,11 +230,11 @@ term::_log_to_number(){
 }
 
 # Print some help text.
-term::log_usage(){
+term::log_usage() {
     local log_level
     # Print any messages passed in.
-    if [[ "$#" -gt 0 ]] ; then
-        while [[ "$#" -gt 0 ]]; do
+    if (($# > 0)); then
+        while (($# > 0)); do
             echo "$1"
             shift
         done
@@ -256,9 +256,9 @@ term::log_usage(){
     echo "    -l LEVEL  Log level for the message."
     echo ""
     echo "Log Levels:"
-    for log_level in "${!_TERM_LOG_LEVELS[@]}" ; do
+    for log_level in "${!_TERM_LOG_LEVELS[@]}"; do
         printf "    [%d] %s" "${log_level}" "${_TERM_LOG_LEVELS[$log_level]}"
-        [[ "${log_level}" == "${_TERM_LOG_LEVEL}" ]] && echo -n " (Default)"
+        [[ ${log_level} == "${_TERM_LOG_LEVEL}" ]] && echo -n " (Default)"
         echo ""
     done
     echo ""
@@ -277,7 +277,7 @@ term::log_usage(){
 }
 
 # Some examples.
-term::log_examples(){
+term::log_examples() {
     echo "Examples:"
     local command
 
@@ -320,39 +320,39 @@ term::log_examples(){
 }
 
 # Do the logging thing.
-term::log_main(){
+term::log_main() {
     local log_level="1"
     local option
     _TERM_LOG_FILE="${TERM_LOG_FILE:-}" # No file by default since this script would be used.
 
     # Check command line args.
-    while getopts ":Cd:Ef:hL:l:" option ; do
+    while getopts ":Cd:Ef:hL:l:" option; do
         case $option in
-            C)  term::log_disable_color;;
-            d)  _TERM_LOG_DATE_FORMAT="${OPTARG}";;
-            E)  term::log_examples;;
-            f)  _TERM_LOG_FILE="${OPTARG}";;
-            h)  term::log_usage;;
-            L)  term::log_level "${OPTARG}";;
-            l)  log_level="${OPTARG}";;
-            *)  if [ "${OPTARG}" = "-" ] ; then
-                    term::log_usage # They probably only want help. Catches --help.
-                else
-                    term::log_usage "Invalid option '${OPTARG}'." # Illegal option.
-                fi;;
+            C) term::log_disable_color ;;
+            d) _TERM_LOG_DATE_FORMAT="${OPTARG}" ;;
+            E) term::log_examples ;;
+            f) _TERM_LOG_FILE="${OPTARG}" ;;
+            h) term::log_usage ;;
+            L) term::log_level "${OPTARG}" ;;
+            l) log_level="${OPTARG}" ;;
+            *) if [ "${OPTARG}" = "-" ]; then
+                term::log_usage # They probably only want help. Catches --help.
+            else
+                term::log_usage "Invalid option '${OPTARG}'." # Illegal option.
+            fi ;;
         esac
     done
     shift $((OPTIND - 1))
 
     # Print the message.
-    if [[ "${#}" -gt "0" ]] ; then
+    if (($# > 0)); then
         term::log "${log_level}" "${*}"
     fi
 }
 
 # If called directly then suggest the example or do some logging.
-if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
-    if [[ "${#}" -eq "0" ]] ; then
+if [[ ${0} == "${BASH_SOURCE[0]}" ]]; then
+    if (($# == 0)); then
         declare example_file="${0##*/}"
         example_file="${example_file%.*}"
         echo "For an example try:"

@@ -3,7 +3,7 @@ declare _TERM_MENU_SEPARATOR=":"
 declare _TERM_MENU_PROMPT="Select the option [~]: "
 
 term::menu() {
-    if [[ "${#}" -lt "3" ]] ; then
+    if (($# < 3)); then
         echo "MENU ERROR: Insufficient parameters passed!" >&2
         exit 252
     fi
@@ -27,71 +27,71 @@ term::menu() {
     option_list[prompt]="${_TERM_MENU_PROMPT}"
     option_list[attr]="" # Attributes for the key character in the menu.
     while IFS="" read -r item; do
-        [[ -z "${item}" ]] && continue
+        [[ -z ${item} ]] && continue
         case "${item}" in
-            sep*)       option_list[sep]="${item:3}";;
-            prompt*)    option_list[prompt]="${item:6}";;
-            bold)       option_list[attr]+="${TERM_BOLD}";;
-            reverse)    option_list[attr]+="${TERM_REVERSE}";;
-            underline)  option_list[attr]+="${TERM_UNDERLINE}";;
-            *)          option_list[${item}]="${item}";;
+            sep*)       option_list[sep]="${item:3}" ;;
+            prompt*)    option_list[prompt]="${item:6}" ;;
+            bold)       option_list[attr]+="${TERM_BOLD}" ;;
+            reverse)    option_list[attr]+="${TERM_REVERSE}" ;;
+            underline)  option_list[attr]+="${TERM_UNDERLINE}" ;;
+            *)          option_list[${item}]="${item}" ;;
         esac
     done <<< "${options//|/$'\n'}"
 
     # Build the menu.
     for item in "${!menu_items[@]}"; do
         # Empty string is a special case.
-        if [[ -z "${menu_items[$item]}" ]] ; then
+        if [[ -z ${menu_items[$item]} ]]; then
             menu_list+=("")
             continue
         fi
 
         # Check for parameters to the menu item.
         IFS="|" read -r key rc text <<< "${menu_items[$item]}"
-        if [[ -z "${rc}" && -z "${text}" ]] ; then
+        if [[ -z ${rc} && -z ${text} ]]; then
             # No parameters so use the defaults.
             key="$((item + 1))"
             rc="$((item + 1))"
             text="${menu_items[$item]}"
         else
             # Check for empty parameters.
-            if [[ -z "${rc}" ]] ; then
+            if [[ -z ${rc} ]]; then
                 rc="$((item + 1))"
             fi
-            if [[ -z "${key}" ]] ; then
+            if [[ -z ${key} ]]; then
                 key="$((item + 1))"
             fi
         fi
 
         # Check that the return code is a number in range.
-        if [[ "${rc}" != "~" && ( "${rc}" -gt "250" ||  "$((rc + 0))" != "${rc}" ) ]] ; then
+        if [[ ${rc} != "~" && (${rc} -gt "250" || "$((rc + 0))" != "${rc}") ]]; then
             echo "MENU ERROR: Return code (${rc}) invalid! Must be a number 250 or less." >&2
             echo "Menu item: ${menu_items[$item]}"
             return 254
         fi
 
         # Check that the key is one character.
-        if [[ "${#key}" -gt "1" ]] ; then
+        if [[ ${#key} -gt "1" ]]; then
             echo "MENU ERROR: Key (${key}) is not a single character." >&2
             echo "Menu item: ${menu_items[$item]}"
             return 253
         fi
 
         # Save the menu item.
-        if [[ "${key}" == "~" ]] ; then
-            if [[ "${text}" != "~" ]] ; then
+        if [[ ${key} == "~" ]]; then
+            if [[ ${text} != "~" ]]; then
                 # No key, just the text.
                 menu_list+=("${text}")
             fi
         else
-            if [[ "${rc}" != "~" ]] ; then
+            if [[ ${rc} != "~" ]]; then
                 # Save the key and return code.
                 key_list[$key]=$rc
             fi
-            if [[ "${text}" != "~" ]] ; then
+            if [[ ${text} != "~" ]]; then
                 # There is text to print so save the menu item.
                 valid_keys+="${key}"
-                if [[ -v option_list[attr] ]] ; then
+                if [[ -v option_list[attr] ]]; then
                     key="${option_list[attr]}${key}${TERM_RESET}"
                 fi
                 menu_list+=("${key}${option_list[sep]} ${text}")
@@ -100,7 +100,7 @@ term::menu() {
     done
 
     # Debug data.
-    if [[ -v option_list[debug] ]] ; then
+    if [[ -v option_list[debug] ]]; then
         echo -n "DEBUG (Options): " >&2
         declare -p option_list >&2
         echo -n "DEBUG (Menu List): " >&2
@@ -114,7 +114,7 @@ term::menu() {
     text=""
     while true; do
         # Print the menu.
-        if [[ -v option_list[clear] ]] ; then
+        if [[ -v option_list[clear] ]]; then
             echo -n "${TERM_CLEAR}"
         fi
         echo "${title}"
@@ -123,24 +123,24 @@ term::menu() {
         done
 
         # Print the error text if present and quiet is not set.
-        if [[ -n "${text}" && ! (-v option_list[quiet]) ]] ; then
+        if [[ -n ${text} && ! (-v option_list[quiet]) ]]; then
             echo "ERROR: ${text}"
         fi
 
         # Handle user input.
         read -r -n 1 -p "${option_list[prompt]/\~/${valid_keys}}"
         echo ""
-        if [[ -v key_list["${REPLY}"] ]] ; then
+        if [[ -v key_list[${REPLY}] ]]; then
             return "${key_list["${REPLY}"]}"
         else
-            if [[ -n "${REPLY}" ]] ; then
+            if [[ -n ${REPLY} ]]; then
                 echo ""
                 text="Invalid option ($REPLY)."
             else
                 text="Please select a key."
             fi
-            if [[ -v option_list[one] ]] ; then
-                if [[ ! (-v option_list[quiet]) ]] ; then
+            if [[ -v option_list[one] ]]; then
+                if [[ ! (-v option_list[quiet]) ]]; then
                     echo "${text}"
                 fi
                 return 251

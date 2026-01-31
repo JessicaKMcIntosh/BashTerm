@@ -1,6 +1,6 @@
 # These are the main variables for the Library.
-declare -A TERM_FG      # Stores terminal foreground color escape sequences.
-declare -A TERM_BG      # Stores terminal background color escape sequences.
+declare -A TERM_FG # Stores terminal foreground color escape sequences.
+declare -A TERM_BG # Stores terminal background color escape sequences.
 
 # Temporary variables that are unset at the end of the script.
 declare _TERM_TEMP_COLOR

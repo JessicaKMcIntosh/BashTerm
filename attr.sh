@@ -18,7 +18,7 @@
 # Edit the files in src/ then run the make.sh script.
 
 # This requires bash version 4.
-if [[ "${BASH_VERSINFO[0]}" -lt "4" ]] ; then
+if ((BASH_VERSINFO[0] < 4)); then
     echo "This script requires Bash 4 or later."
     echo "Current version: ${BASH_VERSION}"
     exit 1
@@ -27,7 +27,7 @@ fi
 # Only load the library once.
 declare -A _TERM_LOADED # Track loaded files.
 declare _TERM_FILE_NAME="${BASH_SOURCE[0]##*/}"
-if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]] ; then
+if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]]; then
     [[ -v TERM_VERBOSE ]] && echo "Already loaded '${_TERM_FILE_NAME}'."
     return 0
 fi
@@ -36,7 +36,7 @@ _TERM_LOADED[${_TERM_FILE_NAME}]="${BASH_SOURCE[0]}"
 unset _TERM_FILE_NAME
 
 # These are the main variables for the Library.
-declare -A TERM_ATTR    # Stores terminal attribute escape sequences.
+declare -A TERM_ATTR # Stores terminal attribute escape sequences.
 
 # Temporary variables that are unset at the end of the script.
 declare _TERM_TEMP_ATTR
@@ -45,26 +45,26 @@ declare _TERM_TEMP_CODE
 # Typical terminal attributes.
 declare -A _TERM_ATTRIBUTES
 _TERM_ATTRIBUTES=(
-    [clear_screen]="clear"          # clear screen and home cursor
-    [enter_bold_mode]="bold"        # turn on bold (extra bright) mode
-    [enter_dim_mode]="dim"          # turn on half-bright mode
-    [enter_insert_mode]="smir"      # enter insert mode
-    [enter_italics_mode]="sitm"     # Enter italic mode
-    [enter_reverse_mode]="rev"      # turn on reverse video mode
-    [enter_secure_mode]="invis"     # turn on blank mode (characters invisible)
-    [enter_standout_mode]="smso"    # begin standout mode
-    [enter_underline_mode]="smul"   # begin underline mode
-    [exit_attribute_mode]="sgr0"    # turn off all attributes
-    [exit_insert_mode]="rmir"       # exit insert mode
-    [exit_italics_mode]="ritm"      # End italic mode
-    [exit_standout_mode]="rmso"     # exit standout mode
-    [exit_underline_mode]="rmul"    # exit underline mode
-    [orig_pair]="op"                # Set default pair to its original value
+    [clear_screen]="clear"        # clear screen and home cursor
+    [enter_bold_mode]="bold"      # turn on bold (extra bright) mode
+    [enter_dim_mode]="dim"        # turn on half-bright mode
+    [enter_insert_mode]="smir"    # enter insert mode
+    [enter_italics_mode]="sitm"   # Enter italic mode
+    [enter_reverse_mode]="rev"    # turn on reverse video mode
+    [enter_secure_mode]="invis"   # turn on blank mode (characters invisible)
+    [enter_standout_mode]="smso"  # begin standout mode
+    [enter_underline_mode]="smul" # begin underline mode
+    [exit_attribute_mode]="sgr0"  # turn off all attributes
+    [exit_insert_mode]="rmir"     # exit insert mode
+    [exit_italics_mode]="ritm"    # End italic mode
+    [exit_standout_mode]="rmso"   # exit standout mode
+    [exit_underline_mode]="rmul"  # exit underline mode
+    [orig_pair]="op"              # Set default pair to its original value
 )
 for _TERM_TEMP_ATTR in "${!_TERM_ATTRIBUTES[@]}"; do
-    if _TERM_TEMP_CODE="$(tput "${_TERM_ATTRIBUTES[$_TERM_TEMP_ATTR]}")" ; then
-        TERM_ATTR[$_TERM_TEMP_ATTR]="${_TERM_TEMP_CODE}"
-        TERM_ATTR[${_TERM_ATTRIBUTES[$_TERM_TEMP_ATTR]}]="${_TERM_TEMP_CODE}"
+    if _TERM_TEMP_CODE="$(tput "${_TERM_ATTRIBUTES[$_TERM_TEMP_ATTR]}")"; then
+        TERM_ATTR[$_TERM_TEMP_ATTR]=${_TERM_TEMP_CODE}
+        TERM_ATTR[${_TERM_ATTRIBUTES[$_TERM_TEMP_ATTR]}]=${_TERM_TEMP_CODE}
     else
         echo "WARNING: This terminal does not support the capability: ${_TERM_ATTRIBUTES[$_TERM_TEMP_ATTR]}"
         unset "TERM_ATTR[$_TERM_TEMP_ATTR]"
@@ -88,7 +88,7 @@ _TERM_ATTRIBUTE_ALIASES=(
     [underline]="smul"
 )
 for _TERM_TEMP_ATTR in "${!_TERM_ATTRIBUTE_ALIASES[@]}"; do
-    TERM_ATTR["${_TERM_TEMP_ATTR}"]="${TERM_ATTR[${_TERM_ATTRIBUTE_ALIASES[$_TERM_TEMP_ATTR]}]}"
+    TERM_ATTR[${_TERM_TEMP_ATTR}]=${TERM_ATTR[${_TERM_ATTRIBUTE_ALIASES[$_TERM_TEMP_ATTR]}]}
 done
 
 # Create the shortcut variables.
@@ -119,8 +119,8 @@ unset _TERM_TEMP_ATTR
 unset _TERM_TEMP_CODE
 
 # If called directly then suggest the example.
-if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
-    declare example_file="${0##*/}"
+if [[ ${0} == "${BASH_SOURCE[0]}" ]]; then
+    declare example_file=${0##*/}
     example_file="${example_file%.*}"
     echo "For an example try:"
     printf "./examples/%s_example.sh\n" "${example_file}"

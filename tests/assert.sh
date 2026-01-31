@@ -12,24 +12,24 @@
 export TEST_TITLE="Make sure the assert tests work."
 
 # Any setup that may need to be performed.
-test_setup(){
+test_setup() {
     # Failures are fatal for this test.
     declare -x TestFailFatal=true
 }
 
 # Any cleanup that may need to be performed.
-test_cleanup(){
+test_cleanup() {
     # Nothing done.
     :
 }
 
-test::assert_equals(){
+test::assert_equals() {
     assert_equals "Foo" "Foo" "'Foo' should be 'Foo'."
 }
 
-test::assert_equals_fail(){
+test::assert_equals_fail() {
     local failures
-    failures="${ASSERT_FAIL}"
+    failures=${ASSERT_FAIL}
     ((failures++))
 
     # Make a failure.
@@ -38,47 +38,47 @@ test::assert_equals_fail(){
     TestFailFatal=true
 
     # Readjust the tests since this test should fail.
-    if [[ "${failures}" -eq "${ASSERT_FAIL}" ]] ; then
+    if ((failures == ASSERT_FAIL)); then
         ((ASSERT_FAIL--))
         ((ASSERT_PASS++))
     else
-        assert_fail "assert_equals should have failed for inequal values."
+        assert_fail "assert_equals should have failed for non-equal values."
     fi
 }
 
-test::assert_exists(){
-    assert_exists "_TEST_SENTINAL" "'ASSERT_PASS' should exist."
-    assert_exists "_TEST_SENTINAL" "SENTINAL" "'_TEST_SENTINAL' should exist and be 'SENTINAL'."
+test::assert_exists() {
+    assert_exists "_TEST_SENTINEL" "'ASSERT_PASS' should exist."
+    assert_exists "_TEST_SENTINEL" "SENTINEL" "'_TEST_SENTINEL' should exist and be 'SENTINEL'."
 }
 
-test::assert_exists_fail(){
+test::assert_exists_fail() {
     local failures
     failures="${ASSERT_FAIL}"
-    ((failures+=2))
+    ((failures += 2))
 
     # Make a failure.
     TestFailFatal=false
-    assert_exists "_TEST_SENTINAL_WRONG" "This test will always fail." > /dev/null
-    assert_exists "_TEST_SENTINAL" "WRONG_VALUE" "This test will always fail." > /dev/null
+    assert_exists "_TEST_SENTINEL_WRONG" "This test will always fail." > /dev/null
+    assert_exists "_TEST_SENTINEL" "WRONG_VALUE" "This test will always fail." > /dev/null
     TestFailFatal=true
 
     # Readjust the tests since this test should fail.
-    if [[ "${failures}" -eq "${ASSERT_FAIL}" ]] ; then
-        ((ASSERT_FAIL-=2))
-        ((ASSERT_PASS+=2))
+    if ((failures == ASSERT_FAIL)); then
+        ((ASSERT_FAIL -= 2))
+        ((ASSERT_PASS += 2))
     else
         assert_fail "assert_exists should fail for an unset variable and incorrect value."
     fi
 }
 
-test::assert_run(){
+test::assert_run() {
     assert_run "printf success" "0" "success" "Successful command should succeed."
 }
 
-test::assert_run_fail(){
+test::assert_run_fail() {
     local failures
     failures="${ASSERT_FAIL}"
-    ((failures+=2))
+    ((failures += 2))
 
     # Make a failure.
     TestFailFatal=false
@@ -87,19 +87,19 @@ test::assert_run_fail(){
     TestFailFatal=true
 
     # Readjust the tests since this test should fail.
-    if [[ "${failures}" -eq "${ASSERT_FAIL}" ]] ; then
-        ((ASSERT_FAIL-=2))
-        ((ASSERT_PASS+=2))
+    if ((failures == ASSERT_FAIL)); then
+        ((ASSERT_FAIL -= 2))
+        ((ASSERT_PASS += 2))
     else
         assert_fail "assert_run should have failed for incorrect values."
     fi
 }
 
-test::assert_success(){
+test::assert_success() {
     assert_success "true" "true should always succeed."
 }
 
-test::assert_fail(){
+test::assert_fail() {
     local failures
     failures="${ASSERT_FAIL}"
     ((failures++))
@@ -110,7 +110,7 @@ test::assert_fail(){
     TestFailFatal=true
 
     # Readjust the tests since this test should fail.
-    if [[ "${failures}" -eq "${ASSERT_FAIL}" ]] ; then
+    if ((failures == ASSERT_FAIL)); then
         ((ASSERT_FAIL--))
         ((ASSERT_PASS++))
     else
@@ -118,4 +118,3 @@ test::assert_fail(){
         exit 1
     fi
 }
-

@@ -18,7 +18,7 @@
 # Edit the files in src/ then run the make.sh script.
 
 # This requires bash version 4.
-if [[ "${BASH_VERSINFO[0]}" -lt "4" ]] ; then
+if ((BASH_VERSINFO[0] < 4)); then
     echo "This script requires Bash 4 or later."
     echo "Current version: ${BASH_VERSION}"
     exit 1
@@ -27,7 +27,7 @@ fi
 # Only load the library once.
 declare -A _TERM_LOADED # Track loaded files.
 declare _TERM_FILE_NAME="${BASH_SOURCE[0]##*/}"
-if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]] ; then
+if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]]; then
     [[ -v TERM_VERBOSE ]] && echo "Already loaded '${_TERM_FILE_NAME}'."
     return 0
 fi
@@ -36,8 +36,8 @@ _TERM_LOADED[${_TERM_FILE_NAME}]="${BASH_SOURCE[0]}"
 unset _TERM_FILE_NAME
 
 # These are the main variables for the Library.
-declare -A TERM_FG      # Stores terminal foreground color escape sequences.
-declare -A TERM_BG      # Stores terminal background color escape sequences.
+declare -A TERM_FG # Stores terminal foreground color escape sequences.
+declare -A TERM_BG # Stores terminal background color escape sequences.
 
 # Temporary variables that are unset at the end of the script.
 declare _TERM_TEMP_COLOR
@@ -94,8 +94,8 @@ done
 unset _TERM_TEMP_COLOR
 
 # If called directly then suggest the example.
-if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
-    declare example_file="${0##*/}"
+if [[ ${0} == "${BASH_SOURCE[0]}" ]]; then
+    declare example_file=${0##*/}
     example_file="${example_file%.*}"
     echo "For an example try:"
     printf "./examples/%s_example.sh\n" "${example_file}"

@@ -23,6 +23,13 @@ clean: # Clean temporary files.
 demo: # Run the BashTerm Demo.
 	@bash demo.sh
 
+shellcheck: # Run shellcheck.
+	@echo "This will take a moment..."
+	@shellcheck -P .:examples:tests -x *.sh examples/*.sh tests/*.sh
+
+shfmt: # Check for formatting issues.
+	@shfmt --apply-ignore -s -d .
+
 test: # Run the tests.
 	@./run_tests.sh
 tests: test

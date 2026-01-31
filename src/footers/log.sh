@@ -1,9 +1,9 @@
 # Print some help text.
-term::log_usage(){
+term::log_usage() {
     local log_level
     # Print any messages passed in.
-    if [[ "$#" -gt 0 ]] ; then
-        while [[ "$#" -gt 0 ]]; do
+    if (($# > 0)); then
+        while (($# > 0)); do
             echo "$1"
             shift
         done
@@ -25,9 +25,9 @@ term::log_usage(){
     echo "    -l LEVEL  Log level for the message."
     echo ""
     echo "Log Levels:"
-    for log_level in "${!_TERM_LOG_LEVELS[@]}" ; do
+    for log_level in "${!_TERM_LOG_LEVELS[@]}"; do
         printf "    [%d] %s" "${log_level}" "${_TERM_LOG_LEVELS[$log_level]}"
-        [[ "${log_level}" == "${_TERM_LOG_LEVEL}" ]] && echo -n " (Default)"
+        [[ ${log_level} == "${_TERM_LOG_LEVEL}" ]] && echo -n " (Default)"
         echo ""
     done
     echo ""
@@ -46,7 +46,7 @@ term::log_usage(){
 }
 
 # Some examples.
-term::log_examples(){
+term::log_examples() {
     echo "Examples:"
     local command
 
@@ -89,39 +89,39 @@ term::log_examples(){
 }
 
 # Do the logging thing.
-term::log_main(){
+term::log_main() {
     local log_level="1"
     local option
     _TERM_LOG_FILE="${TERM_LOG_FILE:-}" # No file by default since this script would be used.
 
     # Check command line args.
-    while getopts ":Cd:Ef:hL:l:" option ; do
+    while getopts ":Cd:Ef:hL:l:" option; do
         case $option in
-            C)  term::log_disable_color;;
-            d)  _TERM_LOG_DATE_FORMAT="${OPTARG}";;
-            E)  term::log_examples;;
-            f)  _TERM_LOG_FILE="${OPTARG}";;
-            h)  term::log_usage;;
-            L)  term::log_level "${OPTARG}";;
-            l)  log_level="${OPTARG}";;
-            *)  if [ "${OPTARG}" = "-" ] ; then
-                    term::log_usage # They probably only want help. Catches --help.
-                else
-                    term::log_usage "Invalid option '${OPTARG}'." # Illegal option.
-                fi;;
+            C) term::log_disable_color ;;
+            d) _TERM_LOG_DATE_FORMAT="${OPTARG}" ;;
+            E) term::log_examples ;;
+            f) _TERM_LOG_FILE="${OPTARG}" ;;
+            h) term::log_usage ;;
+            L) term::log_level "${OPTARG}" ;;
+            l) log_level="${OPTARG}" ;;
+            *) if [ "${OPTARG}" = "-" ]; then
+                term::log_usage # They probably only want help. Catches --help.
+            else
+                term::log_usage "Invalid option '${OPTARG}'." # Illegal option.
+            fi ;;
         esac
     done
     shift $((OPTIND - 1))
 
     # Print the message.
-    if [[ "${#}" -gt "0" ]] ; then
+    if (($# > 0)); then
         term::log "${log_level}" "${*}"
     fi
 }
 
 # If called directly then suggest the example or do some logging.
-if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
-    if [[ "${#}" -eq "0" ]] ; then
+if [[ ${0} == "${BASH_SOURCE[0]}" ]]; then
+    if (($# == 0)); then
         declare example_file="${0##*/}"
         example_file="${example_file%.*}"
         echo "For an example try:"

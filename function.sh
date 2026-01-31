@@ -19,7 +19,7 @@
 # Edit the files in src/ then run the make.sh script.
 
 # This requires bash version 4.
-if [[ "${BASH_VERSINFO[0]}" -lt "4" ]] ; then
+if ((BASH_VERSINFO[0] < 4)); then
     echo "This script requires Bash 4 or later."
     echo "Current version: ${BASH_VERSION}"
     exit 1
@@ -28,7 +28,7 @@ fi
 # Only load the library once.
 declare -A _TERM_LOADED # Track loaded files.
 declare _TERM_FILE_NAME="${BASH_SOURCE[0]##*/}"
-if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]] ; then
+if [[ -v _TERM_LOADED[${_TERM_FILE_NAME}] ]]; then
     [[ -v TERM_VERBOSE ]] && echo "Already loaded '${_TERM_FILE_NAME}'."
     return 0
 fi
@@ -38,11 +38,11 @@ unset _TERM_FILE_NAME
 
 # Load the libraries.
 declare -a library_list=("attr.sh" "boxes.sh" "color.sh" "cursor.sh")
-find_library(){
+find_library() {
     local library="${1}"
     local file_name
-    for file_name in {../,./}${library} ; do
-        if [[ -f  "${file_name}" ]] ; then
+    for file_name in {../,./}${library}; do
+        if [[ -f ${file_name} ]]; then
             echo "${file_name}"
             exit
         fi
@@ -84,107 +84,107 @@ term::cursor() {
 }
 
 # Attributes:
-term::ITALICS()     { echo -n "${TERM_ATTR["ritm"]}" ; }
-term::STANDOUT()    { echo -n "${TERM_ATTR["rmso"]}" ; }
-term::UNDERLINE()   { echo -n "${TERM_ATTR["rmul"]}" ; }
-term::bold()        { echo -n "${TERM_ATTR["bold"]}" ; }
-term::clear()       { echo -n "${TERM_ATTR["clear"]}" ; }
-term::dim()         { echo -n "${TERM_ATTR["dim"]}" ; }
-term::invisible()   { echo -n "${TERM_ATTR["invis"]}" ; }
-term::italics()     { echo -n "${TERM_ATTR["italics"]}" ; }
-term::orig()        { echo -n "${TERM_ATTR["op"]}" ; }
-term::reset()       { echo -n "${TERM_ATTR["reset"]}" ; }
-term::reverse()     { echo -n "${TERM_ATTR["reverse"]}" ; }
-term::standout()    { echo -n "${TERM_ATTR["standout"]}" ; }
-term::underline()   { echo -n "${TERM_ATTR["underline"]}" ; }
+term::ITALICS()     { echo -n "${TERM_ATTR["ritm"]}";  }
+term::STANDOUT()    { echo -n "${TERM_ATTR["rmso"]}";  }
+term::UNDERLINE()   { echo -n "${TERM_ATTR["rmul"]}";  }
+term::bold()        { echo -n "${TERM_ATTR["bold"]}";  }
+term::clear()       { echo -n "${TERM_ATTR["clear"]}";  }
+term::dim()         { echo -n "${TERM_ATTR["dim"]}";  }
+term::invisible()   { echo -n "${TERM_ATTR["invis"]}";  }
+term::italics()     { echo -n "${TERM_ATTR["italics"]}";  }
+term::orig()        { echo -n "${TERM_ATTR["op"]}";  }
+term::reset()       { echo -n "${TERM_ATTR["reset"]}";  }
+term::reverse()     { echo -n "${TERM_ATTR["reverse"]}";  }
+term::standout()    { echo -n "${TERM_ATTR["standout"]}";  }
+term::underline()   { echo -n "${TERM_ATTR["underline"]}";  }
 
 # Colors:
-term::black()       { echo -n "${TERM_FG["black"]}" ; }
-term::blue()        { echo -n "${TERM_FG["blue"]}" ; }
-term::cyan()        { echo -n "${TERM_FG["cyan"]}" ; }
-term::green()       { echo -n "${TERM_FG["green"]}" ; }
-term::magenta()     { echo -n "${TERM_FG["magenta"]}" ; }
-term::red()         { echo -n "${TERM_FG["red"]}" ; }
-term::white()       { echo -n "${TERM_FG["white"]}" ; }
-term::yellow()      { echo -n "${TERM_FG["yellow"]}" ; }
-term::BLACK()       { echo -n "${TERM_BG["black"]}" ; }
-term::BLUE()        { echo -n "${TERM_BG["blue"]}" ; }
-term::CYAN()        { echo -n "${TERM_BG["cyan"]}" ; }
-term::GREEN()       { echo -n "${TERM_BG["green"]}" ; }
-term::MAGENTA()     { echo -n "${TERM_BG["magenta"]}" ; }
-term::RED()         { echo -n "${TERM_BG["red"]}" ; }
-term::YELLOW()      { echo -n "${TERM_BG["yellow"]}" ; }
+term::black()       { echo -n "${TERM_FG["black"]}";  }
+term::blue()        { echo -n "${TERM_FG["blue"]}";  }
+term::cyan()        { echo -n "${TERM_FG["cyan"]}";  }
+term::green()       { echo -n "${TERM_FG["green"]}";  }
+term::magenta()     { echo -n "${TERM_FG["magenta"]}";  }
+term::red()         { echo -n "${TERM_FG["red"]}";  }
+term::white()       { echo -n "${TERM_FG["white"]}";  }
+term::yellow()      { echo -n "${TERM_FG["yellow"]}";  }
+term::BLACK()       { echo -n "${TERM_BG["black"]}";  }
+term::BLUE()        { echo -n "${TERM_BG["blue"]}";  }
+term::CYAN()        { echo -n "${TERM_BG["cyan"]}";  }
+term::GREEN()       { echo -n "${TERM_BG["green"]}";  }
+term::MAGENTA()     { echo -n "${TERM_BG["magenta"]}";  }
+term::RED()         { echo -n "${TERM_BG["red"]}";  }
+term::YELLOW()      { echo -n "${TERM_BG["yellow"]}";  }
 
 # Cursor:
-term::clr_bol()             { echo -n "${TERM_ATTR["clr_bol"]}" ; }
-term::clr_eol()             { echo -n "${TERM_ATTR["clr_eol"]}" ; }
-term::clr_eos()             { echo -n "${TERM_ATTR["clr_eos"]}" ; }
-term::delete_character()    { echo -n "${TERM_ATTR["delete_character"]}" ; }
-term::delete_line()         { echo -n "${TERM_ATTR["delete_line"]}" ; }
-term::down()                { echo -n "${TERM_ATTR["down"]}" ; }
-term::hide()                { echo -n "${TERM_ATTR["hide"]}" ; }
-term::home()                { echo -n "${TERM_ATTR["home"]}" ; }
+term::clr_bol()             { echo -n "${TERM_ATTR["clr_bol"]}";  }
+term::clr_eol()             { echo -n "${TERM_ATTR["clr_eol"]}";  }
+term::clr_eos()             { echo -n "${TERM_ATTR["clr_eos"]}";  }
+term::delete_character()    { echo -n "${TERM_ATTR["delete_character"]}";  }
+term::delete_line()         { echo -n "${TERM_ATTR["delete_line"]}";  }
+term::down()                { echo -n "${TERM_ATTR["down"]}";  }
+term::hide()                { echo -n "${TERM_ATTR["hide"]}";  }
+term::home()                { echo -n "${TERM_ATTR["home"]}";  }
+term::insert_line()         { echo -n "${TERM_ATTR["insert_line"]}";  }
+term::left()                { echo -n "${TERM_ATTR["left"]}";  }
+term::normal()              { echo -n "${TERM_ATTR["normal"]}";  }
+term::restore()             { echo -n "${TERM_ATTR["restore"]}";  }
+term::right()               { echo -n "${TERM_ATTR["right"]}";  }
+term::save()                { echo -n "${TERM_ATTR["save"]}";  }
+term::show()                { echo -n "${TERM_ATTR["show"]}";  }
+term::up()                  { echo -n "${TERM_ATTR["up"]}";  }
+term::visible()             { echo -n "${TERM_ATTR["visible"]}";  }
 # term::insert_character()    { echo -n "${TERM_ATTR["insert_character"]}" ; }
-term::insert_line()         { echo -n "${TERM_ATTR["insert_line"]}" ; }
-term::left()                { echo -n "${TERM_ATTR["left"]}" ; }
-term::normal()              { echo -n "${TERM_ATTR["normal"]}" ; }
-term::restore()             { echo -n "${TERM_ATTR["restore"]}" ; }
-term::right()               { echo -n "${TERM_ATTR["right"]}" ; }
-term::save()                { echo -n "${TERM_ATTR["save"]}" ; }
-term::show()                { echo -n "${TERM_ATTR["show"]}" ; }
 # term::to_ll()               { echo -n "${TERM_ATTR["to_ll"]}" ; }
-term::up()                  { echo -n "${TERM_ATTR["up"]}" ; }
-term::visible()             { echo -n "${TERM_ATTR["visible"]}" ; }
 
 # Boxes:
-term::box_l_lh() { echo -n "${TERM_BOX_LLH}" ; } # ─ Box Drawings Light Horizontal
-term::box_l_lv() { echo -n "${TERM_BOX_LLV}" ; } # │ Box Drawings Light Vertical
-term::box_l_tc() { echo -n "${TERM_BOX_LTC}" ; } # ┬ Box Drawings Light Down and Horizontal
-term::box_l_tl() { echo -n "${TERM_BOX_LTL}" ; } # ┌ Box Drawings Light Down and Right
-term::box_l_tr() { echo -n "${TERM_BOX_LTR}" ; } # ┐ Box Drawings Light Down and Left
-term::box_l_ml() { echo -n "${TERM_BOX_LML}" ; } # ├ Box Drawings Light Vertical and Right
-term::box_l_mc() { echo -n "${TERM_BOX_LMC}" ; } # ┼ Box Drawings Light Vertical and Horizontal
-term::box_l_mr() { echo -n "${TERM_BOX_LMR}" ; } # ┤ Box Drawings Light Vertical and Left
-term::box_l_bc() { echo -n "${TERM_BOX_LBC}" ; } # ┴ Box Drawings Light Up and Horizontal
-term::box_l_bl() { echo -n "${TERM_BOX_LBL}" ; } # └ Box Drawings Light Up and Right
-term::box_l_br() { echo -n "${TERM_BOX_LBR}" ; } # ┘ Box Drawings Light Up and Left
-term::box_h_lh() { echo -n "${TERM_BOX_HLH}" ; } # ━ Box Drawings Heavy Horizontal
-term::box_h_lv() { echo -n "${TERM_BOX_HLV}" ; } # ┃ Box Drawings Heavy Vertical
-term::box_h_tc() { echo -n "${TERM_BOX_HTC}" ; } # ┳ Box Drawings Heavy Down and Horizontal
-term::box_h_tl() { echo -n "${TERM_BOX_HTL}" ; } # ┏ Box Drawings Heavy Down and Right
-term::box_h_tr() { echo -n "${TERM_BOX_HTR}" ; } # ┓ Box Drawings Heavy Down and Left
-term::box_h_ml() { echo -n "${TERM_BOX_HML}" ; } # ┣ Box Drawings Heavy Vertical and Right
-term::box_h_mc() { echo -n "${TERM_BOX_HMC}" ; } # ╋ Box Drawings Heavy Vertical and Horizontal
-term::box_h_mr() { echo -n "${TERM_BOX_HMR}" ; } # ┫ Box Drawings Heavy Vertical and Left
-term::box_h_bc() { echo -n "${TERM_BOX_HBC}" ; } # ┻ Box Drawings Heavy Up and Horizontal
-term::box_h_bl() { echo -n "${TERM_BOX_HBL}" ; } # ┗ Box Drawings Heavy Up and Right
-term::box_h_br() { echo -n "${TERM_BOX_HBR}" ; } # ┛ Box Drawings Heavy Up and Left
-term::box_d_lh() { echo -n "${TERM_BOX_DLH}" ; } # ═ Box Drawings Double Horizontal
-term::box_d_lv() { echo -n "${TERM_BOX_DLV}" ; } # ║ Box Drawings Double Vertical
-term::box_d_tc() { echo -n "${TERM_BOX_DTC}" ; } # ╦ Box Drawings Double Down and Horizontal
-term::box_d_tl() { echo -n "${TERM_BOX_DTL}" ; } # ╔ Box Drawings Double Down and Right
-term::box_d_tr() { echo -n "${TERM_BOX_DTR}" ; } # ╗ Box Drawings Double Down and Left
-term::box_d_ml() { echo -n "${TERM_BOX_DML}" ; } # ╠ Box Drawings Double Vertical and Right
-term::box_d_mc() { echo -n "${TERM_BOX_DMC}" ; } # ╬ Box Drawings Double Vertical and Horizontal
-term::box_d_mr() { echo -n "${TERM_BOX_DMR}" ; } # ╣ Box Drawings Double Vertical and Left
-term::box_d_bc() { echo -n "${TERM_BOX_DBC}" ; } # ╩ Box Drawings Double Up and Horizontal
-term::box_d_bl() { echo -n "${TERM_BOX_DBL}" ; } # ╚ Box Drawings Double Up and Right
-term::box_d_br() { echo -n "${TERM_BOX_DBR}" ; } # ╝ Box Drawings Double Up and Left
-term::box_r_lh() { echo -n "${TERM_BOX_RLH}" ; } # ─ Box Drawings Light Horizontal
-term::box_r_lv() { echo -n "${TERM_BOX_RLV}" ; } # │ Box Drawings Light Vertical
-term::box_r_tc() { echo -n "${TERM_BOX_RTC}" ; } # ┬ Box Drawings Light Down and Horizontal
-term::box_r_tl() { echo -n "${TERM_BOX_RTL}" ; } # ╭ Box Drawings Light Arc Down and Right
-term::box_r_tr() { echo -n "${TERM_BOX_RTR}" ; } # ╮ Box Drawings Light Arc Down and Left
-term::box_r_ml() { echo -n "${TERM_BOX_RML}" ; } # ├ Box Drawings Light Vertical and Right
-term::box_r_mc() { echo -n "${TERM_BOX_RMC}" ; } # ┼ Box Drawings Light Vertical and Horizontal
-term::box_r_mr() { echo -n "${TERM_BOX_RMR}" ; } # ┤ Box Drawings Light Vertical and Left
-term::box_r_bc() { echo -n "${TERM_BOX_RBC}" ; } # ┴ Box Drawings Light Up and Horizontal
-term::box_r_bl() { echo -n "${TERM_BOX_RBL}" ; } # ╰ Box Drawings Light Arc Up and Right
-term::box_r_br() { echo -n "${TERM_BOX_RBR}" ; } # ╯ Box Drawings Light Arc Up and Left
+term::box_l_lh() { echo -n "${TERM_BOX_LLH}"; } # ─ Box Drawings Light Horizontal
+term::box_l_lv() { echo -n "${TERM_BOX_LLV}"; } # │ Box Drawings Light Vertical
+term::box_l_tc() { echo -n "${TERM_BOX_LTC}"; } # ┬ Box Drawings Light Down and Horizontal
+term::box_l_tl() { echo -n "${TERM_BOX_LTL}"; } # ┌ Box Drawings Light Down and Right
+term::box_l_tr() { echo -n "${TERM_BOX_LTR}"; } # ┐ Box Drawings Light Down and Left
+term::box_l_ml() { echo -n "${TERM_BOX_LML}"; } # ├ Box Drawings Light Vertical and Right
+term::box_l_mc() { echo -n "${TERM_BOX_LMC}"; } # ┼ Box Drawings Light Vertical and Horizontal
+term::box_l_mr() { echo -n "${TERM_BOX_LMR}"; } # ┤ Box Drawings Light Vertical and Left
+term::box_l_bc() { echo -n "${TERM_BOX_LBC}"; } # ┴ Box Drawings Light Up and Horizontal
+term::box_l_bl() { echo -n "${TERM_BOX_LBL}"; } # └ Box Drawings Light Up and Right
+term::box_l_br() { echo -n "${TERM_BOX_LBR}"; } # ┘ Box Drawings Light Up and Left
+term::box_h_lh() { echo -n "${TERM_BOX_HLH}"; } # ━ Box Drawings Heavy Horizontal
+term::box_h_lv() { echo -n "${TERM_BOX_HLV}"; } # ┃ Box Drawings Heavy Vertical
+term::box_h_tc() { echo -n "${TERM_BOX_HTC}"; } # ┳ Box Drawings Heavy Down and Horizontal
+term::box_h_tl() { echo -n "${TERM_BOX_HTL}"; } # ┏ Box Drawings Heavy Down and Right
+term::box_h_tr() { echo -n "${TERM_BOX_HTR}"; } # ┓ Box Drawings Heavy Down and Left
+term::box_h_ml() { echo -n "${TERM_BOX_HML}"; } # ┣ Box Drawings Heavy Vertical and Right
+term::box_h_mc() { echo -n "${TERM_BOX_HMC}"; } # ╋ Box Drawings Heavy Vertical and Horizontal
+term::box_h_mr() { echo -n "${TERM_BOX_HMR}"; } # ┫ Box Drawings Heavy Vertical and Left
+term::box_h_bc() { echo -n "${TERM_BOX_HBC}"; } # ┻ Box Drawings Heavy Up and Horizontal
+term::box_h_bl() { echo -n "${TERM_BOX_HBL}"; } # ┗ Box Drawings Heavy Up and Right
+term::box_h_br() { echo -n "${TERM_BOX_HBR}"; } # ┛ Box Drawings Heavy Up and Left
+term::box_d_lh() { echo -n "${TERM_BOX_DLH}"; } # ═ Box Drawings Double Horizontal
+term::box_d_lv() { echo -n "${TERM_BOX_DLV}"; } # ║ Box Drawings Double Vertical
+term::box_d_tc() { echo -n "${TERM_BOX_DTC}"; } # ╦ Box Drawings Double Down and Horizontal
+term::box_d_tl() { echo -n "${TERM_BOX_DTL}"; } # ╔ Box Drawings Double Down and Right
+term::box_d_tr() { echo -n "${TERM_BOX_DTR}"; } # ╗ Box Drawings Double Down and Left
+term::box_d_ml() { echo -n "${TERM_BOX_DML}"; } # ╠ Box Drawings Double Vertical and Right
+term::box_d_mc() { echo -n "${TERM_BOX_DMC}"; } # ╬ Box Drawings Double Vertical and Horizontal
+term::box_d_mr() { echo -n "${TERM_BOX_DMR}"; } # ╣ Box Drawings Double Vertical and Left
+term::box_d_bc() { echo -n "${TERM_BOX_DBC}"; } # ╩ Box Drawings Double Up and Horizontal
+term::box_d_bl() { echo -n "${TERM_BOX_DBL}"; } # ╚ Box Drawings Double Up and Right
+term::box_d_br() { echo -n "${TERM_BOX_DBR}"; } # ╝ Box Drawings Double Up and Left
+term::box_r_lh() { echo -n "${TERM_BOX_RLH}"; } # ─ Box Drawings Light Horizontal
+term::box_r_lv() { echo -n "${TERM_BOX_RLV}"; } # │ Box Drawings Light Vertical
+term::box_r_tc() { echo -n "${TERM_BOX_RTC}"; } # ┬ Box Drawings Light Down and Horizontal
+term::box_r_tl() { echo -n "${TERM_BOX_RTL}"; } # ╭ Box Drawings Light Arc Down and Right
+term::box_r_tr() { echo -n "${TERM_BOX_RTR}"; } # ╮ Box Drawings Light Arc Down and Left
+term::box_r_ml() { echo -n "${TERM_BOX_RML}"; } # ├ Box Drawings Light Vertical and Right
+term::box_r_mc() { echo -n "${TERM_BOX_RMC}"; } # ┼ Box Drawings Light Vertical and Horizontal
+term::box_r_mr() { echo -n "${TERM_BOX_RMR}"; } # ┤ Box Drawings Light Vertical and Left
+term::box_r_bc() { echo -n "${TERM_BOX_RBC}"; } # ┴ Box Drawings Light Up and Horizontal
+term::box_r_bl() { echo -n "${TERM_BOX_RBL}"; } # ╰ Box Drawings Light Arc Up and Right
+term::box_r_br() { echo -n "${TERM_BOX_RBR}"; } # ╯ Box Drawings Light Arc Up and Left
 
 # If called directly then suggest the example.
-if [[ "${0}" == "${BASH_SOURCE[0]}" ]] ; then
-    declare example_file="${0##*/}"
+if [[ ${0} == "${BASH_SOURCE[0]}" ]]; then
+    declare example_file=${0##*/}
     example_file="${example_file%.*}"
     echo "For an example try:"
     printf "./examples/%s_example.sh\n" "${example_file}"

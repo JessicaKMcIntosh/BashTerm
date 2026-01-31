@@ -14,11 +14,11 @@ export TERM="xterm"
 
 # Load the libraries.
 declare -a library_list=("attr.sh")
-find_library(){
+find_library() {
     local library="${1}"
     local file_name
-    for file_name in {../,./}${library} ; do
-        if [[ -f  "${file_name}" ]] ; then
+    for file_name in {../,./}${library}; do
+        if [[ -f ${file_name} ]]; then
             echo "${file_name}"
             exit
         fi
@@ -36,7 +36,7 @@ unset _TERM_LOAD_LIBRARY
 export TEST_TITLE="Test all attribute variables."
 
 # Any setup that may need to be performed.
-test_setup(){
+test_setup() {
     # The xterm escape codes to test against.
     test_attr_bold=$'\E[1m'
     test_attr_clear=$'\E[H\E[2J\E[3J'
@@ -56,7 +56,7 @@ test_setup(){
 }
 
 # Any cleanup that may need to be performed.
-test_cleanup(){
+test_cleanup() {
     # Cleanup the testing variables.
     unset test_attr_bold
     unset test_attr_clear
@@ -75,7 +75,7 @@ test_cleanup(){
     unset test_attr_smul
 }
 
-test::attributes(){
+test::attributes() {
     assert_exists "TERM_ATTR[clear_screen]" "${test_attr_clear}" "Check the value of TERM_ATTR[clear_screen]."
     assert_exists "TERM_ATTR[enter_bold_mode]" "${test_attr_bold}" "Check the value of TERM_ATTR[enter_bold_mode]."
     assert_exists "TERM_ATTR[enter_dim_mode]" "${test_attr_dim}" "Check the value of TERM_ATTR[enter_dim_mode]."
@@ -93,7 +93,7 @@ test::attributes(){
     assert_exists "TERM_ATTR[orig_pair]" "${test_attr_op}" "Check the value of TERM_ATTR[orig_pair]."
 }
 
-test::aliases(){
+test::aliases() {
     assert_exists "TERM_ATTR[INSERT]" "${test_attr_rmir}" "Check the value of TERM_ATTR[INSERT]."
     assert_exists "TERM_ATTR[ITALICS]" "${test_attr_ritm}" "Check the value of TERM_ATTR[ITALICS]."
     assert_exists "TERM_ATTR[STANDOUT]" "${test_attr_rmso}" "Check the value of TERM_ATTR[STANDOUT]."
@@ -108,7 +108,7 @@ test::aliases(){
     assert_exists "TERM_ATTR[underline]" "${test_attr_smul}" "Check the value of TERM_ATTR[underline]."
 }
 
-test::shortcuts(){
+test::shortcuts() {
     assert_exists "TERM_BOLD" "${test_attr_bold}" "Check the value of TERM_BOLD."
     assert_exists "TERM_CLEAR" "${test_attr_clear}" "Check the value of TERM_CLEAR."
     assert_exists "TERM_DIM" "${test_attr_dim}" "Check the value of TERM_DIM."
@@ -125,4 +125,3 @@ test::shortcuts(){
     assert_exists "TERM_STANDOUT" "${test_attr_smso}" "Check the value of TERM_STANDOUT."
     assert_exists "TERM_UNDERLINE" "${test_attr_smul}" "Check the value of TERM_UNDERLINE."
 }
-

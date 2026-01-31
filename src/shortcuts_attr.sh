@@ -1,4 +1,4 @@
-_TERM_CREATE_SHORTCUTS_ATTR(){
+_TERM_CREATE_SHORTCUTS_ATTR() {
     local attribute
 
     # Create the shortcut variables.
@@ -26,4 +26,3 @@ _TERM_CREATE_SHORTCUTS_ATTR(){
     done
 }
 _TERM_CREATE_SHORTCUTS_ATTR
-
