@@ -290,11 +290,11 @@ main() {
     # Check command line args.
     while getopts ":h" option; do
         case "${option}" in
-            h) usage ;;
+            h) print_usage ;;
             *) if [[ ${OPTARG} == "-" ]]; then
-                usage # They probably only want help. Catches --help.
+                print_usage # They probably only want help. Catches --help.
             else
-                usage "Invalid option '${OPTARG}'." # Illegal option.
+                print_usage "Invalid option '${OPTARG}'." # Illegal option.
             fi ;;
         esac
     done
