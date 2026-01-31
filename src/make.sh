@@ -3,32 +3,44 @@
 # shellcheck source=raw_boxes.sh
 # shellcheck source=shortcuts_color.sh
 # shellcheck source=raw_printf.sh
+# shellcheck source=find_awk.sh
 
-# Make the files in the main directory.
+# Build the various libraries and files..
 
-# Configuration:
+# This requires bash version 4.4 or later.
+if [ -z "$BASH_VERSION" ]; then
+    echo "Error: Bash version 4.4 or higher is required."
+    exit 1
+fi
+if ((BASH_VERSINFO[0] < 4)) || ((BASH_VERSINFO[0] == 4 && BASH_VERSINFO[1] < 4)); then
+    echo "Error: Bash version 4.4 or higher is required."
+    echo "Current version: ${BASH_VERSION}"
+    exit 1
+fi
 
-# Files to create.
-# Values are the dependencies.
-declare -a FILE_LIST
-FILE_LIST=("attr" "boxes" "color" "cursor" "function" "log" "menu" "printf" "spinner" "table" "export")
+# Make sure we are in the src/ directory.
+if [[ -d "src" ]]; then
+    if ! cd src; then
+        echo "Unable to CD to the directory 'src/'."
+        echo "Aborting!!!"
+        exit 1
+    fi
+fi
+if [[ ! -f "make.sh" ]]; then
+    echo "Run this from the 'BashTerm' or 'BashTerm/src' directories."
+    echo "Aborting!!!"
+    exit 1
+fi
 
-# Figure out the AWK command.
-declare -g _TERM_AWK_COMMAND="awk"
-term::find_awk() {
-    local awk_command
-    # mawk is generally faster than gawk.
-    for awk_command in {m,}awk gawk; do
-        if command -v "${awk_command}" > /dev/null; then
-            declare -g _TERM_AWK_COMMAND="${awk_command}"
-            break
-        fi
-    done
-}
+# This sequence is important or the file will not be loaded globally.
+source "find_awk.sh"
 
+# Create a single file.
 build_file() {
     local library="${1}"
     local file_new="new/${library}.sh"
+
+    # Build the file.
     ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- "macros/${library}.m1" "macros/_library.m1" "macros/_example.m1" "macros/_standalone.m1"
 
     # Compare the old and new files.
@@ -39,21 +51,58 @@ build_file() {
     fi
 }
 
+# Create all of the files available.
 create_files() {
-    echo "Creating the main files..."
+    echo "Creating the files..."
     local library
 
     # Loop over the files creating the new files.
-    mkdir -p new
-    mkdir -p ../standalone
-    for library in "${FILE_LIST[@]}"; do
+    for library in $(get_library_list); do
         build_file "${library}"
     done
 }
 
-get_file_descr() {
+# Create files from the command line args.
+create_file_args() {
+    local library
+
+    for library in "${@}"; do
+        if [[ -f "macros/${library}.m1" ]]; then
+            build_file "${library}"
+        else
+            echo "Unknown library '${library}'."
+        fi
+    done
+}
+
+create_output_directories() {
+    local -a directory_list=("new" "../standalone")
+    local directory
+
+    for directory in "${directory_list[@]}"; do
+        if ! mkdir -p "${directory}"; then
+            echo "Error creating the directory '${directory}'."
+            echo "Aborting!!!"
+            exit 1
+        fi
+    done
+}
+
+# Get the description of a library.
+get_file_description() {
     local library="${1}"
     ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- "macros/${library}.m1" "macros/_description.m1"
+}
+
+# Print the library names one per line.
+get_library_list() {
+    local library_file
+    local library_name
+    for library_file in macros/[a-z]*.m1; do
+        library_name=${library_file##*/}
+        library_name=${library_name%.*}
+        echo "${library_name}"
+    done
 }
 
 # Print some help text.
@@ -69,6 +118,8 @@ usage() {
     fi
 
     # Some extra box characters. See '../alt_boxes.sh'.
+    # Variables that start with 'TERM_BOX_' can be used in term::printf.
+    # For example to print '╫' use the command 'term::printf "%<BDVDHS>"'.
     export TERM_BOX_BDVDLS=$'\u2562' # ╢ Box Drawings Vertical Double and Left Single
     export TERM_BOX_BDVDRS=$'\u255F' # ╟ Box Drawings Vertical Double and Right Single
     export TERM_BOX_BDVDHS=$'\u256B' # ╫ Box Drawings Vertical Double and Horizontal Single
@@ -92,10 +143,10 @@ usage() {
     term::printf "%<DTL,DLH@12,DTC,DLH@67,DTR>\n"
     term::printf "%<DLV> %(bold)%-10s%(reset) %<DLV> %(bold)%-65s%(reset) %<DLV>\n" "File" "Description"
     term::printf "%<BDVDRS,LLH@12,BDVDHS,LLH@67,BDVDLS>\n"
-    for library in "${FILE_LIST[@]}"; do
+    for library in $(get_library_list); do
         term::printf "%<DLV> %-10s %<DLV> %-65s %<DLV>\n" \
             "${library}" \
-            "$(get_file_descr "${library}")"
+            "$(get_file_description "${library}")"
     done
     term::printf "%<DBL,DLH@12,DBC,DLH@67,DBR>\n"
     exit 1
@@ -105,18 +156,13 @@ usage() {
 main() {
     local option
 
-    # Make sure we are in the src/ directory.
-    if [[ -d "src" ]]; then
-        cd src || exit 1
-    fi
-    if [[ ! -f "make.sh" ]]; then
-        echo "Run this from the 'BashTerm' or 'BashTerm/src' directories."
+    # Locate the AWK command.
+    term::find_awk
+    if [[ -z ${_TERM_AWK_COMMAND} ]]; then
+        echo "Unable to locate the AWK command."
         echo "Aborting!!!"
         exit 1
     fi
-
-    # Locate the AWK command.
-    term::find_awk
 
     # Check command line args.
     while getopts ":h" option; do
@@ -131,17 +177,11 @@ main() {
     done
     shift $((OPTIND - 1))
 
+    # Make sure the output directories exist.
+    create_output_directories
+
     if (($# > 0)); then
-        # Build a list of files.
-        while (($# > 0)); do
-            if [[ -v FILE_LIST[$1] ]]; then
-                build_file "${1}"
-            else
-                echo "Unknown library '${1}'."
-            fi
-            shift
-            (($# > 0)) && echo ""
-        done
+        create_file_args "${@}"
     else
         # Build all of the files.
         create_files "${@}"
