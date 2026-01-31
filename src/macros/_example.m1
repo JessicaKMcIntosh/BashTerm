@@ -1,0 +1,14 @@
+@@ Build the example file.
+@@
+@@ Default settings.
+@default HAS_EXAMPLE 0
+@default EXAMPLE_FILE ../examples/@LIBRARY_NAME@_example.sh
+@default EXAMPLE_SOURCE examples/@LIBRARY_NAME@.sh
+@@
+@if HAS_EXAMPLE
+@echo Building the example file '@EXAMPLE_FILE@'...
+@output @EXAMPLE_FILE@
+@include @EXAMPLE_SOURCE@
+@output -
+@system chmod +x @EXAMPLE_FILE@
+@fi

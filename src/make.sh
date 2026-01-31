@@ -29,7 +29,9 @@ term::find_awk() {
 build_file() {
     local library="${1}"
     local file_new="new/${library}.sh"
-    ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- "macros/${library}.m1" "macros/_template.m1"
+    ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- "macros/${library}.m1" "macros/_library.m1"
+    ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- "macros/${library}.m1" "macros/_example.m1"
+    ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- "macros/${library}.m1" "macros/_standalone.m1"
 
     # Compare the old and new files.
     if [[ -f "${file_new}" ]]; then

@@ -1,0 +1,34 @@
+@@ Build the library file.
+@@
+@@ Default settings.
+@default HAS_LIBRARY 0
+@default HEADER_FILE default.sh
+@default RAW_FILE raw_@LIBRARY_NAME@.sh
+@default OUTPUT_FILE new/@LIBRARY_NAME@.sh
+@default FOOTER_FILE default.sh
+@@
+@if HAS_LIBRARY
+@echo Building the library '@OUTPUT_FILE@'...
+@output @OUTPUT_FILE@
+@include shebang.sh
+
+# @DESCRIPTION@
+
+@if LONG_DESCRIPTION
+@echo @LONG_DESCRIPTION@
+
+@fi
+@include headers/@HEADER_FILE@
+
+@if LIBRARIES
+@define LIBRARY_LIST @LIBRARIES@
+@include load_libraries.sh
+
+@fi
+@include @RAW_FILE@
+
+@include footers/@FOOTER_FILE@
+@output -
+@system chmod +x @OUTPUT_FILE@
+@fi
+@@
