@@ -17,6 +17,7 @@ A library to simplify working with the terminal in bash.
   * [`spinner.sh` - Spinner](#spinnersh---spinner)
   * [`boxes.sh` - Box drawing Unicode characters](#boxessh---box-drawing-unicode-characters)
   * [`function.sh` - Functional Interface](#functionsh---functional-interface)
+* [Stadalone Files](#stadalone-files)
 * [Utilities](#utilities)
   * [`demo.sh` - Demonstrate the Library](#demosh---demonstrate-the-library)
   * [`run_tests.sh` - Unit Tests](#run_testssh---unit-tests)
@@ -62,7 +63,7 @@ echo "Normal ${TERM_BOLD}Bold${TERM_RESET} not bold"
 
 This us done by using the command `tput` to generate the escape codes when the library files load.
 First the associative arrays are built.
-hen the shortcut variables are created.
+Then the shortcut variables are created.
 See the file `attr.sh` for more details.
 
 ## Why?
@@ -70,13 +71,13 @@ See the file `attr.sh` for more details.
 Because there isn't a simple solution out there that can be easily customized for a project.
 There are more complicated libraries that don't cover many cases.
 And plenty of snippets and Gists.
-But nothing with broad coverage that is easy to use.
+But nothing with broad coverage that is easy to customize.
 I created this after having to dig up some of this for a simple world clock.
 I had to find the attributes, colors, and box characters separately.
 
 The goal is not to provide an all encompassing library that solves all of your problems.
 
-The goal is to make something simple that can be easily customized to suit YOUR needs.
+The goal is to make something simple that can be easily customized to suit **YOUR** needs.
 
 To that end I recommend picking and choosing the bits and pieces you want in your script.
 
@@ -86,22 +87,29 @@ Don't care about drawing boxes? Delete all of the boxy stuff.
 
 ## Requirements
 
-This library requires Bash 4.
-There are some features that only work with 4.
+This library requires Bash 4.4 or later.
+There are some features that are not available in older versions.
 For example Unicode characters `$'\u2500'` and associative arrays.
+
+AWK is used for several things.
+The custom printf function uses AWK.
+The build scripts use AWK extensively.
+I recommend [Mawk](https://invisible-island.net/mawk/) for speed and
+[GAWK](https://www.gnu.org/software/gawk/) for development.
 
 MacOS still ships with Bash 3.
 For MacOS check out [Homebrew](https://brew.sh/) for a modern version of bash.
-
-AWK is used by the printf library and the script `examples/spinner_example.sh`.
 
 ## How
 
 You can certainly source the files in the current directory.
 See the files in the directory `examples/` for details.
-It would be better to get the raw files from `src/raw_*.sh`.
+
+It would be better to get the bits you need from the files `src/*.sh`.
 These files contain the useful bits without the nonsense about loading libraries.
 Just copy the contents of the raw file that you need into your script.
+See the files in the directory `standalone` for an example of this method.
+
 The script `demo.sh` presents a menu to run various examples.
 
 ## TODO
