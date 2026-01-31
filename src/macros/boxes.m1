@@ -1,13 +1,17 @@
-@@ Settings for boxes.sh
+@@ Settings for the library boxes.sh
+@define HAS_LIBRARY 1
 @define LIBRARY_NAME boxes
 @define DESCRIPTION A library of unicode box drawing characters.
 @define LONG_DESCRIPTION # See the following resources:
 @append LONG_DESCRIPTION # https://www.compart.com/en/unicode/block/U+2500
 @append LONG_DESCRIPTION # https://en.wikipedia.org/wiki/Box-drawing_characters
-@@define LIBRARIES "attr.sh"
-@@define HEADER_FILE @LIBRARY_NAME@.sh
-@@define RAW_FILE raw_@LIBRARY_NAME@.sh
-@@define OUTPUT_FILE new/@LIBRARY_NAME@.sh
-@@define FOOTER_FILE @LIBRARY_NAME@.sh
-@@ Build the files.
-@include macros/template.m1
+@@ @define LIBRARIES "attr.sh"
+@@ @define HEADER_FILE @LIBRARY_NAME@.sh
+@@ @define RAW_FILE raw_@LIBRARY_NAME@.sh
+@@ @define OUTPUT_FILE new/@LIBRARY_NAME@.sh
+@@ @define FOOTER_FILE @LIBRARY_NAME@.sh
+@@
+@@ Settings for the example file.
+@define HAS_EXAMPLE 1
+@define EXAMPLE_DESCRIPTION # Example of using the printf library.
+@define EXAMPLE_LIBRARIES "boxes.sh"

@@ -1,12 +1,15 @@
-@@ Settings for function.sh
+@@ Settings for the library function.sh
+@define HAS_LIBRARY 1
 @define LIBRARY_NAME function
 @define DESCRIPTION A functional interface to the variables.
 @define LONG_DESCRIPTION # If that is something you want... :shrug:
 @append LONG_DESCRIPTION # I recommend picking and choosing what you want.
 @define LIBRARIES "attr.sh" "boxes.sh" "color.sh" "cursor.sh"
 @define HEADER_FILE @LIBRARY_NAME@.sh
-@@define RAW_FILE raw_@LIBRARY_NAME@.sh
-@@define OUTPUT_FILE new/@LIBRARY_NAME@.sh
-@@define FOOTER_FILE @LIBRARY_NAME@.sh
-@@ Build the files.
-@include macros/template.m1
+@@ @define RAW_FILE raw_@LIBRARY_NAME@.sh
+@@ @define OUTPUT_FILE new/@LIBRARY_NAME@.sh
+@@ @define FOOTER_FILE @LIBRARY_NAME@.sh
+@@
+@@ Settings for the example file.
+@define HAS_EXAMPLE 1
+@define EXAMPLE_LIBRARIES "function.sh"

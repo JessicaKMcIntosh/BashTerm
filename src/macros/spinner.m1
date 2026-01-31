@@ -1,4 +1,5 @@
-@@ Settings for spinner.sh
+@@ Settings for the library spinner.sh
+@define HAS_LIBRARY 1
 @define LIBRARY_NAME spinner
 @define DESCRIPTION A simple spinner using Unicode characters.
 @define LONG_DESCRIPTION # See 'man 5 terminfo' for more information.
@@ -8,5 +9,7 @@
 @@define RAW_FILE raw_@LIBRARY_NAME@.sh
 @@define OUTPUT_FILE new/@LIBRARY_NAME@.sh
 @@define FOOTER_FILE @LIBRARY_NAME@.sh
-@@ Build the files.
-@include macros/template.m1
+@@
+@@ Settings for the example file.
+@define HAS_EXAMPLE 1
+@define EXAMPLE_LIBRARIES "spinner.sh" "menu.sh"

@@ -1,23 +1,44 @@
-@@ Settings for printf.sh
+@@ Settings for the library printf.sh
+@define HAS_LIBRARY 1
 @define LIBRARY_NAME printf
 @define DESCRIPTION A printf implementation with terminal attributes.
 @define LONG_DESCRIPTION # This is really only an example.
 @append LONG_DESCRIPTION # Adapt to your needs.
 @define LIBRARIES "attr.sh" "boxes.sh" "color.sh" "cursor.sh"
-@@define HEADER_FILE @LIBRARY_NAME@.sh
-@@define RAW_FILE raw_@LIBRARY_NAME@.sh
-@@define OUTPUT_FILE new/@LIBRARY_NAME@.sh
+@@ @define HEADER_FILE @LIBRARY_NAME@.sh
+@@ @define RAW_FILE raw_@LIBRARY_NAME@.sh
+@@ @define OUTPUT_FILE new/@LIBRARY_NAME@.sh
 @define FOOTER_FILE @LIBRARY_NAME@.sh
 @@
-@@ Special variables for the stadalone file.
-@define HAS_STANDLONE 1
+@@ Settings for an example file.
+@define HAS_EXAMPLE 1
+@define EXAMPLE_LIBRARIES "printf.sh"
+@@
+@@ Settings for a standalone file.
+@define HAS_STANDALONE 1
 @define STANDALONE_LIBRARIES @include shortcuts_attr.sh
 @append STANDALONE_LIBRARIES @include raw_boxes.sh
 @append STANDALONE_LIBRARIES @include shortcuts_color.sh
 @append STANDALONE_LIBRARIES @include shortcuts_cursor.sh
 @@
 @@ Build the raw file.
-@include macros/raw_printf.m1
-@@
-@@ Build the files.
-@include macros/template.m1
+@output raw_printf.sh
+# Configuration.
+@include find_awk.sh
+term::find_awk
+
+# Print to STDOUT.
+term::printf() {
+    printf "%s\n" "${@}" | $_TERM_AWK_COMMAND '
+@include printf.awk
+    '
+}
+
+# Print to a variable.
+term::printf-v() {
+    local -n variable="${1}"
+    shift
+    # shellcheck disable=SC2034
+    variable="$(term::printf "${@}")"
+}
+@output -

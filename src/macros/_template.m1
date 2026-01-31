@@ -1,26 +1,21 @@
 @@ Build the output file.
 @@
 @@ Default settings.
-@default NEW_FILE 0
-@default PRINT_DESCR 0
-@default STANDLONE 0
-@default HAS_STANDLONE 0
+@default HAS_EXAMPLE 0
+@default HAS_LIBRARY 0
+@default HAS_STANDALONE 0
 @@
 @@ Defaults file names.
 @default HEADER_FILE default.sh
 @default RAW_FILE raw_@LIBRARY_NAME@.sh
 @default OUTPUT_FILE new/@LIBRARY_NAME@.sh
 @default FOOTER_FILE default.sh
+@default EXAMPLE_FILE ../examples/@LIBRARY_NAME@_example.sh
+@default EXAMPLE_SOURCE examples/@LIBRARY_NAME@.sh
 @default STANDALONE_FILE ../standalone/@LIBRARY_NAME@.sh
 @@
-@@ Print the description.
-@if PRINT_DESCR
-@output -
-@echo @DESCRIPTION@
-@fi
-@@
 @@ Build the library file.
-@if NEW_FILE
+@if HAS_LIBRARY
 @echo Building the file '@OUTPUT_FILE@'...
 @output @OUTPUT_FILE@
 @include shebang.sh
@@ -34,6 +29,7 @@
 @include headers/@HEADER_FILE@
 
 @if LIBRARIES
+@define LIBRARY_LIST @LIBRARIES@
 @include load_libraries.sh
 
 @fi
@@ -41,12 +37,11 @@
 
 @include footers/@FOOTER_FILE@
 @output -
+@system chmod +x @OUTPUT_FILE@
 @fi
 @@
 @@ Build the standalone file.
-@@ TODO!!
-@if STANDLONE
-@if HAS_STANDLONE
+@if HAS_STANDALONE
 @echo Building the standalone file '@STANDALONE_FILE@'...
 @output @STANDALONE_FILE@
 @include shebang.sh
@@ -69,4 +64,12 @@
 @output -
 @system chmod +x @STANDALONE_FILE@
 @fi
+@@
+@@ Build the example file.
+@if HAS_EXAMPLE
+@echo Building the example file '@EXAMPLE_FILE@'...
+@output @EXAMPLE_FILE@
+@include @EXAMPLE_SOURCE@
+@output -
+@system chmod +x @EXAMPLE_FILE@
 @fi

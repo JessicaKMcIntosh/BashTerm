@@ -7,27 +7,8 @@
 
 # Example of using the attribute library.
 
-# Load the libraries.
-declare -a library_list=("attr.sh")
-find_library() {
-    local library="${1}"
-    local file_name
-    for file_name in {../,./}${library}; do
-        if [[ -f ${file_name} ]]; then
-            echo "${file_name}"
-            exit
-        fi
-    done
-    echo "Unable to locate the library '${library}'." >&2
-    exit 1
-}
-#TERM_VERBOSE=0 # Uncomment for verbose library loading.
-declare _TERM_LOAD_LIBRARY
-# shellcheck disable=SC2167 # Go home Shellcheck, you are drunk.
-for _TERM_LOAD_LIBRARY in "${library_list[@]}"; do
-    source "$(find_library "${_TERM_LOAD_LIBRARY}")" || exit 1
-done
-unset _TERM_LOAD_LIBRARY
+@define LIBRARY_LIST @EXAMPLE_LIBRARIES@
+@include load_libraries.sh
 
 echo "Testing attributes:"
 echo "Normal text ${TERM_BOLD}Bold text${TERM_ATTR[sgr0]} not bold"

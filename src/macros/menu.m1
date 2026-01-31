@@ -1,16 +1,19 @@
-@@ Settings for menu.sh
+@@ Settings for the library menu.sh
+@define HAS_LIBRARY 1
 @define LIBRARY_NAME menu
 @define DESCRIPTION A library for making menus.
-@@define LONG_DESCRIPTION
-@@append LONG_DESCRIPTION
+@@ @define LONG_DESCRIPTION
+@@ @append LONG_DESCRIPTION
 @define LIBRARIES "attr.sh"
-@@define HEADER_FILE @LIBRARY_NAME@.sh
-@@define RAW_FILE raw_@LIBRARY_NAME@.sh
-@@define OUTPUT_FILE new/@LIBRARY_NAME@.sh
+@@ @define HEADER_FILE @LIBRARY_NAME@.sh
+@@ @define RAW_FILE raw_@LIBRARY_NAME@.sh
+@@ @define OUTPUT_FILE new/@LIBRARY_NAME@.sh
 @define FOOTER_FILE @LIBRARY_NAME@.sh
 @@
-@@ Special variables for the stadalone file.
-@define HAS_STANDLONE 1
+@@ Settings for the example file.
+@define HAS_EXAMPLE 1
+@define EXAMPLE_LIBRARIES "menu.sh"
+@@
+@@ Settings for a standalone file.
+@define HAS_STANDALONE 1
 @define STANDALONE_LIBRARIES @include shortcuts_attr.sh
-@@ Build the files.
-@include macros/template.m1

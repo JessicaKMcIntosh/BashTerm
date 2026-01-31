@@ -1,11 +1,14 @@
-@@ Settings for cursor.sh
+@@ Settings for the library cursor.sh
+@define HAS_LIBRARY 1
 @define LIBRARY_NAME cursor
 @define DESCRIPTION A library of useful code for working with terminal cursors.
 @define LONG_DESCRIPTION # See 'man 5 terminfo' for more information.
-@@define LIBRARIES "attr.sh"
-@@define HEADER_FILE @LIBRARY_NAME@.sh
-@@define RAW_FILE raw_@LIBRARY_NAME@.sh
-@@define OUTPUT_FILE new/@LIBRARY_NAME@.sh
-@@define FOOTER_FILE @LIBRARY_NAME@.sh
-@@ Build the files.
-@include macros/template.m1
+@@ @define LIBRARIES "attr.sh"
+@@ @define HEADER_FILE @LIBRARY_NAME@.sh
+@@ @define RAW_FILE raw_@LIBRARY_NAME@.sh
+@@ @define OUTPUT_FILE new/@LIBRARY_NAME@.sh
+@@ @define FOOTER_FILE @LIBRARY_NAME@.sh
+@@
+@@ Settings for the example file.
+@define HAS_EXAMPLE 1
+@define EXAMPLE_LIBRARIES "attr.sh" "cursor.sh"

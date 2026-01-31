@@ -11,7 +11,7 @@
 # Files to create.
 # Values are the dependencies.
 declare -a FILE_LIST
-FILE_LIST=("attr" "boxes" "color" "cursor" "function" "log" "menu" "printf" "spinner")
+FILE_LIST=("attr" "boxes" "color" "cursor" "function" "log" "menu" "printf" "spinner" "table" "export")
 
 # Figure out the AWK command.
 declare -g _TERM_AWK_COMMAND="awk"
@@ -29,13 +29,13 @@ term::find_awk() {
 build_file() {
     local library="${1}"
     local file_new="new/${library}.sh"
-    ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- -DNEW_FILE=1 "macros/${library}.m1"
-    ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- -DSTANDLONE=1 "macros/${library}.m1"
-    chmod +x "${file_new}"
+    ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- "macros/${library}.m1" "macros/_template.m1"
 
     # Compare the old and new files.
-    if ! diff "${file_new}" "../${library}.sh" > /dev/null 2>&1; then
-        echo "The new and main files differ: ${file_new} ../${library}.sh"
+    if [[ -f "${file_new}" ]]; then
+        if ! diff "${file_new}" "../${library}.sh" > /dev/null 2>&1; then
+            echo "The new and main files differ: ${file_new} ../${library}.sh"
+        fi
     fi
 }
 
@@ -53,7 +53,7 @@ create_files() {
 
 get_file_descr() {
     local library="${1}"
-    ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- -DPRINT_DESCR=1 "macros/${library}.m1"
+    ${_TERM_AWK_COMMAND} -f utilities/m1.awk -- "macros/${library}.m1" "macros/_description.m1"
 }
 
 # Print some help text.

@@ -1,0 +1,7 @@
+@@ Settings for the example file table.sh
+@define HAS_LIBRARY 0
+@define LIBRARY_NAME table
+@define DESCRIPTION Demonstration of color and attributes.
+@define HAS_EXAMPLE 1
+@define EXAMPLE_LIBRARIES "attr.sh" "color.sh"
+@default EXAMPLE_FILE ../examples/@LIBRARY_NAME@.sh
