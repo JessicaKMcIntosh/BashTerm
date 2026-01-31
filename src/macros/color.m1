@@ -12,8 +12,3 @@
 @@ Settings for the example file.
 @define HAS_EXAMPLE 1
 @define EXAMPLE_LIBRARIES "attr.sh" "color.sh"
-@@
-@@ Settings for the example file 'table'.
-@define HAS_EXAMPLE 1
-@default EXAMPLE_FILE ../examples/table.sh
-@default EXAMPLE_SOURCE examples/table.sh
