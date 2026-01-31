@@ -9,10 +9,9 @@
 
 SHELL=/bin/bash
 
-.PHONY: all clean demo help test
+.PHONY: default all clean demo help replace shellcheck shfmt test tests
 
-help: # Print all available options.
-	@awk -f src/utilities/make_help.awk Makefile
+default: help
 
 all: # Build all files.
 	@src/make.sh
@@ -23,12 +22,20 @@ clean: # Clean temporary files.
 demo: # Run the BashTerm Demo.
 	@bash demo.sh
 
+help: # Print all available options.
+	@awk -f src/utilities/make_help.awk Makefile
+
+replace: all # Replace the library files with the generated ones.
+	@echo ""
+	@echo "Updating main library files."
+	cp -v src/new/*.sh .
+
 shellcheck: # Run shellcheck.
 	@echo "This will take a moment..."
-	@shellcheck -P .:examples:tests -x *.sh examples/*.sh tests/*.sh
+	@shellcheck -P .:examples:tests -x *.sh examples/*.sh tests/*.sh src/make.sh
 
-shfmt: # Check for formatting issues.
-	@shfmt --apply-ignore -s -d .
+shfmt: # Check for formatting issues. See: .editorconfig
+	@shfmt --apply-ignore -s -d . src/make.sh
 
 test: # Run the tests.
 	@./run_tests.sh
