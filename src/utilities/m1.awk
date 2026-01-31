@@ -54,7 +54,8 @@
 #
 
 function error(s) {
-    print "m1 error: " s | "cat 1>&2"; exit 1
+    s = "m1 error: " s
+    print s | "cat 1>&2"; exit 1
 }
 
 function dofile(fname,  savefile, savebuffer, newstring) {
@@ -206,7 +207,7 @@ function dodef(fname,  str, x, name) {
 function do_D(definition,  pos, name, value) {
     sub(/^-D/, "", definition)
     pos = index(definition, "=")
-    if (pos == 0) 
+    if (pos == 0)
         print_usage(sprintf("Invalid -D definition: %s", definition))
     $0 = sprintf("@define\t%s\t%s",substr(definition, 1, (pos - 1)) , substr(definition, (pos + 1)))
     dodef()
@@ -234,6 +235,8 @@ function doargs(  i) {
 }
 
 function doprint(string) {
+    if (output == "/dev/null")
+        return 0
     if (output == "-")
         print string
     else
