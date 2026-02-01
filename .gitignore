@@ -1,3 +1,4 @@
 src/new/*
 *.out
 *.swp
+.gawk*
