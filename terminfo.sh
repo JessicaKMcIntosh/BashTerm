@@ -85,7 +85,8 @@ term::info_print() {
     fi
 
     # echo "PARAMETERIZED!! >>${name}<< >>${value}<< >>${parameters[*]}<<"
-    printf "$(gawk --lint -f print_info.awk -- "${value}" "${parameters[@]}")"
+    # printf "$(gawk --lint -f print_info.awk -- "${value}" "${parameters[@]}")"
+    printf "$(gawk -f print_info.awk -- "${value}" "${parameters[@]}")"
     # gawk -D --lint -f print_info.awk -- "${value}" "${parameters[@]}"
 }
 
@@ -99,8 +100,17 @@ declare -p TERM_INFO
 # printf ".\n"
 
 # term::info_print "rep" "1" "2"
-term::info_print "rep" "2" "3" | xxd
-tput rep 2 3 | xxd
+# term::info_print "rep" "2" "3" | xxd
+# tput rep 2 3 | xxd
+
+# term::info_print "setf" "0" | xxd
+# tput setf 0 | xxd
+for number in {0..9}; do
+    echo "# ${number}"
+    term::info_print "setf" ${number} | xxd
+    tput setf ${number} | xxd
+done
+
 # term::info_print "cup" "1" "2" | xxd
 # tput cup 1 2 | xxd
 
