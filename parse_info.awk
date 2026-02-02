@@ -11,9 +11,6 @@
     # Strip the leading tab.
     sub(/^\t/, "")
 
-    # Strip the trailing comma.
-    sub(/,$/, "")
-
     # Make reading numeric capabilities easier.
     if (sub(/#/, "=")) {
         print
@@ -49,13 +46,15 @@
             } else {
                 # Convert a character to a control character in octal.
                 # The spaces skip over the numbers 8 and 9, which are invalid for octal.
-                output = output sprintf("\\%03d", index("ABCDEFG  HIJKLMNO  PQRSTUVW  XYZ", toupper(character)))
+                output = output sprintf("\\%03d", index("ABCDEFG  HIJKLMNO  PQRSTUVW  XYZ[\\]^_", toupper(character)))
             }
             value = ((RSTART + 1) >= length(value) ? "" : substr(value, (RSTART + 2)))
             # value = substr(value, (RSTART + 2))
         }
-        print output value
-    } else {
-        print value
+        value =  output value
     }
+    gsub(/\\,/, ",", value)
+    gsub(/\\:/, ":", value)
+    gsub(/\\\\/, "\\,", value)
+    print value
 }

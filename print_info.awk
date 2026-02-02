@@ -13,6 +13,8 @@ BEGIN {
     delete stack
     stack_pointer=0
     delete vars
+    if (var_file)
+        load_variables()
 
     # Check that there are enough arguments.
     if (ARGC < 2) {
@@ -33,6 +35,8 @@ BEGIN {
         }
     }
     printf "%s", output
+    if (var_file)
+        save_variables()
     exit
 }
 
@@ -79,7 +83,7 @@ function handle_percent() {
         }
     } else if (character == "\047") { # single quote
         # %"c" - char constant c
-        push(handle_character_constant())
+        handle_character_constant()
     } else if (character == "\173") { # {}
         # %{nn} - integer constant nn
         push(handle_integer_constant())
@@ -100,8 +104,8 @@ function handle_percent() {
         push(compl(pop()))
     } else if (character == "i") {
         # %i - add 1 to first two parameters (for ANSI terminals)
-        ARGV[2]++
-        ARGV[3]++
+        push(++ARGV[2])
+        push(++ARGV[3])
     } else if (character ~ /[+*\/m&|^=<>-]/) {
         handle_math()
     } else if (character ~ /[?te;]/) {
@@ -116,11 +120,14 @@ function handle_percent() {
     return ""
 }
 
-function handle_character_constant(    save_character) {
-    save_character = next_character(1)
+function handle_character_constant(    value) {
+    value = index(  " !\"#$%&'()*+,-./0123456789:;<=>?@" \
+                    "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`" \
+                    "abcdefghijklmnopqrstuvwxyz{|}~ ",
+                    next_character(1))
     if (next_character(1) != "\047")
         error("Expecting closing single quote.")
-    character = save_character
+    push(value + 31)
 }
 
 function handle_integer_constant(    number) {
@@ -246,7 +253,7 @@ function handle_sprintf(string) {
 }
 
 function error(string) {
-    printf "ERROR: %s\n", string | "cat 1>&2"
+    printf "ERROR: %s\nOutput: %s\n", string, output | "cat 1>&2"
     close("cat 1>&2")
     exit 1
 }
@@ -254,7 +261,7 @@ function error(string) {
 # function trace(caller,    stack_item, stack_print) {
 #     stack_print = ""
 #     for (stack_item = 1; stack_item <= stack_pointer; stack_item++) {
-#         stack_print = stack_print " " stack[stack_item]
+#         stack_print = stack_print " \047" stack[stack_item] "\047"
 #     }
 
 #     printf  "{%s} %-10s [%03d] %s (%s) %s : %-10s {%d%s}\n",
@@ -270,13 +277,13 @@ function error(string) {
 # }
 
 # Work with variables.
-function get(variale) {
+function get(variable) {
     if (!(variable in vars)) {
         vars[variable] = 0
     }
     return vars[variable]
 }
-function set(variale, value) {
+function set(variable, value) {
     return (vars[variable] = value)
 }
 
@@ -294,3 +301,18 @@ function pop() {
 #         print stack[pointer]
 #     }
 # }
+
+function load_variables(    input) {
+    while (getline input < var_file) {
+        vars[substr(input, 1, 1)] = substr(input, 2)
+    }
+    close(var_file)
+}
+function save_variables(    variable) {
+    printf "" > var_file
+    for (variable in vars) {
+        printf("%s%s\n", variable, vars[variable]) > var_file
+    }
+    fflush(var_file)
+    close(var_file)
+}

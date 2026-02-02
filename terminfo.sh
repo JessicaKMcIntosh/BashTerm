@@ -34,6 +34,9 @@ unset _TERM_FILE_NAME
 # Contains the terminfo details.
 declare -A TERM_INFO
 
+# Static variable storage file.
+declare -g _TERM_INFO_VARIABLE_FILE=""
+
 # Read the terminfo description
 term::info_init() {
     local name value term_name
@@ -46,6 +49,9 @@ term::info_init() {
 
     # Read the capabilities and store them into TERM_INFO.
     while IFS=$'=' read -r name value; do
+        # Strip the trailing comma.
+        # Without this comma read will drop a trailing '='.
+        value=${value%,}
         # The first line is the terminal name and description.
         if [[ -z ${term_name} ]]; then
             IFS='|' read -r name value < <(echo "${name}")
@@ -57,10 +63,11 @@ term::info_init() {
         # [[ -z ${value} ]] && value=${name}
         # printf ">>%s<< >>%s<<\n" "${name@Q}" "${value@Q}"
         TERM_INFO[${name}]=${value}
-    done < <(
-        infocmp -q -1 -l |
-        awk -f parse_info.awk
-    )
+    done < <(infocmp -q -1 -l | awk -f parse_info.awk)
+
+    # Create the storage for static variables.
+    trap '[[ -n $_TERM_INFO_VARIABLE_FILE ]] && rm -f "${_TERM_INFO_VARIABLE_FILE}"' EXIT
+    _TERM_INFO_VARIABLE_FILE=$(mktemp --tmpdir BashTermInfoVars.XXXXXXXXXX) || exit
 }
 term::info_init
 
@@ -86,11 +93,38 @@ term::info_print() {
 
     # echo "PARAMETERIZED!! >>${name}<< >>${value}<< >>${parameters[*]}<<"
     # printf "$(gawk --lint -f print_info.awk -- "${value}" "${parameters[@]}")"
-    printf "$(gawk -f print_info.awk -- "${value}" "${parameters[@]}")"
+    printf "$(gawk -vvar_file="${_TERM_INFO_VARIABLE_FILE}" -f print_info.awk -- "${value}" "${parameters[@]}")"
     # gawk -D --lint -f print_info.awk -- "${value}" "${parameters[@]}"
 }
 
-declare -p TERM_INFO
+
+term::info_test() {
+    local name value my_output tput_output
+    # declare -p test_list
+
+    while IFS=$'=' read -r name value; do
+        # Strip the trailing comma.
+        # Without this comma read will drop a trailing '='.
+        value=${value%,}
+        my_output="$(term::info_print "${name}" 1 2 3 4 5 6 7 8 9)"
+        if [[ ${name} == "clear" ]]; then
+            # tput does strange things for 'clear'. :(
+            tput_output="$(tput -x "${name}")"
+        else
+            tput_output="$(tput "${name}" 1 2 3 4 5 6 7 8 9)"
+        fi
+        if [[ ${my_output} != "${tput_output}" ]]; then
+            echo "Capability ${name}=(${value}) does not match..."
+            printf "Expected: "
+            printf "${tput_output}" | xxd
+            printf "Actual  : "
+            printf "${my_output}" | xxd
+        fi
+    done < <(infocmp -q -1 -l | sed -n -e 's/^\t//;/=.*$/p')
+
+}
+
+# declare -p TERM_INFO
 
 # echo ""
 # printf "This is "
@@ -105,29 +139,19 @@ declare -p TERM_INFO
 
 # term::info_print "setf" "0" | xxd
 # tput setf 0 | xxd
-for number in {0..9}; do
-    echo "# ${number}"
-    term::info_print "setf" ${number} | xxd
-    tput setf ${number} | xxd
-done
-
+# for number in {0..9}; do
+    # echo "# ${number}"
+    # term::info_print "setf" ${number} | xxd
+    # tput setf ${number} | xxd
+# done
 # term::info_print "cup" "1" "2" | xxd
 # tput cup 1 2 | xxd
 
+echo "Running tests..."
+term::info_test
+echo "Done."
+echo ""
 
+echo "Variables (${_TERM_INFO_VARIABLE_FILE}):"
+cat "${_TERM_INFO_VARIABLE_FILE}"
 
-# term::info_print "clear" #| xxd
-# printf "${TERM_INFO[cub1]}"
-# echo ""
-# printf "${TERM_INFO[cub1]}" | xxd
-# echo ""
-
-# awk '
-#     BEGIN {
-#         string="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-#         for (i=1; i <= length(string); i++) {
-#             character = substr(string, i, 1)
-#             printf "%s = %03d\n", character, index("ABCDEFG  HIJKLMNO  PQRSTUVW  XYZ", toupper(character))
-#         }
-#     }
-# '
