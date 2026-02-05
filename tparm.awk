@@ -1,4 +1,4 @@
-#!/usr/bin/env -S awk -f
+#!/usr/bin/env -S gawk -f
 
 # BashTerm by Jessica K McIntosh is marked CC0 1.0.
 # To view a copy of this mark, visit:
@@ -7,6 +7,9 @@
 # Print a terminfo string.
 # Handle the parameters in the string.
 # See: https://invisible-island.net/ncurses/man/terminfo.5.html#h3-Parameterized-Strings
+
+# WARNING: This file requires GAWK since it uses bitwise operations.
+# Or some other AWK implementation that supports and(), compl(), or(), and xor().
 
 BEGIN {
     # Stack and variables for processing the capability value.
@@ -21,25 +24,29 @@ BEGIN {
         error("Provide the capability string and parameter(s).")
     }
 
-    # Process the string.
+    # Process the format string.
     format_string = ARGV[1]
     format_length = length(format_string)
     format_position = 0
-    output = ""
+    output_string = ""
     character = ""
     while (next_character(0)) {
         if (character == "%") {
-            output = output handle_percent()
+            handle_percent()
         } else {
-            output = output character
+            output_string = output_string character
         }
     }
-    printf "%s", output
+    printf "%s", output_string
+
+    # Save the variables back to the file.
     if (var_file)
         save_variables()
     exit
 }
 
+# Get the next character from the format string.
+# Set the variable 'character' and return the character.
 function next_character(fatal) {
     if (format_position >= format_length) {
         if (fatal) {
@@ -51,17 +58,18 @@ function next_character(fatal) {
     return (character = substr(format_string, ++format_position, 1))
 }
 
+# Figure out what to do with a '%' in the format string.
 function handle_percent() {
     next_character(1)
     if (character == "%") {
         #  %% - outputs “%”
-        return "%"
+        output_string = output_string "%"
     } else if (character == "c") {
         # %c - print pop() like %c in printf
-        return sprintf("%c", pop())
+        output_string = output_string sprintf("%c", pop())
     } else if (character == "s") {
         # %s - print pop() like %s in printf
-        return sprintf("%s", pop())
+        output_string = output_string sprintf("%s", pop())
     } else if (character == "p") {
         # %p[1-9] - push i'th parameter
         if (next_character(1) ~ /[0-9]/) {
@@ -84,18 +92,12 @@ function handle_percent() {
     } else if (character == "\047") { # single quote
         # %"c" - char constant c
         handle_character_constant()
-    } else if (character == "\173") { # {}
+    } else if (character == "\173") {
         # %{nn} - integer constant nn
-        push(handle_integer_constant())
+        handle_integer_constant()
     } else if (character == "l") {
         # %l - push strlen(pop)
         push(length(pop()))
-    } else if (character == "A") {
-        # %A - logical “and” operations (for conditionals)
-        push(((pop() == 0) && (pop() == 0) ? 1 : 0))
-    } else if (character == "O") {
-        # %O - logical “or” operations (for conditionals)
-        push(((pop() == 0) || (pop() == 0) ? 1 : 0))
     } else if (character == "!") {
         # %! - unary operations (logical complement): push(op pop())
         push((pop() == 0 ? 1 : 0))
@@ -104,10 +106,11 @@ function handle_percent() {
         push(compl(pop()))
     } else if (character == "i") {
         # %i - add 1 to first two parameters (for ANSI terminals)
+        # Also push the values. Some capabilities assume this.
         push(++ARGV[2])
         push(++ARGV[3])
-    } else if (character ~ /[+*\/m&|^=<>-]/) {
-        handle_math()
+    } else if (character ~ /[AO+*\/m&|^=<>-]/) {
+        handle_math_and_logic()
     } else if (character ~ /[?te;]/) {
         handle_if_then_else()
     } else if (substr(format_string, format_position) ~ /^(:-)?[+#]?[0-9]*(\.[0-9]*)?[doxX]/) {
@@ -115,11 +118,11 @@ function handle_percent() {
         # as in printf(3), flags are [-+#] and space.
         # Use a “:” to allow the next character to be a “-” flag,
         # avoiding interpreting “%-” as an operator.
-        return handle_sprintf()
+        handle_sprintf()
     }
-    return ""
 }
 
+# Convert the character to a numer then push it to the stack.
 function handle_character_constant(    value) {
     value = index(  " !\"#$%&'()*+,-./0123456789:;<=>?@" \
                     "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`" \
@@ -133,10 +136,11 @@ function handle_character_constant(    value) {
 function handle_integer_constant(    number) {
     number = ""
     while (1) {
-        if ((next_character(1)) == "\175") # {}
-            return number
+        if ((next_character(1)) == "\175")
+            break
         number = number character
     }
+    push(number)
 }
 
 function handle_if_then_else(    level) {
@@ -199,28 +203,32 @@ function handle_if_then_else(    level) {
         }
         return
     }
-
-    print "FOO"
 }
 
-function handle_math(    a, b) {
+function handle_math_and_logic(    a, b) {
     a = pop()
     b = pop()
 
     # Binary operations are in postfix form with the operands in the usual order.
     # That is, to get x-5 one would use “%gx%{5}%-”.
-    if (character == "+") {
+    if (character == "A") {
+        # %A - logical “and” operations (for conditionals)
+        push(((b != 0) && (a != 0) ? 1 : 0))
+    } else if (character == "O") {
+        # %O - logical “or” operations (for conditionals)
+        push(((b != 0) || (a != 0) ? 1 : 0))
+    } else if (character == "+") {
          # %+ - arithmetic: push(pop() op pop())
-         push(a + b)
+         push(b + a)
     } else if (character == "-") {
          # %- - arithmetic: push(pop() op pop())
          push(b - a)
     } else if (character == "*") {
          #%* - arithmetic: push(pop() op pop())
-         push(a * b)
+         push(b * a)
     } else if (character == "/") {
          # %/ - arithmetic: push(pop() op pop())
-         push(int(b / a))
+         push((a == 0 ? 0 : int(b / a)))
     } else if (character == "m") {
          # %m - arithmetic (%m is mod): push(pop() op pop())
          push(b % a)
@@ -238,26 +246,33 @@ function handle_math(    a, b) {
          push((b == a ? 1 : 0))
     } else if (character == ">") {
         # %> - logical operations: push(pop() op pop())
-         push((b < a ? 1 : 0))
+         push((b > a ? 1 : 0))
     } else if (character == "<") {
         # %< - logical operations: push(pop() op pop())
          push((b < a ? 1 : 0))
     }
 }
 
+# Take care of a real format string.
+# Expectes RLENGTH to hold the length of the formmat string.
 function handle_sprintf(string) {
+    # as in printf(3), flags are [-+#] and space.
+    # Use a ":" to allow the next character to be a "-" flag,
+    # avoiding interpreting "%-" as an operator.
     string = substr(format_string, (format_position - 1), (RLENGTH + 2))
     sub(/^%:/, "%", string)
     format_position += RLENGTH
-    return sprintf(string, pop())
+    output_string = output_string sprintf(string, pop())
 }
 
+# Print an error to STDERR then exit.
 function error(string) {
-    printf "ERROR: %s\nOutput: %s\n", string, output | "cat 1>&2"
+    printf "ERROR: %s\n", string | "cat 1>&2"
     close("cat 1>&2")
     exit 1
 }
 
+# This is for debugging. Otherwise leave commented out.
 # function trace(caller,    stack_item, stack_print) {
 #     stack_print = ""
 #     for (stack_item = 1; stack_item <= stack_pointer; stack_item++) {
@@ -271,7 +286,7 @@ function error(string) {
 #             substr(format_string, 1, format_position - 1),
 #             substr(format_string, format_position, 1),
 #             substr(format_string, format_position + 1),
-#             output,
+#             output_string,
 #             stack_pointer,
 #             stack_print | "cat 1>&2"
 # }
@@ -286,22 +301,6 @@ function get(variable) {
 function set(variable, value) {
     return (vars[variable] = value)
 }
-
-# Work with the stack.
-function push(value) {
-    stack[++stack_pointer] = value
-}
-function pop() {
-    if (stack_pointer == 0)
-        error("Stack underflow")
-    return stack[stack_pointer--]
-}
-# function dump_stack(    pointer) {
-#     for (pointer = 1; pointer <= stack_pointer; pointer++) {
-#         print stack[pointer]
-#     }
-# }
-
 function load_variables(    input) {
     while (getline input < var_file) {
         vars[substr(input, 1, 1)] = substr(input, 2)
@@ -315,4 +314,14 @@ function save_variables(    variable) {
     }
     fflush(var_file)
     close(var_file)
+}
+
+# Work with the stack.
+function push(value) {
+    stack[++stack_pointer] = value
+}
+function pop() {
+    if (stack_pointer == 0)
+        error("Stack underflow")
+    return stack[stack_pointer--]
 }

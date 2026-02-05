@@ -7,11 +7,21 @@
 # Reads output from infocmp and transforms it
 # into something easier to handle in BASH.
 
+NR == 1 {
+    # Special handling for the first line.
+    # It contains the terminal name and description.
+    sub(/,*$/, "", $0)
+    fields = split($0, info, /\|/)
+    printf "_name=%s,\n", info[1]
+    printf "_descr=%s,\n", info[fields]
+    next
+}
+
 {
     # Strip the leading tab.
     sub(/^\t/, "")
 
-    # Make reading numeric capabilities easier.
+    # Make reading numeric capabilities easier to deal with.
     if (sub(/#/, "=")) {
         print
         next
@@ -27,19 +37,20 @@
     # TODO: Deal with delays.
     gsub(/\$<[0-9][0-9]*[\/*]*>/,"")
 
-    value = $0
-    if (value ~ /\^/) {
+    input = $0
+    output = input
+    if (input ~ /\^/) {
         # Replace ^ with the corresponding control characters.
         output = ""
-        while (match(value, /\^/)) {
+        while (match(input, /\^/)) {
             # If the ^ is escaped include only the ^.
-            if (substr(value, (RSTART - 1), 1) == "\\") {
-                output = output substr(value, 1, (RSTART - 2)) "^"
-                value = substr(value, (RSTART + 1))
+            if (substr(input, (RSTART - 1), 1) == "\\") {
+                output = output substr(input, 1, (RSTART - 2)) "^"
+                input = substr(input, (RSTART + 1))
                 continue
             }
-            output = output substr(value, 1, (RSTART -1))
-            character = substr(value, (RSTART + 1), 1)
+            output = output substr(input, 1, (RSTART -1))
+            character = substr(input, (RSTART + 1), 1)
             if (character == "?") {
                 # Special case for DEL.
                 output = output "\\177"
@@ -48,13 +59,16 @@
                 # The spaces skip over the numbers 8 and 9, which are invalid for octal.
                 output = output sprintf("\\%03d", index("ABCDEFG  HIJKLMNO  PQRSTUVW  XYZ[\\]^_", toupper(character)))
             }
-            value = ((RSTART + 1) >= length(value) ? "" : substr(value, (RSTART + 2)))
-            # value = substr(value, (RSTART + 2))
+            input = ((RSTART + 1) >= length(input) ? "" : substr(input, (RSTART + 2)))
         }
-        value =  output value
     }
-    gsub(/\\,/, ",", value)
-    gsub(/\\:/, ":", value)
-    gsub(/\\\\/, "\\,", value)
-    print value
+
+    # Terminfo uses some uncommon escape sequences.
+    gsub(/\\,/, ",", output)
+    gsub(/\\:/, ":", output)
+    gsub(/\\s/, " ", output)
+    gsub(/\\l/, "\\n", output)
+
+    # Finally.
+    print output
 }

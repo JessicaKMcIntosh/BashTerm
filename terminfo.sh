@@ -48,22 +48,12 @@ term::info_init() {
     fi
 
     # Read the capabilities and store them into TERM_INFO.
-    while IFS=$'=' read -r name value; do
+    while IFS='=' read -r name value; do
         # Strip the trailing comma.
         # Without this comma read will drop a trailing '='.
         value=${value%,}
-        # The first line is the terminal name and description.
-        if [[ -z ${term_name} ]]; then
-            IFS='|' read -r name value < <(echo "${name}")
-            term_name=${name}
-            TERM_INFO[_name]=${name}
-            TERM_INFO[_descr]=${value}
-            continue
-        fi
-        # [[ -z ${value} ]] && value=${name}
-        # printf ">>%s<< >>%s<<\n" "${name@Q}" "${value@Q}"
         TERM_INFO[${name}]=${value}
-    done < <(infocmp -q -1 -l | awk -f parse_info.awk)
+    done < <(infocmp -q -1 -l | awk -f setupterm.awk)
 
     # Create the storage for static variables.
     trap '[[ -n $_TERM_INFO_VARIABLE_FILE ]] && rm -f "${_TERM_INFO_VARIABLE_FILE}"' EXIT
@@ -72,7 +62,7 @@ term::info_init() {
 term::info_init
 
 # Print the interpreted value for a terminal capability.
-term::info_print() {
+term::info_tput() {
     local name=${1:-}
     shift
     local -a parameters=("${@}")
@@ -91,27 +81,33 @@ term::info_print() {
         return 0
     fi
 
-    # echo "PARAMETERIZED!! >>${name}<< >>${value}<< >>${parameters[*]}<<"
-    # printf "$(gawk --lint -f print_info.awk -- "${value}" "${parameters[@]}")"
-    printf "$(gawk -vvar_file="${_TERM_INFO_VARIABLE_FILE}" -f print_info.awk -- "${value}" "${parameters[@]}")"
-    # gawk -D --lint -f print_info.awk -- "${value}" "${parameters[@]}"
+    # Parameters are required. Run it through awk.
+    #printf "$(gawk --lint -vvar_file="${_TERM_INFO_VARIABLE_FILE}" -f tparm.awk -- "${value}" "${parameters[@]}")"
+    printf "$(gawk -vvar_file="${_TERM_INFO_VARIABLE_FILE}" -f tparm.awk -- "${value}" "${parameters[@]}")"
+    # gawk -D --lint -f tparm.awk -- "${value}" "${parameters[@]}"
+    #gawk -vvar_file="${_TERM_INFO_VARIABLE_FILE}" -f tparm.awk -- "${value}" "${parameters[@]}"
 }
 
 
 term::info_test() {
-    local name value my_output tput_output
+    local name value my_output tput_output tput_return
     # declare -p test_list
 
     while IFS=$'=' read -r name value; do
         # Strip the trailing comma.
         # Without this comma read will drop a trailing '='.
         value=${value%,}
-        my_output="$(term::info_print "${name}" 1 2 3 4 5 6 7 8 9)"
+        my_output="$(term::info_tput "${name}" 1 2 3 4 5 6 7 8 9)"
         if [[ ${name} == "clear" ]]; then
             # tput does strange things for 'clear'. :(
-            tput_output="$(tput -x "${name}")"
+            tput_output="$(tput -x "${name}" | tr -d '\000')"
         else
-            tput_output="$(tput "${name}" 1 2 3 4 5 6 7 8 9)"
+            tput_output="$(tput "${name}" 1 2 3 4 5 6 7 8 9 2>/dev/null | tr -d '\000')"
+            tput_return=$?
+            if [[ ! $tput_return ]] ; then
+                echo "Error running 'tput ${name} 1 2 3 4 5 6 7 8 9'. Return Code: $tput_return" 1>&2
+                exit 1
+            fi
         fi
         if [[ ${my_output} != "${tput_output}" ]]; then
             echo "Capability ${name}=(${value}) does not match..."
@@ -128,30 +124,30 @@ term::info_test() {
 
 # echo ""
 # printf "This is "
-# term::info_print "smul"
+# term::info_tput "smul"
 # printf "Underlined"
-# term::info_print "sgr0"
+# term::info_tput "sgr0"
 # printf ".\n"
 
-# term::info_print "rep" "1" "2"
-# term::info_print "rep" "2" "3" | xxd
+# term::info_tput "rep" "1" "2"
+# term::info_tput "rep" "2" "3" | xxd
 # tput rep 2 3 | xxd
 
-# term::info_print "setf" "0" | xxd
+# term::info_tput "setf" "0" | xxd
 # tput setf 0 | xxd
 # for number in {0..9}; do
     # echo "# ${number}"
-    # term::info_print "setf" ${number} | xxd
+    # term::info_tput "setf" ${number} | xxd
     # tput setf ${number} | xxd
 # done
-# term::info_print "cup" "1" "2" | xxd
+# term::info_tput "cup" "1" "2" | xxd
 # tput cup 1 2 | xxd
 
 echo "Running tests..."
+echo "Terminal: ${TERM_INFO[_name]} : ${TERM_INFO[_descr]}"
 term::info_test
 echo "Done."
 echo ""
 
 echo "Variables (${_TERM_INFO_VARIABLE_FILE}):"
 cat "${_TERM_INFO_VARIABLE_FILE}"
-

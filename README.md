@@ -138,6 +138,12 @@ For example setting text **BOLD**.
 
 Details in the file [attr.md](doc/attr.md).
 
+### `boxes.sh` - Box drawing Unicode characters
+
+Unicode box drawing characters.
+
+Details in the file [boxes.md](doc/boxes.md)
+
 ### `color.sh` - Terminal Colors
 
 Escape codes for setting foreground and background.
@@ -177,12 +183,6 @@ A simple spinner to tell the user something is going on.
 This is more of an example than a complete solution.
 
 Details in the file [spinner.md](doc/spinner.md)
-
-### `boxes.sh` - Box drawing Unicode characters
-
-Unicode box drawing characters.
-
-Details in the file [boxes.md](doc/boxes.md)
 
 ### `function.sh` - Functional Interface
 
