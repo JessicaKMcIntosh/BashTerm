@@ -61,6 +61,7 @@ NR == 1 {
             }
             input = ((RSTART + 1) >= length(input) ? "" : substr(input, (RSTART + 2)))
         }
+        output = output input
     }
 
     # Terminfo uses some uncommon escape sequences.
