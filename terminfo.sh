@@ -59,7 +59,6 @@ term::info_init() {
     trap '[[ -n $_TERM_INFO_VARIABLE_FILE ]] && rm -f "${_TERM_INFO_VARIABLE_FILE}"' EXIT
     _TERM_INFO_VARIABLE_FILE=$(mktemp --tmpdir BashTermInfoVars.XXXXXXXXXX) || exit
 }
-term::info_init
 
 # Print the interpreted value for a terminal capability.
 term::info_tput() {
@@ -120,6 +119,8 @@ term::info_test() {
 
 }
 
+term::info_init
+
 # declare -p TERM_INFO
 
 # echo ""
@@ -140,14 +141,18 @@ term::info_test() {
     # term::info_tput "setf" ${number} | xxd
     # tput setf ${number} | xxd
 # done
-# term::info_tput "cup" "1" "2" | xxd
-# tput cup 1 2 | xxd
+#term::info_tput kf9 | xxd
+#tput kf9 | xxd
 
 echo "Running tests..."
-echo "Terminal: ${TERM_INFO[_name]} : ${TERM_INFO[_descr]}"
-term::info_test
-echo "Done."
-echo ""
+#for TERM in vt100 vt220 xterm xterm-color xterm-256color screen tmux sun amiga; do
+    #TERM_INFO=()
+    #term::info_init
+    echo "Terminal: ${TERM_INFO[_name]} : ${TERM_INFO[_descr]}"
+    term::info_test
+    echo "Done."
+    echo ""
+#done
 
 echo "Variables (${_TERM_INFO_VARIABLE_FILE}):"
 cat "${_TERM_INFO_VARIABLE_FILE}"
