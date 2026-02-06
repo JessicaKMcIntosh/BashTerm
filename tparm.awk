@@ -72,7 +72,7 @@ function handle_percent() {
         output_string = output_string sprintf("%s", pop())
     } else if (character == "p") {
         # %p[1-9] - push i'th parameter
-        if (next_character(1) ~ /[0-9]/) {
+        if (next_character(1) ~ /[1-9]/) {
             if ((character + 1) >= ARGC)
                 error("Insufficient parameters.")
             push(ARGV[character + 1])
@@ -113,11 +113,13 @@ function handle_percent() {
         handle_math_and_logic()
     } else if (character ~ /[?te;]/) {
         handle_if_then_else()
-    } else if (substr(format_string, format_position) ~ /^(:-)?[+#]?[0-9]*(\.[0-9]*)?[doxX]/) {
+    } else if (match(substr(format_string, format_position)i, /^(:-)?[+#]?[0-9]*(\.[0-9]*)?[doxX]/)) {
         # %[[:]flags][width[.precision]][doxXs]
         # as in printf(3), flags are [-+#] and space.
         # Use a “:” to allow the next character to be a “-” flag,
         # avoiding interpreting “%-” as an operator.
+
+        # match() is used here to the function can make use of RLENGTH.
         handle_sprintf()
     }
 }
@@ -254,14 +256,14 @@ function handle_math_and_logic(    a, b) {
 }
 
 # Take care of a real format string.
-# Expectes RLENGTH to hold the length of the formmat string.
+# Expectes RLENGTH to hold the length of the format string.
 function handle_sprintf(string) {
     # as in printf(3), flags are [-+#] and space.
     # Use a ":" to allow the next character to be a "-" flag,
     # avoiding interpreting "%-" as an operator.
-    string = substr(format_string, (format_position - 1), (RLENGTH + 2))
+    string = substr(format_string, (format_position - 1), (RLENGTH + 1))
     sub(/^%:/, "%", string)
-    format_position += RLENGTH
+    format_position += RLENGTH - 1
     output_string = output_string sprintf(string, pop())
 }
 
