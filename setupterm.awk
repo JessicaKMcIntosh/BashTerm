@@ -10,7 +10,7 @@
 NR == 1 {
     # Special handling for the first line.
     # It contains the terminal name and description.
-    sub(/,*$/, "", $0)
+    sub(/,*$/, "")
     fields = split($0, info, /\|/)
     printf "_name=%s,\n", info[1]
     printf "_descr=%s,\n", info[fields]
