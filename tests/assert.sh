@@ -29,6 +29,7 @@ test::assert_equals() {
 
 test::assert_equals_fail() {
     local save_assert_fail=${ASSERT_FAIL_COUNT}
+    local save_assert_pass=${ASSERT_PASS_COUNT}
     local save_verbose=${TestVerbose}
     local test_message="assert_equals should fail for non-equal values."
 
@@ -43,6 +44,7 @@ test::assert_equals_fail() {
         ASSERT_FAIL_COUNT=${save_assert_fail}
         assert_pass "${test_message}"
     else
+        ASSERT_PASS_COUNT=${save_assert_pass}
         assert_fail "${test_message}"
     fi
 }
@@ -54,6 +56,7 @@ test::assert_exists() {
 
 test::assert_exists_fail() {
     local save_assert_fail=${ASSERT_FAIL_COUNT}
+    local save_assert_pass=${ASSERT_PASS_COUNT}
     local save_verbose=${TestVerbose}
     local test_message="assert_exists should fail for an unset variable and incorrect value."
 
@@ -69,12 +72,14 @@ test::assert_exists_fail() {
         ASSERT_FAIL_COUNT=${save_assert_fail}
         assert_pass "${test_message}"
     else
+        ASSERT_PASS_COUNT=${save_assert_pass}
         assert_fail "${test_message}"
     fi
 }
 
 test::assert_fail() {
     local save_assert_fail=${ASSERT_FAIL_COUNT}
+    local save_assert_pass=${ASSERT_PASS_COUNT}
     local save_verbose=${TestVerbose}
     local test_message="assert_fail should always fail."
 
@@ -89,6 +94,7 @@ test::assert_fail() {
         ASSERT_FAIL_COUNT=${save_assert_fail}
         assert_pass "${test_message}"
     else
+        ASSERT_PASS_COUNT=${save_assert_pass}
         echo "${test_message}"
         exit 1
     fi
@@ -104,6 +110,7 @@ test::assert_run() {
 
 test::assert_run_fail() {
     local save_assert_fail=${ASSERT_FAIL_COUNT}
+    local save_assert_pass=${ASSERT_PASS_COUNT}
     local save_verbose=${TestVerbose}
     local test_message="assert_run should fail for incorrect values."
 
@@ -119,6 +126,7 @@ test::assert_run_fail() {
         ASSERT_FAIL_COUNT=${save_assert_fail}
         assert_pass "${test_message}"
     else
+        ASSERT_PASS_COUNT=${save_assert_pass}
         assert_fail "${test_message}"
     fi
 }
