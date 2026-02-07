@@ -29,6 +29,7 @@ fi
 # Configuration:
 declare TestDirectory="tests"
 declare TestFailFatal=false
+declare TestVerbose=false
 
 # Saner shell defaults.
 set -o nounset
@@ -36,9 +37,9 @@ shopt -s nullglob
 shopt -u failglob
 
 # Testing Variables:
-declare TEST_COUNT  # The number of tests that have been run.
-declare ASSERT_PASS # The number of assertions that have passed.
-declare ASSERT_FAIL # The number of assertions that have failed.
+declare TEST_COUNT        # The number of tests that have been run.
+declare ASSERT_PASS_COUNT # The number of assertions that have passed.
+declare ASSERT_FAIL_COUNT # The number of assertions that have failed.
 
 # For testing the tests.
 declare _TEST_SENTINEL="SENTINEL"
@@ -47,7 +48,7 @@ declare _TEST_SENTINEL="SENTINEL"
 
 _assert_check_fatal() {
     if ${TestFailFatal}; then
-        echo "Fatal failure! Aborting..."
+        echo "Bail out! A fatal test has failed."
         exit 1
     fi
 }
@@ -60,14 +61,13 @@ _assert() {
     local message=${3:-}
 
     if [[ ${condition} -ne 0 ]]; then
-        ((ASSERT_FAIL++))
-        printf "FAILED: [%s] " "${caller}"
-        if [[ -n ${message} ]]; then
-            printf "%s " "${message}"
-        fi
+        ((ASSERT_FAIL_COUNT++))
+        printf "not ok - [%s] %s\n" "${caller}" "${message}"
         return 1
+    elif $TestVerbose; then
+        printf "ok - [%s] %s\n" "${caller}" "${message}"
     fi
-    ((ASSERT_PASS++))
+    ((ASSERT_PASS_COUNT++))
     return 0
 }
 
@@ -82,24 +82,23 @@ assert_exists() {
     fi
     local message=${2:-}
     local actual
-    local result=1
 
-    # Does the variable exist?
-    [[ -v ${variable} ]] && result=0 || result=1
-    if ! _assert "${result}" "assert_exists" "${message}"; then
-        printf "Variable (%s) does not exist.\n" "${variable}"
-        _assert_check_fatal
-        return 1
-    elif [[ -n ${expected} ]]; then
-        # Yes. And there is an expected value. Are they equal?
-        actual=${!variable}
-        [[ ${expected} == "${actual}" ]] && result=0 || result=1
-        if ! _assert "${result}" "assert_exists" "${message}"; then
-            printf "Expected: (%s) Actual: (%s)\n" "${expected@Q}" "${actual@Q}"
-            _assert_check_fatal
-            return 1
+    if [[ -v ${variable} ]]; then
+        if [[ -n ${expected} ]]; then
+            actual=${!variable}
+            if [[ ${expected} != "${actual}" ]]; then
+                _assert "1" "assert_exists" "${message}"
+                printf "Expected: (%s) Actual: (%s)\n" "${expected@Q}" "${actual@Q}"
+                _assert_check_fatal
+                return 1
+            fi
         fi
+    else
+        _assert "1" "assert_exists" "${message}"
+        printf "Variable (%s) does not exist.\n" "${variable}"
+        return 1
     fi
+    _assert "0" "assert_exists" "${message}"
     return 0
 }
 
@@ -126,15 +125,20 @@ assert_fail() {
     return 1
 }
 
+# Always pass.
+assert_pass() {
+    local message=${1}
+    _assert "0" "assert_pass" "${message}"
+    return 0
+}
+
 # Run a command. Check the return status and output.
 assert_run() {
     local command=${1}
     local expected_status=${2}
     local expected_output=${3}
     local message=${4}
-    local actual_output
-    local actual_status
-    local result
+    local actual_output actual_status
 
     # Run the command.
     actual_output="$(eval "${command}" 2>&1)"
@@ -142,18 +146,19 @@ assert_run() {
 
     # Check the return code.
     if [[ -n ${expected_status} ]]; then
-        [[ ${expected_status} == "${actual_status}" ]] && result=0 || result=1
-        if ! _assert "${result}" "assert_run" "${message}"; then
+        if [[ ${expected_status} != "${actual_status}" ]]; then
+            _assert "1" "assert_run" "${message}"
             printf "Expected return code: (%s) Actual: (%s)\n" "${expected_status}" "${actual_status}"
             printf "Output: %s\n" "${actual_output@Q}"
             return 1
         fi
     fi
-    [[ ${expected_output} == "${actual_output}" ]] && result=0 || result=1
-    if ! _assert "${result}" "assert_equals" "${message}"; then
+    if [[ ${expected_output} != "${actual_output}" ]]; then
+        _assert "1" "assert_equals" "${message}"
         printf "Expected: (%s) Actual: (%s)\n" "${expected_output@Q}" "${actual_output@Q}"
         return 1
     fi
+    _assert "0" "assert_equals" "${message}"
     return 0
 }
 
@@ -174,40 +179,47 @@ assert_success() {
 
 # ----~~~~++++====#### Testing Functions ####====++++~~~~----
 
-# Loop over the files in `test/`.
-run_test_files() {
+# Loop over the files in '$TestDirectory'.
+run_a_test_files() {
     local test_file
     echo "Running the tests from 'test/'..."
     for test_file in "${TestDirectory}"/*.sh; do
         # Run the tests from the file.
-        run_test_file "${test_file}"
+        run_a_test_file "${test_file}"
     done
 }
 
 # Run tests passed in on the command line.
 run_test_args() {
-    local test_file
+    local test_file file_name
     echo "Running the tests given on the command line..."
-    if (($# > 0)); then
-        while (($# > 0)); do
-            test_file="${TestDirectory}/${1}"
+
+    while (($# > 0)); do
+        file_name=${1}
+        test_file=${file_name}
+        shift
+
+        # Try to locate the test file.
+        if [[ ! -f ${test_file} ]]; then
+            test_file="${TestDirectory}/${test_file}"
             if [[ ! -f ${test_file} ]]; then
-                test_file="${TestDirectory}/${1}.sh"
-                if [[ ! -f ${test_file} ]]; then
-                    echo "Unable to locate the test file ${1} in ${TestDirectory}."
-                    continue
+                if [[ -f "${test_file}.sh" ]]; then
+                    test_file="${test_file}.sh"
+                else
+                    printf "Unable to locate the test file '%s' in the directory '%s'.\n" "${file_name}" "${TestDirectory}/"
+                    exit 1
                 fi
             fi
-            # Run the tests from the file.
-            run_test_file "${test_file}"
-            shift
-        done
-        echo ""
-    fi
+        fi
+
+        # Run the tests from the file.
+        run_a_test_file "${test_file}"
+    done
+    echo ""
 }
 
 # Load the file then run the tests from the file.
-run_test_file() {
+run_a_test_file() {
     local test_file="${1}"
 
     # Load the test file.
@@ -226,6 +238,7 @@ run_test_file() {
     # Do setup if needed.
     if declare -F "test_setup" > /dev/null 2>&1; then
         test_setup
+        unset test_setup
     fi
 
     run_tests
@@ -233,6 +246,7 @@ run_test_file() {
     # Do cleanup if needed.
     if declare -F "test_cleanup" > /dev/null 2>&1; then
         test_cleanup
+        unset test_cleanup
     fi
 }
 
@@ -253,9 +267,28 @@ print_report() {
     echo ""
     echo "Test Report:"
     printf "  Tests run:         %d\n" "${TEST_COUNT}"
-    printf "  Assertions Total:  %d\n" "$((ASSERT_PASS + ASSERT_FAIL))"
-    printf "  Assertions Passed: %d\n" "${ASSERT_PASS}"
-    printf "  Assertions Failed: %d\n" "${ASSERT_FAIL}"
+    printf "  Assertions Total:  %d\n" "$((ASSERT_PASS_COUNT + ASSERT_FAIL_COUNT))"
+    printf "  Assertions Passed: %d\n" "${ASSERT_PASS_COUNT}"
+    printf "  Assertions Failed: %d\n" "${ASSERT_FAIL_COUNT}"
+}
+
+# Check if there are any left over variables.
+check_variables() {
+    local functions variables
+
+    functions="$(compgen -A function test_)"
+    if [[ -n ${functions} ]]; then
+        echo ""
+        echo "NOTE: There are leftover test functions:"
+        echo "${functions}" | column
+    fi
+
+    variables="$(compgen -v test_)"
+    if [[ -n ${variables} ]]; then
+        echo ""
+        echo "NOTE: There are leftover test variables:"
+        echo "${variables}" | column
+    fi
 }
 
 # ----~~~~++++====#### CLI Functions ####====++++~~~~----
@@ -280,6 +313,7 @@ print_usage() {
     echo ""
     echo "Options:"
     echo "  -h  Print this text."
+    echo "  -v  Verbose testing output."
     exit 1
 }
 
@@ -288,9 +322,10 @@ main() {
     local option
 
     # Check command line args.
-    while getopts ":h" option; do
+    while getopts ":hv" option; do
         case "${option}" in
             h) print_usage ;;
+            v) TestVerbose=true ;;
             *) if [[ ${OPTARG} == "-" ]]; then
                 print_usage # They probably only want help. Catches --help.
             else
@@ -302,8 +337,8 @@ main() {
 
     # Setup the variables.
     TEST_COUNT=0
-    ASSERT_PASS=0
-    ASSERT_FAIL=0
+    ASSERT_PASS_COUNT=0
+    ASSERT_FAIL_COUNT=0
 
     # Were tests to run given on the command line?
     if (($# > 0)); then
@@ -311,11 +346,14 @@ main() {
         run_test_args "${@}"
     else
         # Run all the tests.
-        run_test_files
+        run_a_test_files
     fi
 
     # Print the report.
     print_report
+
+    # Check if there are any left over test variables.
+    check_variables
 }
 
 # Start the testing.
