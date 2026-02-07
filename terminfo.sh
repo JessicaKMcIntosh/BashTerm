@@ -133,6 +133,29 @@ term::tigettype() {
     fi
 }
 
+# Prints the capability value, regardless of the type.
+# Prints TRUE for a boolean value.
+# Princes NULL if the value is cancelled.
+# Returns:
+#   0   The capability was found.
+#   1   The capability is absent.
+term::tiget() {
+    local name=${1:-}
+    local value
+
+    if [[ -v TERM_INFO[${name}] ]]; then
+        value=${TERM_INFO[${name}]}
+    else
+        return 1
+    fi
+
+    case "$(term::tigettype "${name}")" in
+        String) echo "${value}" ;;
+        Number) echo "${value###}" ;;
+        Boolean) echo "${value###}" ;;
+    esac
+}
+
 # Get boolean terminal capability.
 # TRUE or FALSE is printed.
 # Returns:
@@ -253,7 +276,7 @@ term::info_test() {
 
 term::info_init
 
-# declare -p TERM_INFO
+declare -p TERM_INFO
 
 # term::tput "setf" "0" | xxd
 # tput setf 0 | xxd
@@ -265,15 +288,15 @@ term::info_init
 #term::tput kf9 | xxd
 #tput kf9 | xxd
 
-echo "Running tests..."
-for TERM in vt100 vt220 xterm xterm-color xterm-256color screen tmux sun amiga wy350; do
-    TERM_INFO=()
-    term::info_init
-    echo "Terminal: ${TERM_INFO[_name]} : ${TERM_INFO[_descr]}"
-    term::info_test
-    echo "Done."
-    echo ""
-done
+# echo "Running tests..."
+# for TERM in vt100 vt220 xterm xterm-color xterm-256color screen tmux sun amiga wy350; do
+#     TERM_INFO=()
+#     term::info_init
+#     echo "Terminal: ${TERM_INFO[_name]} : ${TERM_INFO[_descr]}"
+#     term::info_test
+#     echo "Done."
+#     echo ""
+# done
 
 # echo ""
 # echo "term::tigetflag am - Boolean"
@@ -324,4 +347,21 @@ done
 # echo ""
 # echo "term::tigetstr ZZZ - Noexistant"
 # term::tigetstr ZZZ
+# echo "RC=$?"
+
+# echo ""
+# echo "term::tiget am - Boolean"
+# term::tiget am
+# echo "RC=$?"
+# echo ""
+# echo "term::tiget cup - String"
+# term::tiget cup
+# echo "RC=$?"
+# echo ""
+# echo "term::tiget it - Number"
+# term::tiget it
+# echo "RC=$?"
+# echo ""
+# echo "term::tiget ZZZ - Noexistant"
+# term::tiget ZZZ
 # echo "RC=$?"
