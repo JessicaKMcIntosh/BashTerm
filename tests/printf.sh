@@ -96,7 +96,10 @@ test_setup() {
 test_cleanup() {
     unset test_attr_bold
     unset test_attr_clear
+    unset test_attr_cnorm
     unset test_attr_dim
+    unset test_attr_hide
+    unset test_attr_home
     unset test_attr_smir
     unset test_attr_invis
     unset test_attr_rmir
@@ -194,18 +197,18 @@ test::environment() {
 # Test backslash escaping.
 test::backslash(){
     term::printf-v "_TEST_TEMP" '>\\<'; assert_equals "${_TEST_TEMP}" ">\<" "Backslash escape a backslash."
-    term::printf-v "_TEST_TEMP" '>\a<'; assert_equals "${_TEST_TEMP}" $'>\a<' "Backslash escape a backslash."
-    term::printf-v "_TEST_TEMP" '>\b<'; assert_equals "${_TEST_TEMP}" $'>\b<' "Backslash escape a backslash."
-    term::printf-v "_TEST_TEMP" '>\e<'; assert_equals "${_TEST_TEMP}" $'>\e<' "Backslash escape a backslash."
-    term::printf-v "_TEST_TEMP" '>\E<'; assert_equals "${_TEST_TEMP}" $'>\E<' "Backslash escape a backslash."
-    term::printf-v "_TEST_TEMP" '>\f<'; assert_equals "${_TEST_TEMP}" $'>\f<' "Backslash escape a backslash."
-    term::printf-v "_TEST_TEMP" '>\n<'; assert_equals "${_TEST_TEMP}" $'>\n<' "Backslash escape a backslash."
-    term::printf-v "_TEST_TEMP" '>\r<'; assert_equals "${_TEST_TEMP}" $'>\r<' "Backslash escape a backslash."
-    term::printf-v "_TEST_TEMP" '>\t<'; assert_equals "${_TEST_TEMP}" $'>\t<' "Backslash escape a backslash."
-    term::printf-v "_TEST_TEMP" '>\v<'; assert_equals "${_TEST_TEMP}" $'>\v<' "Backslash escape a backslash."
-    term::printf-v "_TEST_TEMP" '>\043<'; assert_equals "${_TEST_TEMP}" ">#<" "Backslash escape a backslash."
-    term::printf-v "_TEST_TEMP" '>\141<'; assert_equals "${_TEST_TEMP}" ">a<" "Backslash escape a backslash."
-    term::printf-v "_TEST_TEMP" '>\x7a<'; assert_equals "${_TEST_TEMP}" ">z<" "Backslash escape a backslash."
+    term::printf-v "_TEST_TEMP" '>\a<'; assert_equals "${_TEST_TEMP}" $'>\a<' "Backslash escape a."
+    term::printf-v "_TEST_TEMP" '>\b<'; assert_equals "${_TEST_TEMP}" $'>\b<' "Backslash escape b."
+    term::printf-v "_TEST_TEMP" '>\e<'; assert_equals "${_TEST_TEMP}" $'>\e<' "Backslash escape e."
+    term::printf-v "_TEST_TEMP" '>\E<'; assert_equals "${_TEST_TEMP}" $'>\E<' "Backslash escape E."
+    term::printf-v "_TEST_TEMP" '>\f<'; assert_equals "${_TEST_TEMP}" $'>\f<' "Backslash escape f."
+    term::printf-v "_TEST_TEMP" '>\n<'; assert_equals "${_TEST_TEMP}" $'>\n<' "Backslash escape n."
+    term::printf-v "_TEST_TEMP" '>\r<'; assert_equals "${_TEST_TEMP}" $'>\r<' "Backslash escape r."
+    term::printf-v "_TEST_TEMP" '>\t<'; assert_equals "${_TEST_TEMP}" $'>\t<' "Backslash escape t."
+    term::printf-v "_TEST_TEMP" '>\v<'; assert_equals "${_TEST_TEMP}" $'>\v<' "Backslash escape v."
+    term::printf-v "_TEST_TEMP" '>\043<'; assert_equals "${_TEST_TEMP}" ">#<" "Backslash escape octal starting with 0."
+    term::printf-v "_TEST_TEMP" '>\141<'; assert_equals "${_TEST_TEMP}" ">a<" "Backslash escape octal starting with 1."
+    term::printf-v "_TEST_TEMP" '>\x7a<'; assert_equals "${_TEST_TEMP}" ">z<" "Backslash escape hexadecimal."
     unset _TEST_TEMP
 }
 
