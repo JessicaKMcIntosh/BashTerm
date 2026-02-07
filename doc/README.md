@@ -1,6 +1,9 @@
-# Various bits of documentation and reference.
+# Various bits of documentation and reference
 
-## BashTerm library documentation:
+Some of these files are form other sources.
+See the contents of the files for their license and source.
+
+## BashTerm library documentation
 
 Documentation for each of the BashTerm libraries.
 
@@ -14,9 +17,11 @@ Documentation for each of the BashTerm libraries.
 * `run_tests.md` - Unit Tests
 * `spinner.md` - Spinner
 * `terminfo_man.txt` - Output from the command:
+
 ```shell
 MANWIDTH=80 man 5 terminfo | uni2ascii -e > z.txt
 ```
+
 * `terminfo.src` - Terminfo terminal description file.
 Downloaded from: <https://raw.githubusercontent.com/ThomasDickey/ncurses-snapshots/refs/heads/master/misc/terminfo.src>
 
@@ -31,11 +36,11 @@ These are only for reference.
 * `xterm-256color.txt` - 256 Color XTERM
 * `xterm.txt` - XTERM
 
-## Unicode Characters.
+## Unicode Characters
 
 These files have lists of characters taken from
 <https://www.compart.com/en/unicode/block/U+2500>.
 
 * `boxes.txt` - Box drawing characters.
 * `brail.txt` - Brain characters useful for spinners.
-
+*
