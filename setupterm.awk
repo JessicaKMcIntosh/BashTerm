@@ -22,14 +22,21 @@ NR == 1 {
     sub(/^\t/, "")
 
     # Make reading numeric capabilities easier to deal with.
-    if (sub(/#/, "=")) {
+    if (sub(/#/, "=#")) {
         print
+        next
+    }
+
+    # Cancelled capabilities.
+    if (/^[^=]*@,$/) {
+        printf "%s=CANCELED,\n", substr($0, 1, (length($0) - 2))
         next
     }
 
     # Boolean capabilities.
     if (index($0, "=") == 0) {
-        printf "%s=%s\n", $0, $0
+        sub(/,*$/, "", $0)
+        printf "%s=TRUE,\n", $0
         next
     }
 
