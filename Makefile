@@ -32,7 +32,7 @@ replace: all # Replace the library files with the generated ones.
 
 shellcheck: # Run shellcheck.
 	@echo "This will take a moment..."
-	@shellcheck -P .:examples:tests -x *.sh examples/*.sh tests/*.sh src/make.sh
+	@shellcheck -P .:examples:src:tests -x *.sh examples/*.sh tests/*.sh src/make.sh
 
 shfmt: # Check for formatting issues. See: .editorconfig
 	@shfmt --apply-ignore -s -d . src/make.sh
