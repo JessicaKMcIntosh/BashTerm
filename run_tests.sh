@@ -44,6 +44,19 @@ declare ASSERT_FAIL_COUNT # The number of assertions that have failed.
 # For testing the tests.
 declare _TEST_SENTINEL="SENTINEL"
 
+# Should this be needed by any tests.
+declare -g _TERM_AWK_COMMAND="awk"
+term::find_awk() {
+    local awk_command
+    # mawk is generally faster than gawk.
+    for awk_command in {m,}awk gawk; do
+        if command -v "${awk_command}" > /dev/null; then
+            declare -g _TERM_AWK_COMMAND="${awk_command}"
+            break
+        fi
+    done
+}
+
 # ----~~~~++++====#### Assertion Functions ####====++++~~~~----
 
 _assert_check_fatal() {
@@ -339,6 +352,9 @@ main() {
     TEST_COUNT=0
     ASSERT_PASS_COUNT=0
     ASSERT_FAIL_COUNT=0
+
+    # Check for AWK.
+    term::find_awk
 
     # Were tests to run given on the command line?
     if (($# > 0)); then
