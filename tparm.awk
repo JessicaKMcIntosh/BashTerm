@@ -6,7 +6,16 @@
 
 # Print a terminfo string.
 # Handle the parameters in the string.
-# See: https://invisible-island.net/ncurses/man/terminfo.5.html#h3-Parameterized-Strings
+
+# For more information see:
+# man 5 terminfo # Describes the capability database.
+# man 3 terminfo # Describes the API.
+# man 1 infocmp  # How the capabilities are retrieved.
+# https://invisible-island.net/ncurses/man/terminfo.5.html
+# https://github.com/ThomasDickey/ncurses-snapshots/tree/master
+
+# Documentation from this section was copied where relevant.
+# https://invisible-island.net/ncurses/man/terminfo.5.html#h3-Parameterized-Strings
 
 # WARNING: This file requires GAWK since it uses bitwise operations.
 # Or some other AWK implementation that supports and(), compl(), or(), and xor().
@@ -47,6 +56,7 @@ BEGIN {
 
 # Get the next character from the format string.
 # Set the variable 'character' and return the character.
+# If fatal is true die if at the end of the format string.
 function next_character(fatal) {
     if (format_position >= format_length) {
         if (fatal) {
@@ -165,7 +175,7 @@ function handle_if_then_else(    level) {
     # Then part.
     if (character == "t") {
         if (pop() == 0) {
-            # Search for a matching e or ;.
+            # Search for a matching %e or %;.
             level = 0
             while (next_character(1)) {
                 if (character == "%") {
@@ -188,7 +198,7 @@ function handle_if_then_else(    level) {
 
     # Else part.
     if (character == "e") {
-        # Search for a matching e or ;.
+        # Search for a matching %e or %;.
         level = 0
         while (next_character(1)) {
             if (character == "%") {
@@ -280,7 +290,6 @@ function error(string) {
 #     for (stack_item = 1; stack_item <= stack_pointer; stack_item++) {
 #         stack_print = stack_print " \047" stack[stack_item] "\047"
 #     }
-
 #     printf  "{%s} %-10s [%03d] %s (%s) %s : %-10s {%d%s}\n",
 #             character,
 #             caller,
